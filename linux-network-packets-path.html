@@ -17,7 +17,7 @@ footer { margin-top: 3em; border-top: 1px solid #8885; font-size: .9em; }
 </style>
 </head>
 <body>
-<nav><a href="./index.html">首页</a> · <a href="./linux-packet-path-diagram.html">打开英文交互图</a></nav>
+<nav><a href="./index.html">首页</a> · <a href="./diagrams/linux-packet-path-diagram.html">打开英文交互图</a></nav>
 <main>
 <h1>Linux 网络数据包路径</h1>
 <h2 id="简介">简介</h2>
@@ -32,18 +32,18 @@ footer { margin-top: 3em; border-top: 1px solid #8885; font-size: .9em; }
 <h2 id="交互式图表">交互式图表</h2>
 <p>下方图表追踪出站（<strong>TX</strong>）和入站（<strong>RX</strong>）路径中的主要内核函数，同时展示 <code>sk_buff</code> 缓冲区布局以及 <strong>netfilter/eBPF</strong> hook 点。</p>
 <p style="text-align:right; margin-bottom:6px;">
-  <a href="./linux-packet-path-diagram.html" target="_blank" rel="noopener" style="font-size:13px;">
+  <a href="./diagrams/linux-packet-path-diagram.html" target="_blank" rel="noopener" style="font-size:13px;">
     ↗ 在新标签页中打开完整图表
   </a>
 </p>
 <p><iframe
-  src="./linux-packet-path-diagram.html"
+  src="./diagrams/linux-packet-path-diagram.html"
   style="width:100%; height:85vh; border:1px solid #2a3545; border-radius:8px; background:#0a0e14;"
   loading="lazy"
   allowfullscreen>
 </iframe></p>
 <noscript>
-  <p><a href="./linux-packet-path-diagram.html">打开交互式图表</a>（需要 JavaScript）。</p>
+  <p><a href="./diagrams/linux-packet-path-diagram.html">打开交互式图表</a>（需要 JavaScript）。</p>
 </noscript>
 
 <hr />

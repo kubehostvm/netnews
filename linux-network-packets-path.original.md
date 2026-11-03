@@ -23,18 +23,18 @@ Let's go:
 The diagrams below trace the major kernel functions on both the egress (_TX_) and ingress (_RX_) paths, plus the `sk_buff` buffer layout and __netfilter/eBPF__ hook points. 
 
 <p style="text-align:right; margin-bottom:6px;">
-  <a href="../diagrams/linux-packet-path-diagram.html" target="_blank" rel="noopener" style="font-size:13px;">
+  <a href="https://kubehostvm.github.io/netnews/diagrams/linux-packet-path-diagram.html" target="_blank" rel="noopener" style="font-size:13px;">
     ↗ Open full diagram in new tab
   </a>
 </p>
 <iframe
-  src="../diagrams/linux-packet-path-diagram.html"
+  src="https://kubehostvm.github.io/netnews/diagrams/linux-packet-path-diagram.html"
   style="width:100%; height:85vh; border:1px solid #2a3545; border-radius:8px; background:#0a0e14;"
   loading="lazy"
   allowfullscreen>
 </iframe>
 <noscript>
-  <p><a href="../diagrams/linux-packet-path-diagram.html">Open the interactive diagram</a> (requires JavaScript).</p>
+  <p><a href="https://kubehostvm.github.io/netnews/diagrams/linux-packet-path-diagram.html">Open the interactive diagram</a> (requires JavaScript).</p>
 </noscript>
 
 ---

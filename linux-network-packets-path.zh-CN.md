@@ -20,18 +20,18 @@ categories: [Linux, Network, Kernel]
 下方图表追踪出站（**TX**）和入站（**RX**）路径中的主要内核函数，同时展示 `sk_buff` 缓冲区布局以及 **netfilter/eBPF** hook 点。
 
 <p style="text-align:right; margin-bottom:6px;">
-  <a href="./linux-packet-path-diagram.html" target="_blank" rel="noopener" style="font-size:13px;">
+  <a href="https://kubehostvm.github.io/netnews/diagrams/linux-packet-path-diagram.html" target="_blank" rel="noopener" style="font-size:13px;">
     ↗ 在新标签页中打开完整图表
   </a>
 </p>
 <iframe
-  src="./linux-packet-path-diagram.html"
+  src="https://kubehostvm.github.io/netnews/diagrams/linux-packet-path-diagram.html"
   style="width:100%; height:85vh; border:1px solid #2a3545; border-radius:8px; background:#0a0e14;"
   loading="lazy"
   allowfullscreen>
 </iframe>
 <noscript>
-  <p><a href="./linux-packet-path-diagram.html">打开交互式图表</a>（需要 JavaScript）。</p>
+  <p><a href="https://kubehostvm.github.io/netnews/diagrams/linux-packet-path-diagram.html">打开交互式图表</a>（需要 JavaScript）。</p>
 </noscript>
 
 ---
