@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linux 网络数据包路径</title>
+<style>
+:root { color-scheme: light dark; }
+body { max-width: 1100px; margin: auto; padding: 24px; font: 17px/1.85 system-ui, sans-serif; }
+h1, h2, h3 { line-height: 1.4; scroll-margin-top: 20px; }
+h2 { margin-top: 2em; border-bottom: 1px solid #8885; padding-bottom: .4em; }
+a { color: #2878cc; overflow-wrap: anywhere; }
+code { background: #8882; padding: .15em .3em; border-radius: 4px; overflow-wrap: anywhere; }
+iframe { box-sizing: border-box; }
+footer { margin-top: 3em; border-top: 1px solid #8885; font-size: .9em; }
+@media (max-width: 600px) { body { padding: 16px; font-size: 16px; } }
+</style>
+</head>
+<body>
+<nav><a href="./index.html">首页</a> · <a href="./linux-packet-path-diagram.html">打开英文交互图</a></nav>
+<main>
+<h1>Linux 网络数据包路径</h1>
+<h2 id="简介">简介</h2>
+<p>本文介绍 Linux 5.10 及更高版本内核中的 <strong>TCP/IP</strong> 和 <strong>UDP/IP</strong> 路径，并配有交互式图表。</p>
+<p>目录：</p>
+<ul>
+<li><a href="#交互式图表">交互式图表</a></li>
+<li><a href="#出站路径tx">出站路径（TX）</a></li>
+<li><a href="#入站路径rx">入站路径（RX）</a></li>
+<li><a href="#参考资料">参考资料</a></li>
+</ul>
+<h2 id="交互式图表">交互式图表</h2>
+<p>下方图表追踪出站（<strong>TX</strong>）和入站（<strong>RX</strong>）路径中的主要内核函数，同时展示 <code>sk_buff</code> 缓冲区布局以及 <strong>netfilter/eBPF</strong> hook 点。</p>
+<p style="text-align:right; margin-bottom:6px;">
+  <a href="./linux-packet-path-diagram.html" target="_blank" rel="noopener" style="font-size:13px;">
+    ↗ 在新标签页中打开完整图表
+  </a>
+</p>
+<p><iframe
+  src="./linux-packet-path-diagram.html"
+  style="width:100%; height:85vh; border:1px solid #2a3545; border-radius:8px; background:#0a0e14;"
+  loading="lazy"
+  allowfullscreen>
+</iframe></p>
+<noscript>
+  <p><a href="./linux-packet-path-diagram.html">打开交互式图表</a>（需要 JavaScript）。</p>
+</noscript>
+
+<hr />
+<h2 id="出站路径tx">出站路径（TX）</h2>
+<h3 id="1-用户态-socket-层">1. 用户态 → Socket 层</h3>
+<p>进程在 socket <strong>fd</strong> 上调用 <code>write()</code>、<code>send()</code> 或 <code>sendto()</code>。<strong>VFS</strong> 通过 <code>sock_sendmsg()</code> 分发请求；该函数从 <strong>fd</strong> 中获取 <code>struct sock</code>，附加来自 <code>task_struct</code> 的凭据（<em>PID/UID/GID</em>），执行 <strong>LSM hook</strong>（<em>SELinux/AppArmor</em>），然后通过 <code>sk_prot-&gt;sendmsg</code> 函数指针将请求分发给传输层协议。</p>
+<p><code>INDIRECT_CALL_INET</code> 宏通过对最常见的两种协议（<em>TCP/UDP</em>）进行硬编码检查，避免间接分支预测的开销；其他协议则回退到通用的间接调用。</p>
+<h3 id="2-传输层-tcp">2. 传输层 —— TCP</h3>
+<p><code>tcp_sendmsg()</code> 首先检查连接是否处于 <strong>ESTABLISHED</strong> 状态，然后遍历用户缓冲区，按照 <strong>MSS</strong> 大小分配 <code>sk_buff</code> 结构。</p>
+<p>数据通过 <code>skb_add_data_nocache()</code> 从用户态复制到内核态（写入已有的尾部空间），或者通过分配新页面来保存。</p>
+<p>数据段会加入 socket 写队列（<code>sk-&gt;sk_write_queue</code>）。随后，<code>tcp_push()</code> → <code>tcp_write_xmit()</code> 遍历队列，应用拥塞窗口（<code>cwnd</code>）和接收窗口（<code>rwnd</code>）限制，设置重传定时器，构造 TCP 头部（<em>seq/ack/flags/window/options</em>），计算校验和（也可以通过 <code>CHECKSUM_PARTIAL</code> 延迟到硬件计算），最后通过 <code>icsk_af_ops-&gt;queue_xmit</code> 函数指针调用 <code>ip_queue_xmit()</code>。</p>
+<h3 id="传输层-udp">传输层 —— UDP</h3>
+<p><code>udp_sendmsg()</code> 的处理更简单：它通过 <code>ip_route_output_flow()</code> 解析路由，处理 <strong>corking</strong>（<code>UDP_CORK</code>，将多次 <code>sendmsg()</code> 调用合并为一个 IP 数据报）或 <strong>non-corking</strong>（立即发送），构造 UDP 头部并计算校验和，随后调用 <code>ip_make_skb()</code> + <code>udp_send_skb()</code> 将数据交给 IP 层。</p>
+<h3 id="3-ip-层">3. IP 层</h3>
+<p><code>__ip_queue_xmit()</code>（<strong>TCP</strong> 路径）或 <code>ip_push_pending_frames()</code>（<strong>UDP</strong> 路径）通过 <strong>FIB</strong>（_Forwarding Information Base，已编译的路由表）执行路由查找。</p>
+<p>如果路由已经缓存在 <code>skb-&gt;_skb_refdst</code> 中，则会跳过查找。</p>
+<p>随后构造 IP 头部（版本、IHL、TOS、TTL、协议、源/目的地址），并执行以下步骤：</p>
+<ul>
+<li>触发 <code>NF_INET_LOCAL_OUT</code> netfilter hook；iptables/nftables 的 <strong>OUTPUT</strong> 链规则在此执行，连接跟踪也从这里开始。</li>
+<li><code>ip_output()</code> 触发 <code>NF_INET_POST_ROUTING</code>；<strong>POSTROUTING</strong> 链在此执行（<strong>SNAT/masquerade</strong> 在此发生）。</li>
+<li><code>ip_finish_output()</code> 检查 <strong>MTU</strong>，必要时通过 <code>ip_fragment()</code> 进行分片。如果设置了 <strong>DF</strong> 位（<strong>PMTUD</strong>），则不会进行分片。</li>
+<li>邻居子系统解析 <strong>L2</strong> 地址：<code>neigh_resolve_output()</code> 执行 <strong>ARP</strong> 查找，或使用邻居缓存。如果没有 ARP 响应，<code>skb</code> 会暂存在邻居的 <code>arp_queue</code> 中，等待解析完成。</li>
+<li>将以太网头部压入 <code>skb</code>。</li>
+</ul>
+<h3 id="4-qdisc-设备层">4. Qdisc / 设备层</h3>
+<p><code>dev_queue_xmit()</code> 设置 <code>skb-&gt;mac_header</code>，然后进入排队规则（<strong>qdisc</strong>）。默认排队规则是 <code>pfifo_fast</code>（现代发行版通常是 <code>fq_codel</code>）。<code>__qdisc_run()</code> 取出 <code>skb</code>，执行 <code>validate_xmit_skb()</code>（插入 VLAN 标签、在硬件支持时执行 GSO/TSO 分段、完成校验和），然后调用驱动的 <code>ndo_start_xmit()</code>。</p>
+<p><code>skb</code> 被放入 TX 环形缓冲区，通常对应 DMA 映射的环形描述符。驱动写入描述符，并通过 <strong>MMIO</strong> 写入敲响网卡的 doorbell 寄存器，触发发送。</p>
+<p><strong>绕过路径：</strong></p>
+<ul>
+<li><code>dev_direct_xmit()</code> 供 <strong>XDP</strong> 和 <strong>AF_XDP</strong> 使用，可以完全跳过 qdisc。</li>
+<li><code>XDP_TX</code> 在驱动层反射数据包，不会进入更高层协议栈。</li>
+<li>TC 出站处理（<code>tc_egress()</code> / <code>tcf_classify()</code>）在 qdisc 入队和驱动之间运行 <strong>tc-BPF</strong> 或 <strong>u32/flower</strong> 分类器。</li>
+</ul>
+<hr />
+<h2 id="入站路径rx">入站路径（RX）</h2>
+<h3 id="1-网卡-驱动">1. 网卡 → 驱动</h3>
+<p>网卡通过 <strong>DMA</strong> 将数据包写入预先分配的环形缓冲区（<strong>RX ring</strong>），并在描述符中写入元数据（长度、校验和状态、RSS 哈希等），随后触发硬件中断（或 <strong>MSI-X</strong> 向量）。</p>
+<p>驱动的 <strong>ISR</strong> 调用 <code>napi_schedule()</code> 安排 <strong>NAPI</strong> 轮询，然后屏蔽中断。中断合并非常关键：没有 NAPI 的话，每个数据包触发一次中断会严重损害吞吐量。</p>
+<h3 id="2-napi-轮询-驱动-netdev">2. NAPI 轮询 / 驱动 → netdev</h3>
+<p>在 <strong>softirq</strong> 上下文（<code>NET_RX_SOFTIRQ</code>）中，<code>napi_poll()</code> 调用驱动的轮询函数。该函数遍历 RX ring，分配 <code>sk_buff</code> 结构，填充元数据（通过 <code>eth_type_trans()</code> 设置协议、设备和接收哈希等），然后调用 <code>napi_gro_receive()</code>。</p>
+<p><strong>GRO（Generic Receive Offload，通用接收卸载）</strong> 会将多个 TCP 段合并为一个较大的 <code>skb</code>，再向上传递，从而降低逐包处理的开销。</p>
+<h3 id="3-netif_receive_skb">3. <code>netif_receive_skb()</code></h3>
+<ul>
+<li>设置 <code>skb-&gt;mac_header</code>，并取出以太网头部。</li>
+<li><strong>af_packet</strong> socket（<em>tcpdump/libpcap</em>）在此通过 <code>deliver_skb()</code> 获得数据包副本，副本会发送给所有注册的 <code>ptype_all</code> 处理器。</li>
+<li>如果挂载了 clsact/ingress qdisc，则运行 <code>tc_ingress()</code>；这是一个重要的 <strong>eBPF</strong> hook 点（<code>BPF_PROG_TYPE_SCHED_CLS</code>）。</li>
+<li>带 VLAN 标签的帧会被分发到对应的 VLAN 子接口。</li>
+<li>如果接口被加入网桥，或注册了 <code>rx_handler</code>，<code>rx_handler()</code> 可以截获数据包。</li>
+<li>根据 <code>skb-&gt;protocol</code>（<code>ETH_P_IP</code>）进行协议分发，调用 <code>ip_rcv()</code>。</li>
+</ul>
+<h3 id="4-ip-层">4. IP 层</h3>
+<p><code>ip_rcv()</code> 校验 IP 头部（_version == 4、IHL &gt;= 5、总长度一致、头部校验和），设置 <code>skb-&gt;transport_header</code>，并触发 <code>NF_INET_PRE_ROUTING</code>（<strong>PREROUTING</strong> 链、<strong>DNAT</strong> 和连接跟踪）。</p>
+<p><code>ip_rcv_finish()</code> 通过 <code>ip_route_input_noref()</code> 执行路由查找，即 <strong>FIB</strong> 查找。</p>
+<p>路由结果会将 <code>skb-&gt;dst-&gt;input</code> 设置为以下函数之一：</p>
+<ul>
+<li><code>ip_local_deliver()</code> —— 数据包发往本机。</li>
+<li><code>ip_forward()</code> —— 数据包需要转发（递减 TTL，并触发 <code>NF_INET_FORWARD</code> hook）。</li>
+<li><code>ip_mr_input()</code> —— 多播路由。</li>
+</ul>
+<p>对于本地交付：<code>ip_defrag()</code> 重新组装分片，随后触发 <code>NF_INET_LOCAL_IN</code>（<strong>INPUT</strong> 链），最后 <code>ip_local_deliver_finish()</code> 移除 IP 头部，并将数据包分发给传输层协议处理器。</p>
+<h3 id="5-传输层-tcp">5. 传输层 —— TCP</h3>
+<p><code>tcp_v4_rcv()</code> 校验 TCP 头部和校验和，并通过 <code>__inet_lookup_skb()</code> 查找 socket（先查已建立连接哈希表，再查监听表）。</p>
+<p>对于已建立的连接：调用 <code>tcp_v4_do_rcv()</code> → <code>tcp_rcv_established()</code>。</p>
+<ul>
+<li><strong>快速路径</strong>：头部预测成功（预测的下一个 seq/ack、没有特殊标志、窗口未变化）时，数据会直接复制到用户态，或加入 <code>sk-&gt;sk_receive_queue</code>。</li>
+<li><strong>慢速路径</strong>：处理乱序段、SACK、ECN、紧急数据等情况，并执行完整的状态机逻辑。</li>
+</ul>
+<p>对于监听 socket 上的 SYN 数据包，会调用 <code>tcp_v4_cookie_check()</code>（SYN 洪水攻击时使用 SYN cookies）和 <code>tcp_check_req()</code> 完成 <strong>三次握手（3WHS）</strong>。</p>
+<h3 id="传输层-udp_1">传输层 —— UDP</h3>
+<p><code>udp_rcv()</code> → <code>__udp4_lib_rcv()</code>：根据目的端口查找 socket，校验和验证后，由 <code>udp_queue_rcv_skb()</code> 将数据包加入 <code>sk-&gt;sk_receive_queue</code>，再由 <code>sk-&gt;sk_data_ready()</code> 唤醒读取者。</p>
+<h3 id="6-socket-层-用户态读取">6. Socket 层 / 用户态读取</h3>
+<p><code>read()</code> → <code>sock_recvmsg()</code> → <code>inet_recvmsg()</code> → <code>tcp_recvmsg()</code> / <code>udp_recvmsg()</code>。</p>
+<p>数据从接收队列中的 <code>skb</code> 复制到用户态缓冲区，读取完成后释放这些 <code>skb</code>。</p>
+<h2 id="参考资料">参考资料</h2>
+<h3 id="主要资料">主要资料</h3>
+<ul>
+<li>Stephan 与 Wüstrich，《数据包在 Linux 内核中的路径》（TUM，2024）：https://www.net.in.tum.de/fileadmin/TUM/NET/NET-2024-04-1/NET-2024-04-1_16.pdf</li>
+<li>PackageCloud，《Linux 网络栈监控与调优：接收数据》：https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-receiving-data/</li>
+<li>PackageCloud，《Linux 网络栈监控与调优：发送数据》：https://blog.packagecloud.io/monitoring-tuning-linux-networking-stack-sending-data/</li>
+<li>PackageCloud，《Linux 网络栈监控与调优图解：接收数据》：https://blog.packagecloud.io/illustrated-guide-monitoring-tuning-linux-networking-stack-receiving-data/</li>
+</ul>
+<h3 id="官方内核文档">官方内核文档</h3>
+<ul>
+<li><a href="https://docs.kernel.org/networking/index.html">Networking subsystem index</a></li>
+<li><a href="https://docs.kernel.org/networking/napi.html">NAPI documentation</a></li>
+<li><a href="https://docs.kernel.org/networking/skbuff.html">sk_buff documentation</a></li>
+<li><a href="https://www.kernel.org/doc/html/v4.14/networking/kapi.html">Kernel networking API</a></li>
+<li><a href="https://docs.kernel.org/admin-guide/sysctl/net.html"><code>/proc/sys/net/</code> tuning parameters</a></li>
+<li><a href="https://elixir.bootlin.com/linux/v5.10.8/source">Kernel source browser (v5.10.8)</a></li>
+</ul>
+<h3 id="linux-foundation-wiki">Linux Foundation Wiki</h3>
+<ul>
+<li><a href="https://wiki.linuxfoundation.org/networking/kernel_flow">Kernel Flow — full packet path diagram</a></li>
+<li><a href="https://wiki.linuxfoundation.org/networking/napi">NAPI driver implementation guide</a></li>
+</ul>
+<h3 id="学术论文">学术论文</h3>
+<ul>
+<li>Høiland-Jørgensen 等，《The eXpress Data Path: Fast Programmable Packet Processing in the Operating System Kernel》（ACM CoNEXT 2018）：https://dl.acm.org/doi/10.1145/3281411.3281443</li>
+<li>Cai 等，《Understanding Host Network Stack Overheads》（ACM SIGCOMM 2021）：https://dl.acm.org/doi/10.1145/3452296.3472888；<a href="https://www.cs.cornell.edu/~ragarwal/pubs/network-stack.pdf">PDF</a></li>
+<li>Chimata，《Path of a Packet in the Linux Kernel Stack》（2005，kernel 2.6.11）：https://www.cs.dartmouth.edu/~sergey/netreads/path-of-packet/Network_stack.pdf</li>
+</ul>
+<h3 id="社区资料">社区资料</h3>
+<ul>
+<li><a href="https://ntk148v.github.io/posts/linux-network-performance-ultimate-guide/">Linux Network Performance Ultimate Guide</a></li>
+<li><a href="https://www.sheharyaar.in/blog/packet-path-overview/">Path of a Received Packet in the Kernel — Overview</a>（Sheharyaar，2024）</li>
+<li><a href="http://vger.kernel.org/~davem/cgi-bin/X_blog.cgi">DaveM's Linux Networking Blog</a> —— GRO 内部机制</li>
+</ul>
+<h3 id="ebpf-xdp">eBPF / XDP</h3>
+<ul>
+<li><a href="https://docs.cilium.io/en/latest/bpf/">Cilium BPF and XDP Reference Guide</a></li>
+<li><a href="https://github.com/xdp-project/xdp-paper">XDP paper source + benchmarks</a></li>
+<li><a href="https://github.com/Terabit-Ethernet/Understanding-network-stack-overheads-SIGCOMM-2021">SIGCOMM '21 network stack profiling tools</a></li>
+</ul>
+</main>
+<footer><p>译自 <a href="https://safesws.github.io/linux-network-packets-path/">SAFESWS：Linux Network Packets Path</a>。图表保留英文，正文按原文翻译，未逐项核验内核实现。</p></footer>
+</body>
+</html>
