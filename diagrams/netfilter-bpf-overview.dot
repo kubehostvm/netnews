@@ -48,7 +48,7 @@ digraph overview {
  }
  subgraph cluster_protocol {
  label="PROTOCOL / APPLICATION LAYER";color="#94a3b8";
- si [label="TCP socket lookup\nMODERN: cgroup_skb ingress → socket cBPF/eBPF\nTCP processing / receive queue",fillcolor="#dcfce7"];
+ si [label="TCP socket lookup [MODERN: SK_LOOKUP for listener lookup]\nMODERN: cgroup_skb ingress → socket cBPF/eBPF\nTCP processing / receive queue",fillcolor="#dcfce7"];
  app [label="Local process\nrecv / read | send / write",fillcolor="#dbeafe"];
  so [label="TCP output\nMODERN optional event hooks: sock_addr / sock_ops\nsockmap sk_msg/sk_skb may redirect",fillcolor="#dcfce7"];
  packet [label="Local AF_PACKET send\nL2 injection bypasses IPv4 OUTPUT",fillcolor="#dbeafe"];
@@ -63,6 +63,6 @@ digraph overview {
  neigh -> ne; bpost -> ne; packet -> ne; ne -> te -> q;
  neigh -> bo [style=dashed,label="bridge device output"]; bo -> bd [label="bridge transmit decision"];
  nx -> bypass [style=dashed]; gx -> bypass [style=dashed]; ti -> bypass [style=dashed]; te -> bypass [style=dashed];
- note [label="Historical reference: Jan Engelhardt, 2014-Feb-28, Linux 2.6.36+ (not all Linux 2.x).\nRe-drawn stage model, not copied SVG artwork. Blue: bridge/L2; orange: IPv4 hooks; green/purple: modern extensions.\nPriority is per-hook, lower runs earlier. raw_before_defrag may move raw to -450.\nNAT rules normally see the first connection packet; conntrack applies subsequent translations.\nMODERN Netfilter BPF may attach inside IPv4 hooks at configured priority (since 6.4).\nBridge NF_BR_* and IPv4 NF_INET_* are distinct hook families. XFRM arrows summarize mode-dependent paths.\nARP/IPv6/hardware offload details excluded. Every hook can terminate/divert a packet.",shape=note,fillcolor="#f8fafc"];
+ note [label="Historical reference: Jan Engelhardt, 2014-Feb-28, Linux 2.6.36+ (not all Linux 2.x).\nRe-drawn stage model, not copied SVG artwork. Blue: bridge/L2; orange: IPv4 hooks; green/purple: modern extensions.\nPriority is per-hook, lower runs earlier. raw_before_defrag may move raw to -450.\nNAT rules normally see the first connection packet; conntrack applies subsequent translations.\nMODERN Netfilter BPF may attach inside IPv4 hooks at configured priority (since 6.4).\niptables -m bpf runs BPF within a rule match (xt_bpf); not a separate Netfilter hook.\nBridge NF_BR_* and IPv4 NF_INET_* are distinct hook families. XFRM arrows summarize mode-dependent paths.\nARP/IPv6/hardware offload details excluded. Every hook can terminate/divert a packet.",shape=note,fillcolor="#f8fafc"];
  q -> note [style=invis];
 }

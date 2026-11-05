@@ -193,6 +193,10 @@ digraph tcp {
  events -> tcpsend [style=dotted,constraint=false];
  note [label="Arrows summarize selected calls/continuations; dotted/dashed edges are optional or asynchronous.\nGrouping wrappers / inline macros keeps this finite: no claim of every transitive helper on all states/drivers.\nIPv4 local TCP uses PREROUTING/INPUT or OUTPUT/POSTROUTING, never FORWARD (see overview for all five chains).\nNative/generic XDP are alternatives; BPF attachments/config/modules may be absent.\nAll hook / filter stages may drop, queue or redirect; not all branches return to this diagram.\nExcluded from detailed function expansion: bridge, IPv6, XFRM, tunnels, hardware offload, full TCP errors/states.",shape=note,fillcolor="#f8fafc"];
  copy -> note [style=invis]; ndo -> note [style=invis];
+ sklookup [label="Listener lookup only (not established hash hit):\n__inet_lookup_listener() → inet_lookup_run_sk_lookup()\n→ bpf_sk_lookup_run_v4() [BPF_PROG_TYPE_SK_LOOKUP]\nMay select socket / reject; netns attachment",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/inet_hashtables.c",target="_blank"];
+ lookup -> sklookup [style=dashed,label="listener lookup",constraint=false];
+ xtbpf [label="iptables -m bpf: optional rule match\nipt_do_table() → match->match()\n→ bpf_mt() / bpf_mt_v1()\n→ bpf_prog_run() / bpf_prog_run_save_cb()\nSOCKET_FILTER program returns match boolean, not NF verdict",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/xt_bpf.c",target="_blank"];
+ xt -> xtbpf [style=dashed,label="if matching rule uses -m bpf"];
  // Source links are also available when opening the SVG directly.
  node [target="_blank"];
  core [URL="https://github.com/torvalds/linux/blob/v6.6/net/core/dev.c"];

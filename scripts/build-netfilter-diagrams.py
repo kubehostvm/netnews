@@ -28,7 +28,7 @@ def main():
     svg = ET.parse(ROOT / 'diagrams/host-tcp-v6.6.svg')
     nodes = [element for element in svg.iter() if element.get('class') == 'node']
     assert len(nodes) >= 140, f'Function diagram unexpectedly collapsed: {len(nodes)} nodes'
-    for required in ('ipv4_conntrack_defrag', 'ipv4_conntrack_in', 'ipv4_conntrack_local', 'nf_confirm', 'nf_conntrack_tcp_packet', 'expr_call_ops_eval', 'ip_packet_match'):
+    for required in ('ipv4_conntrack_defrag', 'ipv4_conntrack_in', 'ipv4_conntrack_local', 'nf_confirm', 'nf_conntrack_tcp_packet', 'expr_call_ops_eval', 'ip_packet_match', 'bpf_mt_v1', 'bpf_sk_lookup_run_v4'):
         assert required in tcp, required
     assert 'nft_expr_eval' not in tcp
     source_links = [element for element in svg.iter() if element.get('{http://www.w3.org/1999/xlink}href', '').startswith('https://github.com/torvalds/linux/blob/v6.6/')]

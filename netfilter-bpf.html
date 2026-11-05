@@ -53,6 +53,8 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <tr><td>SCHED_CLS / TCX</td><td>ingress 在 PREROUTING 前；egress 在 POSTROUTING 后且 qdisc 入队前</td><td>挂设备；可丢弃、重定向、修改报文，TCX 是 v6.6 现代附着方式</td></tr>
 <tr><td>CGROUP_SKB</td><td>ingress：tcp_filter 中；egress：ip_finish_output 中</td><td>需要 socket/cgroup 上下文，不是宿主所有转发流量的通用 hook</td></tr>
 <tr><td>SOCKET_FILTER</td><td>sk_filter_trim_cap 中、cgroup ingress 后</td><td>socket 上附着的 cBPF/eBPF；tcpdump 的 AF_PACKET filter 是另一 socket 上的过滤，不能混成 TCP socket filter</td></tr>
+<tr><td>iptables <code>-m bpf</code> / xt_bpf</td><td>ipt_do_table 的规则匹配回调中：bpf_mt / bpf_mt_v1</td><td>执行 SOCKET_FILTER 类型程序或编译的经典 BPF，返回匹配真假；是否 ACCEPT/DROP 仍由规则 target 决定。不是独立 hook，也不是 BPF_PROG_TYPE_NETFILTER</td></tr>
+<tr><td>SK_LOOKUP</td><td>__inet_lookup_listener → inet_lookup_run_sk_lookup → bpf_sk_lookup_run_v4</td><td>附着 netns；TCP 监听 socket 查找时可选择 socket/拒绝。已建立连接命中 established 哈希时不经过此点</td></tr>
 <tr><td>NETFILTER</td><td>NF_INET hook 内、按 link 的 priority 排序</td><td>直接参与 Netfilter 回调；不是 iptables match/target 或 TC；v6.6 对合法 hook/priority 有校验</td></tr>
 <tr><td>CGROUP_SOCK_ADDR / SOCK_OPS</td><td>连接前或 TCP 事件回调</td><td>不是每个数据包的固定串行阶段</td></tr>
 <tr><td>SK_MSG / SK_SKB</td><td>sockmap/sockhash 替代数据路径</td><td>可能由 tcp_bpf_sendmsg/recvmsg 或 psock 流处理接管、重定向；不保证经过普通发送主线</td></tr>
@@ -101,6 +103,8 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <h3>nftables 在图中怎么定位？</h3>
 <p>IPv4 的原生 nft base chain 可注册到相同的 PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING hook。例如 <code>type filter hook input priority 0</code> 与 legacy filter INPUT 处于相同阶段；表叫 <code>filter</code> 并不赋予它过滤语义，真正决定执行位置的是链的 type、hook 和 priority。</p>
 <p>nft 的 <code>netdev ingress</code>（以及现代内核的 <code>inet ingress</code>）是入站设备级 hook，在 TC ingress 后、IPv4 PREROUTING 前；<code>netdev egress</code> 在 TC egress 前。它们不属于 iptables 五链。netdev ingress 早于 IPv4 defrag/conntrack，不能默认认为它已有完整 conntrack 上下文。</p>
+<h3>iptables 调用 BPF，不等于 BPF 替代 iptables</h3>
+<p>存在三种不同关系：① XDP/TC 等在 Netfilter 前后执行；② Netfilter BPF link 直接成为某个 hook 的回调；③ iptables <code>-m bpf</code> 在一条规则匹配时调用 BPF，输出只是匹配真假。第三种路径为 <code>ipt_do_table → match-&gt;match → bpf_mt/bpf_mt_v1 → bpf_prog_run[_save_cb]</code>。不能把这三种 BPF 画成同一个阶段。</p>
 <h3>共存与 verdict</h3>
 <ul>
 <li>iptables-legacy 与 nf_tables 可同时注册在同一 Netfilter hook；不是“先完整走完 iptables，再完整走 nft”。按所有注册回调的优先级执行，<strong>相同优先级不要依赖顺序</strong>。</li>
@@ -120,6 +124,7 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <li><a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/tcp_ipv4.c">tcp_ipv4.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/tcp_input.c">tcp_input.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/tcp_output.c">tcp_output.c</a>：TCP 收发关键路径。</li>
 <li><a href="https://github.com/torvalds/linux/blob/v6.6/net/core/filter.c">filter.c</a>：sk_filter_trim_cap；<a href="https://github.com/torvalds/linux/blob/v6.6/include/uapi/linux/netfilter_ipv4.h">netfilter_ipv4.h</a>：hook 优先级；<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/netfilter/iptable_nat.c">iptable_nat.c</a>：四个 NAT 链注册。</li>
 <li><a href="https://github.com/torvalds/linux/blob/v6.6/net/bridge/br_input.c">br_input.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/bridge/br_forward.c">br_forward.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/bridge/br_netfilter_hooks.c">br_netfilter_hooks.c</a>：桥接与可选 IPv4 转交；<a href="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/nf_nat_proto.c">nf_nat_proto.c</a>：NAT family 包装；<a href="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/nf_nat_core.c">nf_nat_core.c</a>：NAT 查表和映射执行。</li>
+<li><a href="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/xt_bpf.c">xt_bpf.c</a>：iptables BPF 匹配；<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/inet_hashtables.c">inet_hashtables.c</a>：SK_LOOKUP 的 TCP 监听查找位置。</li>
 <li><a href="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/nf_bpf_link.c">nf_bpf_link.c</a>：Netfilter BPF link；<a href="https://wiki.nftables.org/wiki-nftables/index.php/Netfilter_hooks">nftables：Netfilter hooks</a>；<a href="https://wiki.nftables.org/wiki-nftables/index.php/Performing_Network_Address_Translation_(NAT)">nftables NAT 与共存说明</a>。</li>
 </ul>
 <p>可编辑源文件：<a href="./diagrams/netfilter-bpf-overview.dot">阶段图 DOT</a>、<a href="./diagrams/host-tcp-v6.6.dot">函数图 DOT</a>。安装 Graphviz 后，在仓库根目录运行 <code>python3 scripts/build-netfilter-diagrams.py</code>，重新生成 SVG 并检查链接、关键节点和版本声明。不需要 MCP、前端构建或运行时图形库。</p>
