@@ -20,10 +20,14 @@ def main():
             assert required in text, (name, required)
         assert 'viewBox' in tree.getroot().attrib, name
     overview = (ROOT / 'diagrams/netfilter-bpf-overview.dot').read_text()
-    assert 'FORWARD' in overview and 'INPUT' in overview
+    for required in ('FORWARD', 'INPUT', 'BROUTING', 'NF_BR_PRE_ROUTING', 'XFRM', 'AF_PACKET', '2.6.36+', 'MODERN'):
+        assert required in overview, required
     tcp = (ROOT / 'diagrams/host-tcp-v6.6.dot').read_text()
-    for required in ('tcp_v4_rcv', 'tcp_sendmsg', 'sk_filter_trim_cap', 'ip_finish_output', 'nf_hook_egress'):
+    for required in ('tcp_v4_rcv', 'tcp_sendmsg', 'sk_filter_trim_cap', 'ip_finish_output', 'nf_hook_egress', 'ipt_do_table', 'nft_do_chain', 'nf_hook_run_bpf', 'tcp_check_req', 'tcp_timewait_state_process', 'tcp_retransmit_timer', 'tcp_recvmsg_locked'):
         assert required in tcp, required
+    svg = ET.parse(ROOT / 'diagrams/host-tcp-v6.6.svg')
+    nodes = [element for element in svg.iter() if element.get('class') == 'node']
+    assert len(nodes) >= 90, f'Function diagram unexpectedly collapsed: {len(nodes)} nodes'
 
     class Links(HTMLParser):
         def __init__(self):

@@ -1,34 +1,68 @@
 digraph overview {
- graph [rankdir=TB, bgcolor="#ffffff", pad="0.4", nodesep="0.45", ranksep="0.5", label="IPv4 Netfilter / BPF packet flow — classic stage-level view, modern extensions (Linux v6.6)", labelloc=t, fontsize=20];
- node [shape=box, style="rounded,filled", fillcolor="#eef2f6", fontname="sans-serif", fontsize=13, margin="0.16,0.12"];
- edge [fontname="sans-serif", fontsize=11, color="#475569"];
- nicrx [label="NIC RX / driver"];
- xdp [label="BPF: native XDP (driver) → PASS",fillcolor="#dcfce7"];
- rx [label="skb / GRO / receive core\nGeneric XDP (alternative mode) → AF_PACKET taps"];
- tc [label="BPF: TC ingress / TCX ingress",fillcolor="#dcfce7"];
- netdev [label="Netfilter NETDEV ingress\nnft netdev / inet ingress (not an iptables chain)",fillcolor="#f3e8ff"];
+ graph [rankdir=TB,bgcolor="white",pad="0.4",nodesep="0.35",ranksep="0.5",compound=true,label="Netfilter and general networking • 2014-Feb-28 / Linux 2.6.36+ stage model + labelled v6.6 extensions",labelloc=t,fontsize=20];
+ node [shape=box,style="rounded,filled",fillcolor="#eef2f6",fontname="sans-serif",fontsize=12,margin="0.16,0.12"];
+ edge [fontname="sans-serif",fontsize=10,color="#475569"];
+ subgraph cluster_link {
+ label="LINK LAYER / BRIDGING — historical stages, modern BPF additions";color="#94a3b8";
+ nic [label="Interface input / driver"];
+ nx [label="MODERN: native XDP\nPASS / DROP / TX / REDIRECT",fillcolor="#dcfce7"];
+ gro [label="skb / GRO / receive core"];
+ gx [label="MODERN: generic XDP alternative\n→ ingress packet taps (AF_PACKET)",fillcolor="#dcfce7"];
+ ti [label="Ingress qdisc\nMODERN: TC/TCX BPF",fillcolor="#dcfce7"];
+ ni [label="MODERN: nft netdev / inet ingress",fillcolor="#f3e8ff"];
+ brcheck [label="Bridge port?",shape=diamond];
+ broute [label="ebtables broute / BROUTING\nHistorical bridge-vs-route decision\nlegacy broute DROP means route, not discard",fillcolor="#dbeafe"];
+ bp [label="Bridge NF_BR_PRE_ROUTING\nebtables nat PREROUTING",fillcolor="#dbeafe"];
+ bd [label="Bridge forwarding decision\nFDB / local MAC / flooding",shape=diamond];
+ bi [label="Bridge NF_BR_LOCAL_IN\nebtables filter INPUT",fillcolor="#dbeafe"];
+ bf [label="Bridge NF_BR_FORWARD\nebtables filter FORWARD",fillcolor="#dbeafe"];
+ bo [label="Bridge NF_BR_LOCAL_OUT\nebtables nat OUTPUT → filter OUTPUT",fillcolor="#dbeafe"];
+ bpost [label="Bridge NF_BR_POST_ROUTING\nebtables nat POSTROUTING",fillcolor="#dbeafe"];
+ brnf [label="OPTIONAL br_netfilter shim\nBridge frames may also traverse IPv4 hooks\nControlled by bridge-nf-call-iptables, etc.\nNative nft bridge filtering does not need this shim",shape=note,fillcolor="#fef9c3"];
+ nic -> nx [label="driver-supported native mode"]; nx -> gro [label="PASS"]; gro -> gx -> ti -> ni -> brcheck;
+ brcheck -> broute [label="bridge port"]; broute -> bp [label="bridge"]; bp -> bd;
+ bd -> bi [label="local / clone"]; bd -> bf [label="bridge forwarding"]; bf -> bpost;
+ bp -> brnf [style=dotted,dir=none];
+ }
+ subgraph cluster_ip {
+ label="NETWORK LAYER — IPv4 Netfilter priorities / routing / XFRM";color="#94a3b8";
  pre [label="PREROUTING\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100",fillcolor="#ffedd5"];
- route [label="IPv4 routing decision",shape=diamond];
- input [label="INPUT (LOCAL_IN)\nmangle -150 → filter 0 → [security 50]\n→ nat/SNAT +100 → conntrack confirm INT_MAX",fillcolor="#ffedd5"];
- sockin [label="BPF: cgroup_skb ingress → socket filter\nTCP processing → socket receive queue",fillcolor="#dcfce7"];
- app [label="Local application / host network namespace",fillcolor="#dbeafe"];
- sockout [label="TCP socket send / route selection\nOptional: cgroup connect, sock_ops, sockmap\n(connection/message events, not a serial packet chain)",fillcolor="#dcfce7"];
- output [label="OUTPUT (LOCAL_OUT)\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100\n→ filter 0 → [security 50]",fillcolor="#ffedd5"];
- reroute [label="Reroute if address/mark changed"];
- forward [label="FORWARD\nmangle -150 → filter 0 → [security 50]",fillcolor="#ffedd5"];
+ route [label="Routing decision",shape=diamond];
+ input [label="INPUT / LOCAL_IN\nmangle -150 → filter 0 → [security +50]\n→ nat/SNAT +100 → conntrack confirm INT_MAX",fillcolor="#ffedd5"];
+ xin [label="XFRM policy / socket lookup\nEncrypted local packet: XFRM decode\n(e.g. ESP tunnel decapsulation)"];
+ dec [label="Inner packet re-enters receive stack\nExact entry depends on XFRM mode",fillcolor="#fef9c3"];
+ fw [label="FORWARD\nmangle -150 → filter 0 → [security +50]",fillcolor="#ffedd5"];
+ xp [label="Forward XFRM policy / route destination"];
+ rtout [label="Initial route / XFRM lookup"];
+ out [label="OUTPUT / LOCAL_OUT\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100\n→ filter 0 → [security +50]",fillcolor="#ffedd5"];
+ rr [label="Reroute check after mark/address changes\nXFRM destination/policy selection"];
  post [label="POSTROUTING\nmangle -150 → nat/SNAT +100\n→ conntrack confirm INT_MAX",fillcolor="#ffedd5"];
- cgout [label="BPF: cgroup_skb egress\n(local socket traffic; not a general forward hook)",fillcolor="#dcfce7"];
- neigh [label="MTU / GSO / fragmentation → neighbour / L2"];
- tcout [label="BPF: TC egress / TCX egress",fillcolor="#dcfce7"];
- nde [label="Netfilter NETDEV egress (nft netdev)\nnot an iptables chain",fillcolor="#f3e8ff"];
- qdisc [label="qdisc → driver TX → NIC"];
- bypass [label="XDP DROP / TX / REDIRECT\nTC drop / redirect / reclassification\nMay bypass the remaining IP stack",fillcolor="#fee2e2"];
- nicrx -> xdp -> rx -> tc -> netdev -> pre -> route;
- route -> input [label="local destination"]; input -> sockin -> app;
- route -> forward [label="forward, if enabled"]; forward -> post;
- app -> sockout -> output -> reroute -> post;
- post -> cgout -> neigh -> nde -> tcout -> qdisc;
- xdp -> bypass [style=dashed]; tc -> bypass [style=dashed]; tcout -> bypass [style=dashed];
- note [label="Orange: IPv4 Netfilter hooks / iptables-legacy priorities\nGreen: modern BPF attachment points (not available in old 2.x)\nPurple: modern nft device hooks; no fixed nft table names\nOptional hooks require configuration/modules. Every hook may DROP/QUEUE.\nNetfilter BPF (since 6.4): inside orange hooks at configured priority.\nNAT rules normally see only the first packet; conntrack applies later translations.\nDefault raw priority shown; raw_before_defrag can move it to -450.\nNot a historical 2014/2.x reconstruction; bridge/ARP/IPsec/offloads excluded.",shape=note,fillcolor="#f8fafc"];
- qdisc -> note [style=invis];
+ cg [label="MODERN: cgroup_skb egress\nLocal socket traffic, not general forwarding",fillcolor="#dcfce7"];
+ xo [label="XFRM encode / output if policy applies\nMode-dependent outer IP output / POSTROUTING\nMay involve additional route / hook traversal",fillcolor="#fef9c3"];
+ neigh [label="MTU / fragment / neighbour resolution\nEthernet header / L2 destination"];
+ pre -> route; route -> input [label="local"]; input -> xin;
+ xin -> dec [label="encrypted input"]; dec -> pre [style=dashed,label="representative inner IPv4 reinjection"];
+ route -> fw [label="forward"]; fw -> xp -> post;
+ rtout -> out -> rr -> post; post -> cg -> neigh [label="ordinary non-XFRM path"];
+ rr -> xo [style=dashed,label="XFRM dst chain"]; xp -> xo [style=dashed]; xo -> post [style=dashed,label="outer output: mode dependent"];
+ }
+ subgraph cluster_protocol {
+ label="PROTOCOL / APPLICATION LAYER";color="#94a3b8";
+ si [label="TCP socket lookup\nMODERN: cgroup_skb ingress → socket cBPF/eBPF\nTCP processing / receive queue",fillcolor="#dcfce7"];
+ app [label="Local process\nrecv / read | send / write",fillcolor="#dbeafe"];
+ so [label="TCP output\nMODERN optional event hooks: sock_addr / sock_ops\nsockmap sk_msg/sk_skb may redirect",fillcolor="#dcfce7"];
+ packet [label="Local AF_PACKET send\nL2 injection bypasses IPv4 OUTPUT",fillcolor="#dbeafe"];
+ xin -> si [label="ordinary TCP"]; si -> app -> so -> rtout;
+ app -> packet [style=dashed];
+ }
+ ne [label="MODERN: nft netdev egress",fillcolor="#f3e8ff"];
+ te [label="Egress qdisc entry\nMODERN: TC/TCX egress before enqueue",fillcolor="#dcfce7"];
+ q [label="qdisc enqueue / dequeue\nEgress AF_PACKET tap on transmit attempt\nInterface output / driver / NIC"];
+ bypass [label="BPF DROP/TX/REDIRECT branches\nNot all packets reach the IP stack",fillcolor="#fee2e2"];
+ brcheck -> pre [label="not bridged / L3 input"]; broute -> pre [label="route"]; bi -> pre [label="local IPv4 delivery"];
+ neigh -> ne; bpost -> ne; packet -> ne; ne -> te -> q;
+ neigh -> bo [style=dashed,label="bridge device output"]; bo -> bd [label="bridge transmit decision"];
+ nx -> bypass [style=dashed]; gx -> bypass [style=dashed]; ti -> bypass [style=dashed]; te -> bypass [style=dashed];
+ note [label="Historical reference: Jan Engelhardt, 2014-Feb-28, Linux 2.6.36+ (not all Linux 2.x).\nRe-drawn stage model, not copied SVG artwork. Blue: bridge/L2; orange: IPv4 hooks; green/purple: modern extensions.\nPriority is per-hook, lower runs earlier. raw_before_defrag may move raw to -450.\nNAT rules normally see the first connection packet; conntrack applies subsequent translations.\nMODERN Netfilter BPF may attach inside IPv4 hooks at configured priority (since 6.4).\nBridge NF_BR_* and IPv4 NF_INET_* are distinct hook families. XFRM arrows summarize mode-dependent paths.\nARP/IPv6/hardware offload details excluded. Every hook can terminate/divert a packet.",shape=note,fillcolor="#f8fafc"];
+ q -> note [style=invis];
 }
