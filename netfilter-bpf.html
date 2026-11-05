@@ -39,6 +39,20 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <p>用户态读取与软中断收包不是同一段同步调用；TCP 发送也可能因窗口或 pacing 延后。实线表示所选正常路径，虚线/点线表示条件、异步事件或共享执行器；GRO list 版本和 inline 包装函数仍在节点内合并。函数图很大，建议使用新标签打开 SVG，搜索函数名并缩放查看。</p>
 <div class="tools"><button type="button" data-zoom="out" data-target="tcp-image" aria-label="缩小 TCP 函数图">−</button><button type="button" data-zoom="in" data-target="tcp-image" aria-label="放大 TCP 函数图">＋</button><button type="button" data-zoom="fit" data-target="tcp-image">适应宽度</button><button type="button" data-zoom="actual" data-target="tcp-image">原始大小</button><a href="./diagrams/host-tcp-v6.6.svg" target="_blank" rel="noopener">新标签查看 SVG</a> · <a href="./diagrams/host-tcp-v6.6.svg" download>下载</a></div>
 <div class="viewport" tabindex="0" role="region" aria-label="TCP 收发函数图，可滚动查看"><img id="tcp-image" src="./diagrams/host-tcp-v6.6.svg" alt="Linux v6.6 本机 IPv4 TCP 收发关键函数，逐层标注 Netfilter、TC、XDP 和 socket BPF"></div>
+<h3>各 hook 的函数级执行顺序</h3>
+<p>图二还包含四列独立展开：PREROUTING 的 defrag → raw → conntrack → mangle → DNAT；INPUT 的 mangle → filter → security → SNAT → confirm；OUTPUT 的 defrag → raw → conntrack → mangle/reroute → DNAT/reroute → filter/security；POSTROUTING 的 mangle → SNAT → confirm。每列都给出 v6.6 回调函数名，虚线与主图对应。未注册的模块不执行；nft/BPF 可插入配置的优先级，不能理解为固定在 legacy 之后。</p>
+<p>在<strong>单独打开的 SVG</strong> 中，部分关键节点可点击跳转到 v6.6 源文件。页面内以图片展示时只能缩放，不能点击 SVG 内部链接。</p>
+<h3>BPF 位置与 Netfilter 的对应关系</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>BPF 类型</th><th>本图位置</th><th>触发与边界</th></tr></thead><tbody>
+<tr><td>XDP</td><td>native 在驱动 RX；generic 在接收核心、TC ingress 前</td><td>两种模式是替代关系；PASS 才继续主线，TX/REDIRECT 不等于正常 TCP egress</td></tr>
+<tr><td>SCHED_CLS / TCX</td><td>ingress 在 PREROUTING 前；egress 在 POSTROUTING 后且 qdisc 入队前</td><td>挂设备；可丢弃、重定向、修改报文，TCX 是 v6.6 现代附着方式</td></tr>
+<tr><td>CGROUP_SKB</td><td>ingress：tcp_filter 中；egress：ip_finish_output 中</td><td>需要 socket/cgroup 上下文，不是宿主所有转发流量的通用 hook</td></tr>
+<tr><td>SOCKET_FILTER</td><td>sk_filter_trim_cap 中、cgroup ingress 后</td><td>socket 上附着的 cBPF/eBPF；tcpdump 的 AF_PACKET filter 是另一 socket 上的过滤，不能混成 TCP socket filter</td></tr>
+<tr><td>NETFILTER</td><td>NF_INET hook 内、按 link 的 priority 排序</td><td>直接参与 Netfilter 回调；不是 iptables match/target 或 TC；v6.6 对合法 hook/priority 有校验</td></tr>
+<tr><td>CGROUP_SOCK_ADDR / SOCK_OPS</td><td>连接前或 TCP 事件回调</td><td>不是每个数据包的固定串行阶段</td></tr>
+<tr><td>SK_MSG / SK_SKB</td><td>sockmap/sockhash 替代数据路径</td><td>可能由 tcp_bpf_sendmsg/recvmsg 或 psock 流处理接管、重定向；不保证经过普通发送主线</td></tr>
+</tbody></table></div>
 <h3>读图时不能省略的区别</h3>
 <ul>
 <li><strong>本机流量不经过 FORWARD。</strong>本机接收是 PREROUTING → INPUT，本机发送是 OUTPUT → POSTROUTING；路由转发才是 PREROUTING → FORWARD → POSTROUTING。</li>
