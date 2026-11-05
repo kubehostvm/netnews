@@ -151,10 +151,13 @@
 <!-- pre -->
 <g id="node16" class="node">
 <title>pre</title>
+<g id="a_node16"><a xlink:href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_input.c" xlink:title="PREROUTING\ndefrag &#45;400 → raw &#45;300 → conntrack &#45;200\n→ mangle &#45;150 → nat/DNAT &#45;100" target="_blank">
 <path fill="#ffedd5" stroke="black" d="M1003.5,-1877C1003.5,-1877 774.5,-1877 774.5,-1877 768.5,-1877 762.5,-1871 762.5,-1865 762.5,-1865 762.5,-1832 762.5,-1832 762.5,-1826 768.5,-1820 774.5,-1820 774.5,-1820 1003.5,-1820 1003.5,-1820 1009.5,-1820 1015.5,-1826 1015.5,-1832 1015.5,-1832 1015.5,-1865 1015.5,-1865 1015.5,-1871 1009.5,-1877 1003.5,-1877"/>
 <text text-anchor="middle" x="889" y="-1858.4" font-family="sans-serif" font-size="12.00">PREROUTING</text>
 <text text-anchor="middle" x="889" y="-1845.4" font-family="sans-serif" font-size="12.00">defrag &#45;400 → raw &#45;300 → conntrack &#45;200</text>
 <text text-anchor="middle" x="889" y="-1832.4" font-family="sans-serif" font-size="12.00">→ mangle &#45;150 → nat/DNAT &#45;100</text>
+</a>
+</g>
 </g>
 <!-- brcheck&#45;&gt;pre -->
 <g id="edge35" class="edge">
@@ -200,6 +203,7 @@
 <!-- brnf -->
 <g id="node15" class="node">
 <title>brnf</title>
+<g id="a_node15"><a xlink:href="https://github.com/torvalds/linux/blob/v6.6/net/bridge/br_netfilter_hooks.c" xlink:title="OPTIONAL br_netfilter shim\nBridge frames may also traverse IPv4 hooks\nControlled by bridge&#45;nf&#45;call&#45;iptables, etc.\nNative nft bridge filtering does not need this shim" target="_blank">
 <polygon fill="#fef9c3" stroke="black" points="318,-1764 16,-1764 16,-1694 324,-1694 324,-1758 318,-1764"/>
 <polyline fill="none" stroke="black" points="318,-1764 318,-1758 "/>
 <polyline fill="none" stroke="black" points="324,-1758 318,-1758 "/>
@@ -207,6 +211,8 @@
 <text text-anchor="middle" x="170" y="-1732.4" font-family="sans-serif" font-size="12.00">Bridge frames may also traverse IPv4 hooks</text>
 <text text-anchor="middle" x="170" y="-1719.4" font-family="sans-serif" font-size="12.00">Controlled by bridge&#45;nf&#45;call&#45;iptables, etc.</text>
 <text text-anchor="middle" x="170" y="-1706.4" font-family="sans-serif" font-size="12.00">Native nft bridge filtering does not need this shim</text>
+</a>
+</g>
 </g>
 <!-- bp&#45;&gt;brnf -->
 <g id="edge13" class="edge">
@@ -302,10 +308,13 @@
 <!-- input -->
 <g id="node18" class="node">
 <title>input</title>
+<g id="a_node18"><a xlink:href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_input.c" xlink:title="INPUT / LOCAL_IN\nmangle &#45;150 → filter 0 → [security +50]\n→ nat/SNAT +100 → conntrack confirm INT_MAX" target="_blank">
 <path fill="#ffedd5" stroke="black" d="M1307,-1631.5C1307,-1631.5 1037,-1631.5 1037,-1631.5 1031,-1631.5 1025,-1625.5 1025,-1619.5 1025,-1619.5 1025,-1586.5 1025,-1586.5 1025,-1580.5 1031,-1574.5 1037,-1574.5 1037,-1574.5 1307,-1574.5 1307,-1574.5 1313,-1574.5 1319,-1580.5 1319,-1586.5 1319,-1586.5 1319,-1619.5 1319,-1619.5 1319,-1625.5 1313,-1631.5 1307,-1631.5"/>
 <text text-anchor="middle" x="1172" y="-1612.9" font-family="sans-serif" font-size="12.00">INPUT / LOCAL_IN</text>
 <text text-anchor="middle" x="1172" y="-1599.9" font-family="sans-serif" font-size="12.00">mangle &#45;150 → filter 0 → [security +50]</text>
 <text text-anchor="middle" x="1172" y="-1586.9" font-family="sans-serif" font-size="12.00">→ nat/SNAT +100 → conntrack confirm INT_MAX</text>
+</a>
+</g>
 </g>
 <!-- route&#45;&gt;input -->
 <g id="edge15" class="edge">
@@ -393,10 +402,13 @@
 <!-- post -->
 <g id="node26" class="node">
 <title>post</title>
+<g id="a_node26"><a xlink:href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_output.c" xlink:title="POSTROUTING\nmangle &#45;150 → nat/SNAT +100\n→ conntrack confirm INT_MAX" target="_blank">
 <path fill="#ffedd5" stroke="black" d="M1120,-1295C1120,-1295 948,-1295 948,-1295 942,-1295 936,-1289 936,-1283 936,-1283 936,-1250 936,-1250 936,-1244 942,-1238 948,-1238 948,-1238 1120,-1238 1120,-1238 1126,-1238 1132,-1244 1132,-1250 1132,-1250 1132,-1283 1132,-1283 1132,-1289 1126,-1295 1120,-1295"/>
 <text text-anchor="middle" x="1034" y="-1276.4" font-family="sans-serif" font-size="12.00">POSTROUTING</text>
 <text text-anchor="middle" x="1034" y="-1263.4" font-family="sans-serif" font-size="12.00">mangle &#45;150 → nat/SNAT +100</text>
 <text text-anchor="middle" x="1034" y="-1250.4" font-family="sans-serif" font-size="12.00">→ conntrack confirm INT_MAX</text>
+</a>
+</g>
 </g>
 <!-- xp&#45;&gt;post -->
 <g id="edge21" class="edge">
@@ -427,11 +439,14 @@
 <!-- out -->
 <g id="node24" class="node">
 <title>out</title>
+<g id="a_node24"><a xlink:href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_output.c" xlink:title="OUTPUT / LOCAL_OUT\ndefrag &#45;400 → raw &#45;300 → conntrack &#45;200\n→ mangle &#45;150 → nat/DNAT &#45;100\n→ filter 0 → [security +50]" target="_blank">
 <path fill="#ffedd5" stroke="black" d="M1805.5,-1638C1805.5,-1638 1576.5,-1638 1576.5,-1638 1570.5,-1638 1564.5,-1632 1564.5,-1626 1564.5,-1626 1564.5,-1580 1564.5,-1580 1564.5,-1574 1570.5,-1568 1576.5,-1568 1576.5,-1568 1805.5,-1568 1805.5,-1568 1811.5,-1568 1817.5,-1574 1817.5,-1580 1817.5,-1580 1817.5,-1626 1817.5,-1626 1817.5,-1632 1811.5,-1638 1805.5,-1638"/>
 <text text-anchor="middle" x="1691" y="-1619.4" font-family="sans-serif" font-size="12.00">OUTPUT / LOCAL_OUT</text>
 <text text-anchor="middle" x="1691" y="-1606.4" font-family="sans-serif" font-size="12.00">defrag &#45;400 → raw &#45;300 → conntrack &#45;200</text>
 <text text-anchor="middle" x="1691" y="-1593.4" font-family="sans-serif" font-size="12.00">→ mangle &#45;150 → nat/DNAT &#45;100</text>
 <text text-anchor="middle" x="1691" y="-1580.4" font-family="sans-serif" font-size="12.00">→ filter 0 → [security +50]</text>
+</a>
+</g>
 </g>
 <!-- rtout&#45;&gt;out -->
 <g id="edge22" class="edge">
@@ -615,7 +630,7 @@
 </g>
 <!-- q&#45;&gt;note -->
 <!-- matrix -->
-<g id="node39" class="node">
+<g id="node40" class="node">
 <title>matrix</title>
 <path fill="#eef2f6" stroke="transparent" d="M2161,-599C2161,-599 1667,-599 1667,-599 1661,-599 1655,-593 1655,-587 1655,-587 1655,-361 1655,-361 1655,-355 1661,-349 1667,-349 1667,-349 2161,-349 2161,-349 2167,-349 2173,-355 2173,-361 2173,-361 2173,-587 2173,-587 2173,-593 2167,-599 2161,-599"/>
 <polygon fill="#fff7ed" stroke="transparent" points="1655,-349 1655,-599 2173,-599 2173,-349 1655,-349"/>
@@ -688,8 +703,17 @@
 <polygon fill="none" stroke="black" points="1655,-349 1655,-599 2173,-599 2173,-349 1655,-349"/>
 </g>
 <!-- note&#45;&gt;matrix -->
+<!-- nfbpf -->
+<g id="node39" class="node">
+<title>nfbpf</title>
+<g id="a_node39"><a xlink:href="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/nf_bpf_link.c" xlink:title="nfbpf" target="_blank">
+<path fill="#eef2f6" stroke="black" d="M776,-2600C776,-2600 744,-2600 744,-2600 738,-2600 732,-2594 732,-2588 732,-2588 732,-2576 732,-2576 732,-2570 738,-2564 744,-2564 744,-2564 776,-2564 776,-2564 782,-2564 788,-2570 788,-2576 788,-2576 788,-2588 788,-2588 788,-2594 782,-2600 776,-2600"/>
+<text text-anchor="middle" x="760" y="-2578.9" font-family="sans-serif" font-size="12.00">nfbpf</text>
+</a>
+</g>
+</g>
 <!-- comparison -->
-<g id="node40" class="node">
+<g id="node41" class="node">
 <title>comparison</title>
 <path fill="#eef2f6" stroke="transparent" d="M2228,-312C2228,-312 1600,-312 1600,-312 1594,-312 1588,-306 1588,-300 1588,-300 1588,-12 1588,-12 1588,-6 1594,0 1600,0 1600,0 2228,0 2228,0 2234,0 2240,-6 2240,-12 2240,-12 2240,-300 2240,-300 2240,-306 2234,-312 2228,-312"/>
 <polygon fill="#f3e8ff" stroke="transparent" points="1588,0 1588,-312 2240,-312 2240,0 1588,0"/>

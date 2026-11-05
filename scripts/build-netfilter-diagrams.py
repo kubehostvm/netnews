@@ -22,6 +22,9 @@ def main():
     overview = (ROOT / 'diagrams/netfilter-bpf-overview.dot').read_text()
     for required in ('FORWARD', 'INPUT', 'BROUTING', 'NF_BR_PRE_ROUTING', 'XFRM', 'AF_PACKET', '2.6.36+', 'MODERN', 'four tables / five chains', 'iptables-legacy', 'iptables-nft', 'native nft'):
         assert required in overview, required
+    overview_svg = ET.parse(ROOT / 'diagrams/netfilter-bpf-overview.svg')
+    overview_links = [element for element in overview_svg.iter() if element.get('{http://www.w3.org/1999/xlink}href', '').startswith('https://github.com/torvalds/linux/blob/v6.6/')]
+    assert len(overview_links) >= 5, 'Missing overview source links'
     tcp = (ROOT / 'diagrams/host-tcp-v6.6.dot').read_text()
     for required in ('tcp_v4_rcv', 'tcp_sendmsg', 'sk_filter_trim_cap', 'ip_finish_output', 'nf_hook_egress', 'ipt_do_table', 'nft_do_chain', 'nf_hook_run_bpf', 'tcp_check_req', 'tcp_timewait_state_process', 'tcp_retransmit_timer', 'tcp_recvmsg_locked'):
         assert required in tcp, required

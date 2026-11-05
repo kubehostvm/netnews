@@ -65,6 +65,12 @@ digraph overview {
  nx -> bypass [style=dashed]; gx -> bypass [style=dashed]; ti -> bypass [style=dashed]; te -> bypass [style=dashed];
  note [label="Historical reference: Jan Engelhardt, 2014-Feb-28, Linux 2.6.36+ (not all Linux 2.x).\nRe-drawn stage model, not copied SVG artwork. Blue: bridge/L2; orange: IPv4 hooks; green/purple: modern extensions.\nPriority is per-hook, lower runs earlier. raw_before_defrag may move raw to -450.\nNAT rules normally see the first connection packet; conntrack applies subsequent translations.\nMODERN Netfilter BPF may attach inside IPv4 hooks at configured priority (since 6.4).\niptables -m bpf runs BPF within a rule match (xt_bpf); not a separate Netfilter hook.\nBridge NF_BR_* and IPv4 NF_INET_* are distinct hook families. XFRM arrows summarize mode-dependent paths.\nARP/IPv6/hardware offload details excluded. Every hook can terminate/divert a packet.",shape=note,fillcolor="#f8fafc"];
  q -> note [style=invis];
+ pre [URL="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_input.c",target="_blank"];
+ input [URL="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_input.c",target="_blank"];
+ out [URL="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_output.c",target="_blank"];
+ post [URL="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_output.c",target="_blank"];
+ brnf [URL="https://github.com/torvalds/linux/blob/v6.6/net/bridge/br_netfilter_hooks.c",target="_blank"];
+ nfbpf [URL="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/nf_bpf_link.c",target="_blank"];
  matrix [shape=plain,label=<
  <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" BGCOLOR="#fff7ed">
  <TR><TD COLSPAN="6"><B>IPv4 iptables-legacy: four tables / five chains</B></TD></TR>
