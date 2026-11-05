@@ -1,0 +1,42 @@
+digraph tcp {
+ graph [rankdir=TB, bgcolor="white", pad="0.4", nodesep="0.7", ranksep="0.35", label="Linux v6.6 • host namespace • IPv4 unicast TCP • established connection main paths",labelloc=t,fontsize=20];
+ node [shape=box,style="rounded,filled",fillcolor="#eef2f6",fontname="sans-serif",fontsize=12,margin="0.15,0.1"];
+ edge [fontname="sans-serif",fontsize=10,color="#475569"];
+ subgraph cluster_rx {
+ label="INGRESS — physical NIC → local socket"; color="#94a3b8";
+ r0 [label="NIC DMA / IRQ → napi_schedule()\nnet_rx_action() → napi_poll() → driver poll()"];
+ r1 [label="Native XDP: driver-specific bpf_prog_run_xdp()\nXDP_PASS continues (before skb / GRO)",fillcolor="#dcfce7"];
+ r2 [label="napi_gro_receive() → dev_gro_receive()\nnapi_skb_finish() / GRO completion\n→ netif_receive_skb_internal() / list variant\n→ __netif_receive_skb_core()"];
+ r3 [label="do_xdp_generic() [alternative XDP mode]\n→ packet taps → sch_handle_ingress()\nTCX / TC classifier BPF",fillcolor="#dcfce7"];
+ r4 [label="nf_ingress() [NETDEV ingress]\n→ protocol demux → ip_rcv() → ip_rcv_core()",fillcolor="#f3e8ff"];
+ r5 [label="NF_HOOK(NF_INET_PRE_ROUTING) = PREROUTING\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100",fillcolor="#ffedd5"];
+ r6 [label="ip_rcv_finish() → ip_rcv_finish_core()\n[early demux / cached route]\nip_route_input_noref() if required\n→ dst_input() → ip_local_deliver()\n→ ip_defrag() if fragmented"];
+ r7 [label="NF_HOOK(NF_INET_LOCAL_IN) = INPUT\nmangle -150 → filter 0 → [security 50]\n→ nat/SNAT +100 → conntrack confirm",fillcolor="#ffedd5"];
+ r8 [label="ip_local_deliver_finish()\n→ ip_protocol_deliver_rcu() → tcp_v4_rcv()\n→ __inet_lookup_skb() [unless socket cached]"];
+ r9 [label="tcp_filter() → sk_filter_trim_cap()\ncgroup_skb ingress → security_sock_rcv_skb()\n→ socket cBPF/eBPF filter",fillcolor="#dcfce7"];
+ r10 [label="tcp_v4_do_rcv() → tcp_rcv_established()\nHeader prediction / fast path OR slow path\n→ tcp_data_queue() / tcp_queue_rcv() as appropriate\n→ socket receive queue / data-ready wakeup"];
+ r11 [label="If socket owned by user:\ntcp_add_backlog() → later __release_sock()\n→ tcp_v4_do_rcv()",fillcolor="#fef9c3"];
+ r12 [label="Application recv/read (separate syscall)\nsock_recvmsg() → inet_recvmsg()\n→ tcp_recvmsg() → tcp_recvmsg_locked()\n→ copy to user / consume skb"];
+ r0 -> r1 -> r2 -> r3 -> r4 -> r5 -> r6 -> r7 -> r8 -> r9 -> r10 -> r12;
+ r9 -> r11 [style=dashed,label="owned socket"]; r11 -> r10 [style=dashed];
+ }
+ subgraph cluster_tx {
+ label="EGRESS — local socket → physical NIC"; color="#94a3b8";
+ t0 [label="Application send/sendmsg/write\n__sys_sendto() / ___sys_sendmsg() / sock_write_iter()\n→ sock_sendmsg() → security_socket_sendmsg()\n→ sock_sendmsg_nosec() → inet_sendmsg()"];
+ t1 [label="tcp_sendmsg() → tcp_sendmsg_locked()\n→ skb write queue → tcp_push()\n→ __tcp_push_pending_frames() → tcp_write_xmit()\n[cwnd/rwnd/pacing may defer transmission]"];
+ t2 [label="tcp_transmit_skb() → __tcp_transmit_skb()\n→ icsk_af_ops->queue_xmit = ip_queue_xmit()\n→ __ip_queue_xmit()\n[route cache / ip_route_output_flow()] → ip_local_out()"];
+ t3 [label="__ip_local_out(): NF_INET_LOCAL_OUT = OUTPUT\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100\n→ filter 0 → [security 50]\n[mangle/NAT may trigger ip_route_me_harder()]",fillcolor="#ffedd5"];
+ t4 [label="dst_output() → ip_output()\nNF_HOOK_COND(NF_INET_POST_ROUTING) = POSTROUTING\nmangle -150 → nat/SNAT +100 → conntrack confirm",fillcolor="#ffedd5"];
+ t5 [label="ip_finish_output()\nBPF_CGROUP_RUN_PROG_INET_EGRESS\n(cgroup_skb egress)",fillcolor="#dcfce7"];
+ t6 [label="__ip_finish_output() → ip_finish_output2()\n[GSO / ip_fragment() branch if required]\n→ ip_neigh_for_gw() → neigh_output()\n→ neigh_resolve_output() / neigh_connected_output()\n[ARP miss: queue until neighbour resolves]"];
+ t7 [label="dev_queue_xmit() → __dev_queue_xmit()\n→ nf_hook_egress() [nft NETDEV egress]",fillcolor="#f3e8ff"];
+ t8 [label="sch_handle_egress()\nTCX / TC classifier BPF\n(before qdisc enqueue)",fillcolor="#dcfce7"];
+ t9 [label="__dev_xmit_skb() [queued qdisc path]\n→ __qdisc_run() → qdisc_restart()\n→ sch_direct_xmit() → validate_xmit_skb_list()\n→ dev_hard_start_xmit() → xmit_one()\n→ netdev_start_xmit() → __netdev_start_xmit()\n→ ndo_start_xmit() → driver DMA TX ring / NIC"];
+ t10 [label="Optional event / alternative paths (not serial):\ncgroup connect4: before TCP connect\nsock_ops: connection / TCP callbacks\nsk_msg / sk_skb: sockmap paths, may redirect\nTCP ACK/retransmit/timer output can enter below sendmsg",fillcolor="#fef9c3"];
+ t0 -> t1 -> t2 -> t3 -> t4 -> t5 -> t6 -> t7 -> t8 -> t9;
+ t10 -> t1 [style=dashed,label="not packet-by-packet"];
+ }
+ {rank=same; r0;t0;} {rank=same;r12;t9;}
+ note [label="Scope: Linux tag v6.6; ordinary established IPv4 TCP, physical NIC, local delivery.\nGrouped arrows are selected call/continuation paths, not an exhaustive dynamic call trace.\nNative vs generic XDP are alternatives. GRO may use batched list variants.\nDROP/QUEUE/REDIRECT can stop or divert any path. Hook presence depends on config/attachments.\nExcluded: bridge/veth/tunnel/IPsec/IPv6/hardware offload, full handshake & error state machines.\nFORWARD is not traversed by local TCP; see overview for all five chains and four tables.\nNetfilter BPF (since 6.4) may attach inside orange hooks at its configured priority.",shape=note,fillcolor="#f8fafc"];
+ r12 -> note [style=invis]; t9 -> note [style=invis];
+}

@@ -1,0 +1,34 @@
+digraph overview {
+ graph [rankdir=TB, bgcolor="#ffffff", pad="0.4", nodesep="0.45", ranksep="0.5", label="IPv4 Netfilter / BPF packet flow — classic stage-level view, modern extensions (Linux v6.6)", labelloc=t, fontsize=20];
+ node [shape=box, style="rounded,filled", fillcolor="#eef2f6", fontname="sans-serif", fontsize=13, margin="0.16,0.12"];
+ edge [fontname="sans-serif", fontsize=11, color="#475569"];
+ nicrx [label="NIC RX / driver"];
+ xdp [label="BPF: native XDP (driver) → PASS",fillcolor="#dcfce7"];
+ rx [label="skb / GRO / receive core\nGeneric XDP (alternative mode) → AF_PACKET taps"];
+ tc [label="BPF: TC ingress / TCX ingress",fillcolor="#dcfce7"];
+ netdev [label="Netfilter NETDEV ingress\nnft netdev / inet ingress (not an iptables chain)",fillcolor="#f3e8ff"];
+ pre [label="PREROUTING\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100",fillcolor="#ffedd5"];
+ route [label="IPv4 routing decision",shape=diamond];
+ input [label="INPUT (LOCAL_IN)\nmangle -150 → filter 0 → [security 50]\n→ nat/SNAT +100 → conntrack confirm INT_MAX",fillcolor="#ffedd5"];
+ sockin [label="BPF: cgroup_skb ingress → socket filter\nTCP processing → socket receive queue",fillcolor="#dcfce7"];
+ app [label="Local application / host network namespace",fillcolor="#dbeafe"];
+ sockout [label="TCP socket send / route selection\nOptional: cgroup connect, sock_ops, sockmap\n(connection/message events, not a serial packet chain)",fillcolor="#dcfce7"];
+ output [label="OUTPUT (LOCAL_OUT)\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100\n→ filter 0 → [security 50]",fillcolor="#ffedd5"];
+ reroute [label="Reroute if address/mark changed"];
+ forward [label="FORWARD\nmangle -150 → filter 0 → [security 50]",fillcolor="#ffedd5"];
+ post [label="POSTROUTING\nmangle -150 → nat/SNAT +100\n→ conntrack confirm INT_MAX",fillcolor="#ffedd5"];
+ cgout [label="BPF: cgroup_skb egress\n(local socket traffic; not a general forward hook)",fillcolor="#dcfce7"];
+ neigh [label="MTU / GSO / fragmentation → neighbour / L2"];
+ tcout [label="BPF: TC egress / TCX egress",fillcolor="#dcfce7"];
+ nde [label="Netfilter NETDEV egress (nft netdev)\nnot an iptables chain",fillcolor="#f3e8ff"];
+ qdisc [label="qdisc → driver TX → NIC"];
+ bypass [label="XDP DROP / TX / REDIRECT\nTC drop / redirect / reclassification\nMay bypass the remaining IP stack",fillcolor="#fee2e2"];
+ nicrx -> xdp -> rx -> tc -> netdev -> pre -> route;
+ route -> input [label="local destination"]; input -> sockin -> app;
+ route -> forward [label="forward, if enabled"]; forward -> post;
+ app -> sockout -> output -> reroute -> post;
+ post -> cgout -> neigh -> nde -> tcout -> qdisc;
+ xdp -> bypass [style=dashed]; tc -> bypass [style=dashed]; tcout -> bypass [style=dashed];
+ note [label="Orange: IPv4 Netfilter hooks / iptables-legacy priorities\nGreen: modern BPF attachment points (not available in old 2.x)\nPurple: modern nft device hooks; no fixed nft table names\nOptional hooks require configuration/modules. Every hook may DROP/QUEUE.\nNetfilter BPF (since 6.4): inside orange hooks at configured priority.\nNAT rules normally see only the first packet; conntrack applies later translations.\nDefault raw priority shown; raw_before_defrag can move it to -450.\nNot a historical 2014/2.x reconstruction; bridge/ARP/IPsec/offloads excluded.",shape=note,fillcolor="#f8fafc"];
+ qdisc -> note [style=invis];
+}

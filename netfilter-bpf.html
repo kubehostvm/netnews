@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Netfilter / BPF：报文路径与 iptables、nftables 对照</title>
+<style>
+:root { color-scheme: light; --line:#cbd5e1; }
+body { max-width:1200px; margin:auto; padding:24px; font:17px/1.8 system-ui,sans-serif; color:#172033; background:#fff; }
+a { color:#155bb5; overflow-wrap:anywhere; } h1,h2,h3 { line-height:1.4; } h2 { margin-top:2em; }
+code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:anywhere; }
+.notice { border-left:4px solid #ca8a04; background:#fefce8; padding:12px 18px; }
+.table-wrap { overflow-x:auto; } table { border-collapse:collapse; width:100%; font-size:15px; } th,td { border:1px solid var(--line); padding:9px; text-align:left; vertical-align:top; }
+.tools { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0; } button { padding:7px 14px; cursor:pointer; font:inherit; }
+.viewport { height:75vh; overflow:auto; border:1px solid var(--line); background:#f1f5f9; }
+.viewport img { display:block; max-width:none; background:white; }
+.legend span { display:inline-block; padding:3px 10px; margin:4px; border-radius:4px; }
+@media(max-width:600px) { body { padding:14px; font-size:16px; } }
+</style>
+</head>
+<body>
+<nav><a href="./index.html">首页</a> · <a href="./linux-network-packets-path.html">TCP/IP 基础文章</a></nav>
+<h1>Netfilter / BPF：从 hook 到 TCP 收发路径</h1>
+<p>两张图分别回答：<strong>规则和 BPF 挂在哪里</strong>，以及<strong>本机 TCP 收发经过哪些关键函数</strong>。图内保留英文 API 和函数名，说明使用中文。</p>
+<nav><a href="#overview">阶段总览</a> · <a href="#tcp">TCP 函数路径</a> · <a href="#tables">四表五链</a> · <a href="#nft">iptables / nftables</a> · <a href="#sources">源码与复现</a></nav>
+<div class="notice"><strong>版本与范围：</strong>以 Linux <code>v6.6</code> 为源码基线。图一参考经典 Netfilter 图的阶段粒度，加入现代功能，不声称是“2014 年 Linux 2.x”的历史还原。图二限定 host 网络命名空间、物理网卡、IPv4 单播、本机已建立 TCP 连接；展示关键调用、延续回调和分支，不是所有配置下每个函数都执行的完整调用栈。若目标机器是发行版补丁内核，需要重新核对。</div>
+<p class="legend"><span style="background:#ffedd5">橙：IPv4 Netfilter hook / 表链</span><span style="background:#dcfce7">绿：BPF</span><span style="background:#f3e8ff">紫：nft 设备级 hook</span><span style="background:#fef9c3">黄：条件 / 旁路</span></p>
+<section id="overview">
+<h2>图一：Netfilter / BPF 阶段总览</h2>
+<p>保持 NIC、路由、本机进出、转发、表链等阶段粒度。Native XDP 在驱动接收侧，TC ingress 在 IPv4 PREROUTING 之前；egress 侧的顺序是 POSTROUTING → cgroup skb egress → 邻居/L2 → nft netdev egress → TC egress → qdisc → 驱动。</p>
+<div class="tools"><button type="button" data-zoom="out" data-target="overview-image" aria-label="缩小阶段总览图">−</button><button type="button" data-zoom="in" data-target="overview-image" aria-label="放大阶段总览图">＋</button><button type="button" data-zoom="fit" data-target="overview-image">适应宽度</button><a href="./diagrams/netfilter-bpf-overview.svg">新标签查看 / 保存 SVG</a></div>
+<div class="viewport" tabindex="0" role="region" aria-label="阶段总览图，可滚动查看"><img id="overview-image" src="./diagrams/netfilter-bpf-overview.svg" alt="IPv4 本机收发与转发路径，标注四表五链、执行优先级及 XDP、TC、cgroup BPF 附着点"></div>
+<p>实线表示继续正常协议栈；虚线表示旁路或条件路径。各 Netfilter hook 都可能因规则而 DROP、QUEUE 或 STOLEN，并非一定到达下个节点。XDP DROP/TX/REDIRECT 不会沿着 XDP_PASS 的主线继续；TC redirect 也可能转向其他设备。</p>
+</section>
+<section id="tcp">
+<h2>图二：host namespace TCP ingress / egress 关键函数</h2>
+<p>左右两列分别是接收和发送。用户态读取与软中断收包不是同一段同步调用；TCP 发送也可能因窗口或 pacing 延后。GRO 批处理会走 list 版本；图中将这些近似等价路径合并说明。</p>
+<div class="tools"><button type="button" data-zoom="out" data-target="tcp-image" aria-label="缩小 TCP 函数图">−</button><button type="button" data-zoom="in" data-target="tcp-image" aria-label="放大 TCP 函数图">＋</button><button type="button" data-zoom="fit" data-target="tcp-image">适应宽度</button><a href="./diagrams/host-tcp-v6.6.svg">新标签查看 / 保存 SVG</a></div>
+<div class="viewport" tabindex="0" role="region" aria-label="TCP 收发函数图，可滚动查看"><img id="tcp-image" src="./diagrams/host-tcp-v6.6.svg" alt="Linux v6.6 本机 IPv4 TCP 收发关键函数，逐层标注 Netfilter、TC、XDP 和 socket BPF"></div>
+<h3>读图时不能省略的区别</h3>
+<ul>
+<li><strong>本机流量不经过 FORWARD。</strong>本机接收是 PREROUTING → INPUT，本机发送是 OUTPUT → POSTROUTING；路由转发才是 PREROUTING → FORWARD → POSTROUTING。</li>
+<li><strong>BPF 并不是单一 hook。</strong>XDP、TC/TCX、cgroup_skb、socket filter、sock_addr、sock_ops、sk_msg/sk_skb 具有不同上下文和触发条件。现代 XDP/TC-BPF/cgroup-BPF 不能倒推为旧 2.x 内核已有功能。</li>
+<li><strong>socket 过滤点：</strong><code>tcp_filter() → sk_filter_trim_cap()</code> 中先执行 cgroup ingress，再执行安全检查和 socket filter。TCP 状态机、backlog 和监听连接走不同分支。</li>
+<li><strong>cgroup egress：</strong>v6.6 的 <code>ip_finish_output()</code> 在 POSTROUTING 之后调用它；它需要合适的 socket/cgroup 上下文，不是转发包通用过滤点。</li>
+<li><strong>TC egress 在 qdisc 入队前。</strong>v6.6 的 <code>__dev_queue_xmit()</code> 中，nft netdev egress 又位于 TC egress 之前。不要把 TC egress 画到出队和驱动之间。</li>
+<li><strong>命名空间：</strong>“host”是部署环境中的宿主网络 namespace（通常为 initial netns），并不是特殊协议栈；Netfilter 配置属于 netns，TC/XDP 挂在具体设备，cgroup BPF 属于 cgroup，不能把它们统称为 host 全局规则。</li>
+<li><strong>不展开：</strong>IPv6、bridge/ARP、veth/容器跨 namespace、隧道、IPsec/XFRM、硬件 offload、全部 SYN/FIN/RST/重传状态机、锁和内存分配内部函数。ACK、定时器和重传可直接进入较低层发送路径，不一定从 sendmsg 起步。</li>
+</ul>
+</section>
+<section id="tables">
+<h2>iptables 四表五链及 hook 优先级</h2>
+<p>下面是 IPv4 iptables-legacy 内建链。数值是典型 Netfilter 注册优先级，<strong>数字越小越早执行</strong>；不存在的组合不应画成有效链。raw 使用默认 -300；启用 raw_before_defrag 时可变为 -450。</p>
+<div class="table-wrap"><table>
+<thead><tr><th>表 / 优先级</th><th>PREROUTING</th><th>INPUT</th><th>FORWARD</th><th>OUTPUT</th><th>POSTROUTING</th></tr></thead>
+<tbody>
+<tr><th>raw (-300)</th><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
+<tr><th>mangle (-150)</th><td>✓</td><td>✓</td><td>✓</td><td>✓</td><td>✓</td></tr>
+<tr><th>nat</th><td>DNAT (-100)</td><td>SNAT (+100)</td><td>—</td><td>DNAT (-100)</td><td>SNAT (+100)</td></tr>
+<tr><th>filter (0)</th><td>—</td><td>✓</td><td>✓</td><td>✓</td><td>—</td></tr>
+</tbody></table></div>
+<p><code>security</code> 是额外的第五张可选表，INPUT/FORWARD/OUTPUT 优先级 +50，图中以方括号显示。INPUT 的 nat 链在较新内核中存在（自 2.6.36），不能套用于更早的所有 2.x 版本。</p>
+<p>conntrack 不是一张 iptables 表：IPv4 defrag 通常是 -400，连接跟踪是 -200，连接确认在 INPUT/POSTROUTING 的 INT_MAX。NOTRACK 可以使流量不被跟踪。图中省略部分 SELinux、helper 等专用回调；数字不表示每个 hook 都注册了全部这些回调。</p>
+<p><strong>NAT 是有状态映射，不是每包重新匹配 NAT 规则：</strong>通常连接首包匹配规则以创建映射，后续包由 conntrack/NAT 在相应 hook 应用映射。DNAT 后会影响路由选择，OUTPUT 修改地址或 mark 也可能触发重新路由。</p>
+</section>
+<section id="nft">
+<h2>iptables、iptables-nft、nftables 有什么不同？</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>维度</th><th>iptables-legacy</th><th>iptables-nft</th><th>原生 nft</th></tr></thead>
+<tbody>
+<tr><th>用户态 → 内核</th><td>iptables 命令 → x_tables / ip_tables</td><td>iptables 兼容语法 → nf_tables，必要时经 nft_compat 使用 xt 扩展</td><td>nft 语法 → nf_tables 表达式</td></tr>
+<tr><th>表和链</th><td>固定用途的 raw/mangle/nat/filter 等表和内建链</td><td>呈现兼容的 iptables 表链模型</td><td>表名自定义；base chain 显式指定 type、hook、priority；普通链无 hook，只由 jump/goto 调用</td></tr>
+<tr><th>规则表达</th><td>按规则匹配/target；集合通常借助 ipset</td><td>保留兼容语法的能力和限制</td><td>原生 set、map、拼接键、verdict map，适合减少重复规则</td></tr>
+<tr><th>协议族</th><td>iptables 管 IPv4；ip6tables 管 IPv6；桥/ARP 用其他工具</td><td>仍按兼容工具区分</td><td>ip、ip6、inet、arp、bridge、netdev；inet 可统一双栈规则，但仍需区分特定协议字段</td></tr>
+<tr><th>更新</th><td>通常按表替换；iptables-restore 非跨全部表的统一事务</td><td>更新通过 nf_tables 的事务接口</td><td>单次 nft 批处理事务可原子提交多项变更；多条独立 shell 命令不是一个事务</td></tr>
+<tr><th>NAT</th><td>固定 nat 内建链，依赖 conntrack</td><td>nf_tables NAT，保持兼容视图</td><td>type nat base chain；同样通常只首包查规则，不是无状态重写</td></tr>
+</tbody></table></div>
+<h3>hook 内部如何执行规则？</h3>
+<p>IPv4 调用 <code>NF_HOOK / nf_hook()</code> 后，由 <code>nf_hook_slow()</code> 按优先级遍历注册的回调。legacy filter/mangle/raw 的表回调进入 <code>ipt_do_table()</code>；legacy NAT 通过 NAT 核心在需要建立映射时调用表规则。原生 nft base chain 则进入 <code>nft_do_chain()</code>（可能通过类型或 family 包装函数）。它们是同一 hook 内的不同处理器，图中表名是策略位置，不是函数名。</p>
+<h3>nftables 在图中怎么定位？</h3>
+<p>IPv4 的原生 nft base chain 可注册到相同的 PREROUTING、INPUT、FORWARD、OUTPUT、POSTROUTING hook。例如 <code>type filter hook input priority 0</code> 与 legacy filter INPUT 处于相同阶段；表叫 <code>filter</code> 并不赋予它过滤语义，真正决定执行位置的是链的 type、hook 和 priority。</p>
+<p>nft 的 <code>netdev ingress</code>（以及现代内核的 <code>inet ingress</code>）是入站设备级 hook，在 TC ingress 后、IPv4 PREROUTING 前；<code>netdev egress</code> 在 TC egress 前。它们不属于 iptables 五链。netdev ingress 早于 IPv4 defrag/conntrack，不能默认认为它已有完整 conntrack 上下文。</p>
+<h3>共存与 verdict</h3>
+<ul>
+<li>iptables-legacy 与 nf_tables 可同时注册在同一 Netfilter hook；不是“先完整走完 iptables，再完整走 nft”。按所有注册回调的优先级执行，<strong>相同优先级不要依赖顺序</strong>。</li>
+<li>某个 base chain 中的 <code>accept</code> 只结束该链的检查，后续 base chain/hook 仍可丢包；<code>drop</code> 则终止当前报文的继续处理。</li>
+<li>Linux 4.18+ 支持 legacy NAT 与 nft NAT 共存，但首个建立 NAT 映射的匹配规则决定映射。不要把同一策略同时交给两套管理器维护。</li>
+<li>用 <code>iptables -V</code> 识别 <code>(legacy)</code> 或 <code>(nf_tables)</code>；<code>nft list ruleset</code> 不能显示 legacy 规则。排查时要同时确认后端和 namespace。</li>
+</ul>
+<h3>图里没有串到主线上的 BPF</h3>
+<p><code>BPF_PROG_TYPE_NETFILTER</code> 自 Linux 6.4 起支持直接附着 Netfilter hook，v6.6 也有：它按附着时指定的 hook/priority 参与回调排序，不是固定的第六条链。它与 XDP、TC 和 socket BPF 不同。图中橙色 hook 的内部可包含这类 BPF 回调；未把它画在表链之外以免误导为额外的必经阶段。</p>
+</section>
+<section id="sources">
+<h2>源码依据、编辑和复现</h2>
+<p>阶段粒度参考 <a href="https://inai.de/images/nf-packet-flow.svg">Jan Engelhardt 的 nf-packet-flow.svg</a>，两张图均重新绘制，没有修改或复制参考 SVG 的图形对象。现有 React 交互图保持不变。</p>
+<ul>
+<li><a href="https://github.com/torvalds/linux/blob/v6.6/net/core/dev.c">v6.6 net/core/dev.c</a>：__netif_receive_skb_core、nf_ingress、TCX/TC、__dev_queue_xmit；<a href="https://github.com/torvalds/linux/blob/v6.6/net/sched/sch_generic.c">sch_generic.c</a>：qdisc 出队。</li>
+<li><a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_input.c">ip_input.c</a> 与 <a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/ip_output.c">ip_output.c</a>：IPv4 hooks、路由和 cgroup egress。</li>
+<li><a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/tcp_ipv4.c">tcp_ipv4.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/tcp_input.c">tcp_input.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/tcp_output.c">tcp_output.c</a>：TCP 收发关键路径。</li>
+<li><a href="https://github.com/torvalds/linux/blob/v6.6/net/core/filter.c">filter.c</a>：sk_filter_trim_cap；<a href="https://github.com/torvalds/linux/blob/v6.6/include/uapi/linux/netfilter_ipv4.h">netfilter_ipv4.h</a>：hook 优先级；<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/netfilter/iptable_nat.c">iptable_nat.c</a>：四个 NAT 链注册。</li>
+<li><a href="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/nf_bpf_link.c">nf_bpf_link.c</a>：Netfilter BPF link；<a href="https://wiki.nftables.org/wiki-nftables/index.php/Netfilter_hooks">nftables：Netfilter hooks</a>；<a href="https://wiki.nftables.org/wiki-nftables/index.php/Performing_Network_Address_Translation_(NAT)">nftables NAT 与共存说明</a>。</li>
+</ul>
+<p>可编辑源文件：<a href="./diagrams/netfilter-bpf-overview.dot">阶段图 DOT</a>、<a href="./diagrams/host-tcp-v6.6.dot">函数图 DOT</a>。安装 Graphviz 后，在仓库根目录运行 <code>python3 scripts/build-netfilter-diagrams.py</code>，重新生成 SVG 并检查链接、关键节点和版本声明。不需要 MCP、前端构建或运行时图形库。</p>
+<p>核验方式是对照 v6.6 静态源码，不是目标机器上的 ftrace/BPF 实测；某些驱动、批处理分支和启用的模块会改变实际调用栈。</p>
+</section>
+<script>
+function resizeDiagram(image, action) {
+  const fit = image.parentElement.clientWidth;
+  const current = image.getBoundingClientRect().width || fit;
+  image.style.width = (action === 'fit' ? fit : Math.max(240, Math.min(12000, current * (action === 'in' ? 1.25 : 0.8)))) + 'px';
+}
+document.querySelectorAll('.viewport img').forEach(image => {
+  if (image.complete) resizeDiagram(image, 'fit');
+  else image.addEventListener('load', () => resizeDiagram(image, 'fit'), { once: true });
+});
+document.querySelectorAll('[data-zoom]').forEach(button => {
+  button.addEventListener('click', () => resizeDiagram(document.getElementById(button.dataset.target), button.dataset.zoom));
+});
+</script>
+</body>
+</html>
