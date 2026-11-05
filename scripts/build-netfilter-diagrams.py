@@ -20,7 +20,7 @@ def main():
             assert required in text, (name, required)
         assert 'viewBox' in tree.getroot().attrib, name
     overview = (ROOT / 'diagrams/netfilter-bpf-overview.dot').read_text()
-    for required in ('FORWARD', 'INPUT', 'BROUTING', 'NF_BR_PRE_ROUTING', 'XFRM', 'AF_PACKET', '2.6.36+', 'MODERN'):
+    for required in ('FORWARD', 'INPUT', 'BROUTING', 'NF_BR_PRE_ROUTING', 'XFRM', 'AF_PACKET', '2.6.36+', 'MODERN', 'four tables / five chains', 'iptables-legacy', 'iptables-nft', 'native nft'):
         assert required in overview, required
     tcp = (ROOT / 'diagrams/host-tcp-v6.6.dot').read_text()
     for required in ('tcp_v4_rcv', 'tcp_sendmsg', 'sk_filter_trim_cap', 'ip_finish_output', 'nf_hook_egress', 'ipt_do_table', 'nft_do_chain', 'nf_hook_run_bpf', 'tcp_check_req', 'tcp_timewait_state_process', 'tcp_retransmit_timer', 'tcp_recvmsg_locked'):

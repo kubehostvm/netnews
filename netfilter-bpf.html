@@ -29,6 +29,7 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <p class="legend"><span style="background:#ffedd5">橙：IPv4 Netfilter hook / 表链</span><span style="background:#dcfce7">绿：BPF</span><span style="background:#f3e8ff">紫：nft 设备级 hook</span><span style="background:#fef9c3">黄：条件 / 旁路</span></p>
 <section id="overview">
 <h2>图一：Netfilter / BPF 阶段总览</h2>
+<p>SVG 底部附带四表五链矩阵及 iptables-legacy / iptables-nft / 原生 nft 对照，下载后不依赖本页面也能阅读。</p>
 <p>沿用原图的链路层 / 网络层 / 协议层 / 应用层粒度：接口接收、taps、ingress qdisc、broute、桥接决策、bridge 表链、IPv4 路由、四表五链、reroute、XFRM 解码/编码和接口发送。现代扩展均标为 MODERN：Native XDP 在驱动侧；TC ingress 在 IPv4 PREROUTING 之前；普通 TCP 出站为 POSTROUTING → cgroup skb egress → 邻居/L2 → nft netdev egress → TC egress → qdisc → 驱动。</p>
 <p><strong>桥接与 XFRM：</strong>蓝色 NF_BR_* 是桥接 family，橙色 NF_INET_* 是 IPv4 family，两者不是同一组五链。br_netfilter 可将桥接 IPv4 报文交给 IP hook，需对应 sysctl，不代表所有桥接默认经过 iptables。历史 broute 表的 BROUTING 中 DROP 表示转交路由，不能解释成普通丢包。XFRM 按 transport/tunnel 等模式改变路由、外层包和回注位置，虚线仅概括可选路径，不规定统一的固定 hook 遍历次数。</p>
 <div class="tools"><button type="button" data-zoom="out" data-target="overview-image" aria-label="缩小阶段总览图">−</button><button type="button" data-zoom="in" data-target="overview-image" aria-label="放大阶段总览图">＋</button><button type="button" data-zoom="fit" data-target="overview-image">适应宽度</button><button type="button" data-zoom="actual" data-target="overview-image">原始大小</button><a href="./diagrams/netfilter-bpf-overview.svg" target="_blank" rel="noopener">新标签查看 SVG</a> · <a href="./diagrams/netfilter-bpf-overview.svg" download>下载</a></div>

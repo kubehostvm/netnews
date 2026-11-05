@@ -65,4 +65,29 @@ digraph overview {
  nx -> bypass [style=dashed]; gx -> bypass [style=dashed]; ti -> bypass [style=dashed]; te -> bypass [style=dashed];
  note [label="Historical reference: Jan Engelhardt, 2014-Feb-28, Linux 2.6.36+ (not all Linux 2.x).\nRe-drawn stage model, not copied SVG artwork. Blue: bridge/L2; orange: IPv4 hooks; green/purple: modern extensions.\nPriority is per-hook, lower runs earlier. raw_before_defrag may move raw to -450.\nNAT rules normally see the first connection packet; conntrack applies subsequent translations.\nMODERN Netfilter BPF may attach inside IPv4 hooks at configured priority (since 6.4).\niptables -m bpf runs BPF within a rule match (xt_bpf); not a separate Netfilter hook.\nBridge NF_BR_* and IPv4 NF_INET_* are distinct hook families. XFRM arrows summarize mode-dependent paths.\nARP/IPv6/hardware offload details excluded. Every hook can terminate/divert a packet.",shape=note,fillcolor="#f8fafc"];
  q -> note [style=invis];
+ matrix [shape=plain,label=<
+ <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" BGCOLOR="#fff7ed">
+ <TR><TD COLSPAN="6"><B>IPv4 iptables-legacy: four tables / five chains</B></TD></TR>
+ <TR><TD>Table</TD><TD>PREROUTING</TD><TD>INPUT</TD><TD>FORWARD</TD><TD>OUTPUT</TD><TD>POSTROUTING</TD></TR>
+ <TR><TD>raw -300</TD><TD>yes</TD><TD>-</TD><TD>-</TD><TD>yes</TD><TD>-</TD></TR>
+ <TR><TD>mangle -150</TD><TD>yes</TD><TD>yes</TD><TD>yes</TD><TD>yes</TD><TD>yes</TD></TR>
+ <TR><TD>nat</TD><TD>DNAT -100</TD><TD>SNAT +100</TD><TD>-</TD><TD>DNAT -100</TD><TD>SNAT +100</TD></TR>
+ <TR><TD>filter 0</TD><TD>-</TD><TD>yes</TD><TD>yes</TD><TD>yes</TD><TD>-</TD></TR>
+ <TR><TD COLSPAN="6">Optional security table: INPUT / FORWARD / OUTPUT at +50</TD></TR>
+ <TR><TD COLSPAN="6">INPUT nat exists since 2.6.36. raw_before_defrag may use -450.</TD></TR>
+ </TABLE>>];
+ comparison [shape=plain,label=<
+ <TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0" CELLPADDING="8" BGCOLOR="#f3e8ff">
+ <TR><TD COLSPAN="3"><B>MODERN: iptables vs nftables (v6.6)</B></TD></TR>
+ <TR><TD>Frontend</TD><TD>Kernel engine</TD><TD>Model</TD></TR>
+ <TR><TD>iptables-legacy</TD><TD>ip_tables / x_tables</TD><TD>fixed table roles / built-in chains</TD></TR>
+ <TR><TD>iptables-nft</TD><TD>nf_tables (+ nft_compat if needed)</TD><TD>iptables-compatible syntax / view</TD></TR>
+ <TR><TD>native nft</TD><TD>nf_tables</TD><TD>named tables; base chain specifies type / hook / priority</TD></TR>
+ <TR><TD COLSPAN="3">nft sets/maps and atomic batch updates; ip/inet/bridge/netdev families</TD></TR>
+ <TR><TD COLSPAN="3">Shared hook: callbacks ordered by priority, NOT legacy then nft.</TD></TR>
+ <TR><TD COLSPAN="3">ACCEPT in one base chain does not skip later chains; DROP terminates.</TD></TR>
+ <TR><TD COLSPAN="3">Stateful NAT normally evaluates rules for the first connection packet.</TD></TR>
+ <TR><TD COLSPAN="3">Netfilter BPF: callback in hook; xt_bpf: match within an iptables rule.</TD></TR>
+ </TABLE>>];
+ note -> matrix -> comparison [style=invis];
 }
