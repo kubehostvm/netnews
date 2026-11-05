@@ -44,7 +44,7 @@ def main():
             attrs = dict(attrs)
             if 'id' in attrs:
                 self.ids.add(attrs['id'])
-            for key in ('href', 'src'):
+            for key in ('href', 'src', 'data'):
                 url = urlsplit(attrs.get(key, ''))
                 if url.scheme or url.netloc:
                     continue

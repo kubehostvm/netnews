@@ -13,7 +13,9 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 .table-wrap { overflow-x:auto; } table { border-collapse:collapse; width:100%; font-size:15px; } th,td { border:1px solid var(--line); padding:9px; text-align:left; vertical-align:top; }
 .tools { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:12px 0; } button { padding:7px 14px; cursor:pointer; font:inherit; }
 .viewport { height:75vh; overflow:auto; border:1px solid var(--line); background:#f1f5f9; }
-.viewport img { display:block; max-width:none; background:white; }
+.viewport object { display:block; max-width:none; background:white; border:0; }
+.tools input { font:inherit; padding:7px; max-width:55vw; }
+.tools output { min-width:6em; }
 .legend span { display:inline-block; padding:3px 10px; margin:4px; border-radius:4px; }
 @media(max-width:600px) { body { padding:14px; font-size:16px; } }
 </style>
@@ -21,7 +23,7 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <body>
 <nav><a href="./index.html">首页</a> · <a href="./linux-network-packets-path.html">TCP/IP 基础文章</a></nav>
 <h1>Netfilter / BPF：从 hook 到 TCP 收发路径</h1>
-<p>两张图分别回答：<strong>规则和 BPF 挂在哪里</strong>，以及<strong>本机 TCP 收发经过哪些关键函数</strong>。图内保留英文 API 和函数名，说明使用中文。</p>
+<p>两张图分别回答：<strong>规则和 BPF 挂在哪里</strong>，以及<strong>本机 TCP 收发经过哪些关键函数</strong>。图内保留英文 API 和函数名，说明使用中文。每张图可按函数名搜索、高亮、定位和遍历结果，无需在整张大图里手动寻找。</p>
 <nav><a href="#overview">阶段总览</a> · <a href="#tcp">TCP 函数路径</a> · <a href="#tables">四表五链</a> · <a href="#nft">iptables / nftables</a> · <a href="#sources">源码与复现</a></nav>
 <div class="notice"><strong>版本与范围：</strong>以 Linux <code>v6.6</code> 为源码基线。图一采用参考图标注的 <strong>2014-02-28 / Linux 2.6.36+</strong> 阶段基线，补上桥接、链路层、AF_PACKET 和 XFRM，再将 v6.6 的现代 BPF/nft 功能明确标记；它不是所有 Linux 2.x 版本的兼容性声明。图二限定 host 网络命名空间、物理网卡、IPv4 单播、本机已建立 TCP 连接；展示关键调用、延续回调和分支，不是所有配置下每个函数都执行的完整调用栈。若目标机器是发行版补丁内核，需要重新核对。</div>
 <p class="legend"><span style="background:#ffedd5">橙：IPv4 Netfilter hook / 表链</span><span style="background:#dcfce7">绿：BPF</span><span style="background:#f3e8ff">紫：nft 设备级 hook</span><span style="background:#fef9c3">黄：条件 / 旁路</span></p>
@@ -30,7 +32,8 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <p>沿用原图的链路层 / 网络层 / 协议层 / 应用层粒度：接口接收、taps、ingress qdisc、broute、桥接决策、bridge 表链、IPv4 路由、四表五链、reroute、XFRM 解码/编码和接口发送。现代扩展均标为 MODERN：Native XDP 在驱动侧；TC ingress 在 IPv4 PREROUTING 之前；普通 TCP 出站为 POSTROUTING → cgroup skb egress → 邻居/L2 → nft netdev egress → TC egress → qdisc → 驱动。</p>
 <p><strong>桥接与 XFRM：</strong>蓝色 NF_BR_* 是桥接 family，橙色 NF_INET_* 是 IPv4 family，两者不是同一组五链。br_netfilter 可将桥接 IPv4 报文交给 IP hook，需对应 sysctl，不代表所有桥接默认经过 iptables。历史 broute 表的 BROUTING 中 DROP 表示转交路由，不能解释成普通丢包。XFRM 按 transport/tunnel 等模式改变路由、外层包和回注位置，虚线仅概括可选路径，不规定统一的固定 hook 遍历次数。</p>
 <div class="tools"><button type="button" data-zoom="out" data-target="overview-image" aria-label="缩小阶段总览图">−</button><button type="button" data-zoom="in" data-target="overview-image" aria-label="放大阶段总览图">＋</button><button type="button" data-zoom="fit" data-target="overview-image">适应宽度</button><button type="button" data-zoom="actual" data-target="overview-image">原始大小</button><a href="./diagrams/netfilter-bpf-overview.svg" target="_blank" rel="noopener">新标签查看 SVG</a> · <a href="./diagrams/netfilter-bpf-overview.svg" download>下载</a></div>
-<div class="viewport" tabindex="0" role="region" aria-label="阶段总览图，可滚动查看"><img id="overview-image" src="./diagrams/netfilter-bpf-overview.svg" alt="IPv4 本机收发与转发路径，标注四表五链、执行优先级及 XDP、TC、cgroup BPF 附着点"></div>
+<form class="tools" data-search="overview-image"><label for="overview-query">查找节点</label><input id="overview-query" type="search" placeholder="例如 PREROUTING、XFRM"><button type="submit">定位 / 下一个</button><output aria-live="polite"></output></form>
+<div class="viewport" tabindex="0" role="region" aria-label="阶段总览图，可滚动查看"><object id="overview-image" type="image/svg+xml" data="./diagrams/netfilter-bpf-overview.svg" aria-label="IPv4 本机收发与转发路径"><a href="./diagrams/netfilter-bpf-overview.svg">直接打开阶段图</a></object></div>
 <p>实线表示继续正常协议栈；虚线表示旁路或条件路径。各 Netfilter hook 都可能因规则而 DROP、QUEUE 或 STOLEN，并非一定到达下个节点。XDP DROP/TX/REDIRECT 不会沿着 XDP_PASS 的主线继续；TC redirect 也可能转向其他设备。</p>
 </section>
 <section id="tcp">
@@ -38,10 +41,11 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <p>展开到函数级节点，包含驱动/NAPI、GRO、接收核心、IPv4 路由、TCP socket lookup、过滤、backlog、快慢路径、用户读取、TCP 发送、邻居解析、qdisc 和 TX tap。单独展开 Netfilter 内部 legacy/nft/BPF 规则执行器，并增加监听、request socket、TIME_WAIT、ACK 和重传入口。</p>
 <p>用户态读取与软中断收包不是同一段同步调用；TCP 发送也可能因窗口或 pacing 延后。实线表示所选正常路径，虚线/点线表示条件、异步事件或共享执行器；GRO list 版本和 inline 包装函数仍在节点内合并。函数图很大，建议使用新标签打开 SVG，搜索函数名并缩放查看。</p>
 <div class="tools"><button type="button" data-zoom="out" data-target="tcp-image" aria-label="缩小 TCP 函数图">−</button><button type="button" data-zoom="in" data-target="tcp-image" aria-label="放大 TCP 函数图">＋</button><button type="button" data-zoom="fit" data-target="tcp-image">适应宽度</button><button type="button" data-zoom="actual" data-target="tcp-image">原始大小</button><a href="./diagrams/host-tcp-v6.6.svg" target="_blank" rel="noopener">新标签查看 SVG</a> · <a href="./diagrams/host-tcp-v6.6.svg" download>下载</a></div>
-<div class="viewport" tabindex="0" role="region" aria-label="TCP 收发函数图，可滚动查看"><img id="tcp-image" src="./diagrams/host-tcp-v6.6.svg" alt="Linux v6.6 本机 IPv4 TCP 收发关键函数，逐层标注 Netfilter、TC、XDP 和 socket BPF"></div>
+<form class="tools" data-search="tcp-image"><label for="tcp-query">查找函数 / hook</label><input id="tcp-query" type="search" placeholder="例如 tcp_filter、ipt_do_table"><button type="submit">定位 / 下一个</button><output aria-live="polite"></output></form>
+<div class="viewport" tabindex="0" role="region" aria-label="TCP 收发函数图，可滚动查看"><object id="tcp-image" type="image/svg+xml" data="./diagrams/host-tcp-v6.6.svg" aria-label="Linux v6.6 TCP 收发函数图"><a href="./diagrams/host-tcp-v6.6.svg">直接打开函数图</a></object></div>
 <h3>各 hook 的函数级执行顺序</h3>
 <p>图二还包含四列独立展开：PREROUTING 的 defrag → raw → conntrack → mangle → DNAT；INPUT 的 mangle → filter → security → SNAT → confirm；OUTPUT 的 defrag → raw → conntrack → mangle/reroute → DNAT/reroute → filter/security；POSTROUTING 的 mangle → SNAT → confirm。每列都给出 v6.6 回调函数名，虚线与主图对应。未注册的模块不执行；nft/BPF 可插入配置的优先级，不能理解为固定在 legacy 之后。</p>
-<p>在<strong>单独打开的 SVG</strong> 中，部分关键节点可点击跳转到 v6.6 源文件。页面内以图片展示时只能缩放，不能点击 SVG 内部链接。</p>
+<p>输入函数或 hook 名称可高亮匹配节点，并放大定位；重复点击可遍历结果。页面内 SVG 支持选择文字和点击关键节点跳转到 v6.6 源文件，也可单独打开或下载。</p>
 <h3>BPF 位置与 Netfilter 的对应关系</h3>
 <div class="table-wrap"><table>
 <thead><tr><th>BPF 类型</th><th>本图位置</th><th>触发与边界</th></tr></thead><tbody>
@@ -119,22 +123,8 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <li><a href="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/nf_bpf_link.c">nf_bpf_link.c</a>：Netfilter BPF link；<a href="https://wiki.nftables.org/wiki-nftables/index.php/Netfilter_hooks">nftables：Netfilter hooks</a>；<a href="https://wiki.nftables.org/wiki-nftables/index.php/Performing_Network_Address_Translation_(NAT)">nftables NAT 与共存说明</a>。</li>
 </ul>
 <p>可编辑源文件：<a href="./diagrams/netfilter-bpf-overview.dot">阶段图 DOT</a>、<a href="./diagrams/host-tcp-v6.6.dot">函数图 DOT</a>。安装 Graphviz 后，在仓库根目录运行 <code>python3 scripts/build-netfilter-diagrams.py</code>，重新生成 SVG 并检查链接、关键节点和版本声明。不需要 MCP、前端构建或运行时图形库。</p>
-<p>核验方式是对照 v6.6 静态源码，不是目标机器上的 ftrace/BPF 实测；某些驱动、批处理分支和启用的模块会改变实际调用栈。</p>
+<p>核验方式是对照 v6.6 静态源码，不是目标机器上的 ftrace/BPF 实测；某些驱动、批处理分支和启用的模块会改变实际调用栈。SVG 搜索和缩放的自检命令为 <code>node scripts/test-diagram-viewer.cjs</code>；已在 Chromium 桌面和窄屏尺寸下检查 SVG 加载、搜索高亮、结果遍历与滚动定位。</p>
 </section>
-<script>
-function resizeDiagram(image, action) {
-  const fit = image.parentElement.clientWidth;
-  const current = image.getBoundingClientRect().width || fit;
-  const width = action === 'fit' ? fit : action === 'actual' ? image.naturalWidth : current * (action === 'in' ? 1.25 : 0.8);
-  image.style.width = Math.max(240, Math.min(12000, width)) + 'px';
-}
-document.querySelectorAll('.viewport img').forEach(image => {
-  if (image.complete) resizeDiagram(image, 'fit');
-  else image.addEventListener('load', () => resizeDiagram(image, 'fit'), { once: true });
-});
-document.querySelectorAll('[data-zoom]').forEach(button => {
-  button.addEventListener('click', () => resizeDiagram(document.getElementById(button.dataset.target), button.dataset.zoom));
-});
-</script>
+<script src="./assets/diagram-viewer.js"></script>
 </body>
 </html>
