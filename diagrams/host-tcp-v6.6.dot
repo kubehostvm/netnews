@@ -1,5 +1,5 @@
 digraph tcp {
- graph [rankdir=TB,bgcolor="white",pad="0.4",nodesep="0.3",ranksep="0.3",compound=true,label="Linux v6.6 • host netns • IPv4 TCP • expanded function paths and conditional branches",labelloc=t,fontsize=22];
+ graph [rankdir=TB,bgcolor="white",pad="0.4",nodesep="0.3",ranksep="0.3",compound=true,label="Linux v6.6 • host netns • IPv4 TCP • expanded function paths • ixgbe driver example",labelloc=t,fontsize=22];
  node [shape=box,style="rounded,filled",fillcolor="#eef2f6",fontname="sans-serif",fontsize=12,margin="0.14,0.09"];
  edge [fontname="sans-serif",fontsize=10,color="#475569"];
  subgraph cluster_rx {
@@ -193,6 +193,38 @@ digraph tcp {
  events -> tcpsend [style=dotted,constraint=false];
  note [label="Arrows summarize selected calls/continuations; dotted/dashed edges are optional or asynchronous.\nGrouping wrappers / inline macros keeps this finite: no claim of every transitive helper on all states/drivers.\nIPv4 local TCP uses PREROUTING/INPUT or OUTPUT/POSTROUTING, never FORWARD (see overview for all five chains).\nNative/generic XDP are alternatives; BPF attachments/config/modules may be absent.\nAll hook / filter stages may drop, queue or redirect; not all branches return to this diagram.\nExcluded from detailed function expansion: bridge, IPv6, XFRM, tunnels, hardware offload, full TCP errors/states.",shape=note,fillcolor="#f8fafc"];
  copy -> note [style=invis]; ndo -> note [style=invis];
+ subgraph cluster_ixgbe {
+ label="Concrete driver example: ixgbe / MSI-X / ordinary RX, not AF_XDP zero-copy";color="#64748b";
+ node [fillcolor="#e0f2fe"];
+ ixirq [label="ixgbe_msix_clean_rings()\n→ napi_schedule_irqoff()"];
+ ixpoll [label="ixgbe_poll()"];
+ ixrx [label="ixgbe_clean_rx_irq()\nRX descriptor / DMA page processing"];
+ ixxdp [label="ixgbe_run_xdp()\n→ bpf_prog_run_xdp() [if attached]",fillcolor="#dcfce7"];
+ ixskb [label="ixgbe_build_skb() OR ixgbe_construct_skb()\n→ ixgbe_rx_skb() → napi_gro_receive()"];
+ ixtx [label="ixgbe_xmit_frame()\n→ __ixgbe_xmit_frame()\n→ ixgbe_xmit_frame_ring()"];
+ ixmap [label="ixgbe_tx_map()\nDMA mapping / descriptors / tail doorbell"];
+ ixcomplete [label="Later ixgbe_poll() → ixgbe_clean_tx_irq()\nTX completion / reclaim skb & DMA mapping"];
+ ixirq -> ixpoll [style=dashed,label="NAPI scheduling"]; ixpoll -> ixrx -> ixxdp -> ixskb [label="PASS"];
+ driver -> ixpoll [style=dotted,constraint=false,label="example callback"]; ixskb -> gro [style=dotted,constraint=false];
+ ndo -> ixtx [style=dotted,constraint=false]; ixtx -> ixmap -> ixcomplete [style=dashed,label="completion later"];
+ }
+ subgraph cluster_lifecycle {
+ label="TCP lifecycle: active/passive open and normal FIN close (separate syscalls/events)";color="#ca8a04";
+ node [fillcolor="#fef9c3"];
+ conn [label="connect() → __sys_connect()\n→ __sys_connect_file() → inet_stream_connect()"];
+ conn2 [label="__inet_stream_connect()\n→ tcp_v4_pre_connect() [cgroup connect4]\n→ tcp_v4_connect() → tcp_connect()"];
+ syn [label="tcp_connect() builds SYN\n→ tcp_transmit_skb() → normal IP OUTPUT"];
+ synack [label="Incoming SYN/ACK:\ntcp_rcv_state_process()\n→ tcp_rcv_synsent_state_process()\n→ tcp_finish_connect() / ACK"];
+ lsn [label="listen() → inet_listen()\n→ __inet_listen_sk() → inet_csk_listen_start()"];
+ accept [label="accept()/accept4() → inet_accept()\n→ inet_csk_accept() → __inet_accept()\nchild established by request-socket path"];
+ fincall [label="shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\nOR close() → sock_close() → __sock_release()\n→ inet_release() → tcp_close() → __tcp_close()"];
+ finsend [label="tcp_send_fin()\n→ __tcp_push_pending_frames()\n→ tcp_write_xmit() → TCP/IP output"];
+ finrecv [label="Incoming in-order FIN:\ntcp_data_queue() → tcp_fin()\nTCP_CLOSE_WAIT / CLOSING / TIME_WAIT transitions\nACK scheduling / reader EOF wakeup"];
+ abort [label="Abortive close / unread data / reset conditions:\ntcp_send_active_reset() → tcp_transmit_skb()\nNot the same as tcp_v4_send_reset() reply path"];
+ conn -> conn2 -> syn; syn -> transmit [style=dotted,constraint=false]; state -> synack [style=dashed,constraint=false];
+ lsn -> listen [style=dotted,constraint=false]; req -> accept [style=dashed,constraint=false,label="accept queue"]; fincall -> finsend -> pending [style=dotted,constraint=false];
+ data -> finrecv [style=dashed,constraint=false]; fincall -> abort [style=dashed]; abort -> transmit [style=dotted,constraint=false];
+ }
  sklookup [label="Listener lookup only (not established hash hit):\n__inet_lookup_listener() → inet_lookup_run_sk_lookup()\n→ bpf_sk_lookup_run_v4() [BPF_PROG_TYPE_SK_LOOKUP]\nMay select socket / reject; netns attachment",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/inet_hashtables.c",target="_blank"];
  lookup -> sklookup [style=dashed,label="listener lookup",constraint=false];
  xtbpf [label="iptables -m bpf: optional rule match\nipt_do_table() → match->match()\n→ bpf_mt() / bpf_mt_v1()\n→ bpf_prog_run() / bpf_prog_run_save_cb()\nSOCKET_FILTER program returns match boolean, not NF verdict",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/xt_bpf.c",target="_blank"];

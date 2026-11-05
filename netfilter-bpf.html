@@ -43,6 +43,10 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <div class="tools"><button type="button" data-zoom="out" data-target="tcp-image" aria-label="缩小 TCP 函数图">−</button><button type="button" data-zoom="in" data-target="tcp-image" aria-label="放大 TCP 函数图">＋</button><button type="button" data-zoom="fit" data-target="tcp-image">适应宽度</button><button type="button" data-zoom="actual" data-target="tcp-image">原始大小</button><a href="./diagrams/host-tcp-v6.6.svg" target="_blank" rel="noopener">新标签查看 SVG</a> · <a href="./diagrams/host-tcp-v6.6.svg" download>下载</a></div>
 <form class="tools" data-search="tcp-image"><label for="tcp-query">查找函数 / hook</label><input id="tcp-query" type="search" placeholder="例如 tcp_filter、ipt_do_table"><button type="submit">定位 / 下一个</button><output aria-live="polite"></output></form>
 <div class="viewport" tabindex="0" role="region" aria-label="TCP 收发函数图，可滚动查看"><object id="tcp-image" type="image/svg+xml" data="./diagrams/host-tcp-v6.6.svg" aria-label="Linux v6.6 TCP 收发函数图"><a href="./diagrams/host-tcp-v6.6.svg">直接打开函数图</a></object></div>
+<h3>固定一个真实驱动，展开 TCP 生命周期</h3>
+<p>图二新增 <strong>ixgbe / MSI-X / 普通 RX</strong> 实例：<code>ixgbe_msix_clean_rings → napi_schedule_irqoff → ixgbe_poll → ixgbe_clean_rx_irq → ixgbe_run_xdp → ixgbe_build_skb/ixgbe_construct_skb → ixgbe_rx_skb → napi_gro_receive</code>；发送为 <code>ixgbe_xmit_frame → __ixgbe_xmit_frame → ixgbe_xmit_frame_ring → ixgbe_tx_map</code>，稍后由 <code>ixgbe_clean_tx_irq</code> 回收。未配置 Native XDP 时不会执行其程序，AF_XDP zero-copy 是另一分支。</p>
+<p>另列 connect 主动建连、listen/accept 被动建连、SYN/ACK、shutdown/close、FIN 和主动 RST 路径，并连回既有发送/接收处理。它们不是一次 sendmsg 的同步子调用；图中用独立区域与虚线区分。</p>
+<p>源码：<a href="https://github.com/torvalds/linux/blob/v6.6/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c">ixgbe_main.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/af_inet.c">af_inet.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/tcp.c">tcp.c</a>。换成 virtio_net、mlx5 或其他驱动时，驱动节点必须替换，不能沿用 ixgbe 调用链。</p>
 <h3>各 hook 的函数级执行顺序</h3>
 <p>图二还包含四列独立展开：PREROUTING 的 defrag → raw → conntrack → mangle → DNAT；INPUT 的 mangle → filter → security → SNAT → confirm；OUTPUT 的 defrag → raw → conntrack → mangle/reroute → DNAT/reroute → filter/security；POSTROUTING 的 mangle → SNAT → confirm。每列都给出 v6.6 回调函数名，虚线与主图对应。未注册的模块不执行；nft/BPF 可插入配置的优先级，不能理解为固定在 legacy 之后。</p>
 <p>输入函数或 hook 名称可高亮匹配节点，并放大定位；重复点击可遍历结果。页面内 SVG 支持选择文字和点击关键节点跳转到 v6.6 源文件，也可单独打开或下载。</p>
@@ -67,7 +71,7 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <li><strong>cgroup egress：</strong>v6.6 的 <code>ip_finish_output()</code> 在 POSTROUTING 之后调用它；它需要合适的 socket/cgroup 上下文，不是转发包通用过滤点。</li>
 <li><strong>TC egress 在 qdisc 入队前。</strong>v6.6 的 <code>__dev_queue_xmit()</code> 中，nft netdev egress 又位于 TC egress 之前。不要把 TC egress 画到出队和驱动之间。</li>
 <li><strong>命名空间：</strong>“host”是部署环境中的宿主网络 namespace（通常为 initial netns），并不是特殊协议栈；Netfilter 配置属于 netns，TC/XDP 挂在具体设备，cgroup BPF 属于 cgroup，不能把它们统称为 host 全局规则。</li>
-<li><strong>完整性的边界：</strong>已展开关键报文函数与常见状态分支，但不能将其称为全部传递调用图。IPv6、bridge/veth、隧道、XFRM、硬件 offload 不在图二展开；全部驱动内部函数、内存/锁/校验和 helper、TCP 每种错误和 FIN/RST 状态转移也未逐项枚举。图一保留 bridge/XFRM 阶段。若要求某台机器一次连接的所有实际调用，应另采集该内核、网卡和配置下的 function_graph trace，而不能用静态图代替。</li>
+<li><strong>完整性的边界：</strong>已展开关键报文函数与常见状态分支，但不能将其称为全部传递调用图。IPv6、bridge/veth、隧道、XFRM、硬件 offload 不在图二展开；图中已提供 ixgbe 驱动关键路径和正常建连/FIN/RST 入口，但驱动全部内部 helper、内存/锁/校验和 helper、TCP 每种错误和状态转移仍未逐项枚举。图一保留 bridge/XFRM 阶段。若要求某台机器一次连接的所有实际调用，应另采集该内核、网卡和配置下的 function_graph trace，而不能用静态图代替。</li>
 </ul>
 </section>
 <section id="tables">
