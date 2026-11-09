@@ -4,364 +4,2242 @@
     "irq -> softirq": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "16f18f665e48648d30b2a5539242d7acbfca11480509b3d35a054b547212a0bf"
     },
     "softirq -> poll": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "f71c37a89217f8500f6cbed5196915c4db56b71df176f3cb950d1700fa7083b2"
     },
     "poll -> driver": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "57e70ac13e26d42220cbbced201c098d94f0387a76822eab39a95413d2b85c6a"
     },
     "driver -> native": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "72cefaa02eab0ed8de7254793cfadd6e387b0eeb2e7731f1e53019ad2ef3bb77"
     },
     "driver -> ixpoll": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "51b5bebdaf825a7cc5cfc330eac1b238c98613e339cb3914d3e3b5573a47d8c0"
     },
     "native -> gro": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "1fb176ea33682d49e7cdea872948fc0467b4c09223470afcacad2429f9c2708c"
     },
     "gro -> devgro": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "4c24e4e01c93f4d49c73beb01e3357c75f19d55a1e459a052d1f0bcedcb52f0a"
     },
     "devgro -> finish": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
-    },
-    "finish -> receive": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "d1c042fe7412ebb92960f3e5f398abc8957a0b61b3871c870b91ed1b0a6cc460"
     },
     "receive -> receive2": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "739207e2f2096646e0cae80b02bd46d3237df3e2788c10d6e20af513dc4c057e"
     },
     "receive2 -> core": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "162d5f9a0d16f1c265a360432c44918d136cab82000352c79ecf7231a9c29365"
     },
     "core -> generic": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "1e6398b2e2e6ed5148f5fa4f69d6d48daffe89bcf344f2e19f98687cfea2d8c7"
     },
     "generic -> taps": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "d6fa417b86bc277f72b5b0990d6e35645721c7f35d4aed93d3f18f893b656117"
     },
     "taps -> tcin": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "23cc78110b40fcebb0a622761dc1995ff86a43e421a1e03006a407a577b4bc3f"
     },
     "tcin -> tcxin": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "dbba53b4d0ec5a09d8849b936c21042c0d3275fb22019fcbd137b16023de5f87"
     },
     "tcxin -> nfin": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "2f17d263d695f4529ac5f00fdc9204adb1c30140ed0fd531d6eb1fc9619bfcb9"
     },
     "nfin -> demux": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "867682e36f106c4e7da64fe723edc1222e6f330796778a798ae7ed49bd63d1b9"
     },
     "demux -> iprcv": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "ee4007f8e8bd1b09b65b22a77572efc8ec4410723260d52e191845a523eb19ad"
     },
     "iprcv -> ipcore": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "8d366346a5496eb9e78580fdaadcb64bdd54cdabb89738b2d860b3abcc10d981"
     },
     "ipcore -> pre": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "ca2d8b52967729cf56d8da3294161c683b4b222fbb8d668b99e0ee334e30ce74"
     },
     "pre -> ipfinish": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "782cc2c5104212a24f5ebcb4e36ba99fc51657be78bc145ca088a3457bd0921f"
     },
     "pre -> hook": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "58a75c34c01317136962a5192b99b17f22a6c51f9baaaf5fd138fbc6e59074a4"
     },
     "pre -> pr0": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "1f9fe275aeed428a195bdfbadc927fe52c4c7c76ccd8e115462ffb120524e892"
     },
     "ipfinish -> ipfinishcore": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "9864a108cf6cb8def25b1b88791cd886a9f125be52aa430fb461bb3226c576f3"
     },
     "ipfinishcore -> early": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
-    },
-    "ipfinishcore -> route": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "early -> route": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "b35784ae400947f8ccbded37ca2e2e0626df26caf7e6ac6c67f40c5aea397aa3"
     },
     "route -> dstin": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "09a80cbc528f32bcdf3772fa2efc28a8e45a278fbb774f094a1d952f98124b24"
     },
     "dstin -> local": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "9dce95dea746c8bac00d222dc246598d349299b9a990126af64b0d4027847206"
     },
     "local -> defrag": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "e4297cedf600dfd266a011b198cfc8399e21b3fa9eb68efc379f82dbbe87cd1b"
     },
     "defrag -> input": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "370ad31dfe9c4bc521fd679aa1bd21ade8dda440461365abed5d808fe37774df"
     },
     "input -> localfinish": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "00911cff393aae8fd16075351997854763b31aa3cd5793314a50e7c0de0a5504"
     },
     "input -> in0": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "78d4afc4499bc14dbb939ac60a2aa59e135a0d76098456237ff48d3a174b787b"
     },
     "localfinish -> protocol": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "776d6edb17d29e07e2058b0090b48cbbc13830aa478c95b1875a28d38ad6443b"
     },
     "protocol -> tcprcv": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "9426cedfbca5e7d05283b3dbb51908db1592c33be92bc9009f422baffea90cef"
     },
     "tcprcv -> lookup": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "37b52743e5dd0c5f1bac6c12a4f81d9cd6c772b6bff04822f3344628ac6a04e6"
     },
     "lookup -> policy": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "61f24f3d4dbc0e2ea4bd0c090fee640007c03315c267a9696713beb6ec4c6f64"
     },
     "lookup -> req": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "dada8ebdddde88cdfc6548953325485d3c9851ed00328ef7c73d35e884ba1c9e"
     },
     "lookup -> timewait": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "723d8f0ef898b6e87be3e4ad4ca321d836b5825e5cb48aa5aad2f19f449e7719"
     },
     "lookup -> reset": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "1a4a95c7a4ae24d52fc7b4028529b431f66d945d3445465f01bf01b769c7ee02"
     },
     "lookup -> sklookup": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "b0b9e5e6733fb124adc47e04695e014c8fd51a8dcc65a58e20950a1a46979d1c"
     },
     "policy -> tcpfilter": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "c53a831aab28909dfe28a93c9d438987035da00b20af87501b8e777c0d2bb98b"
     },
     "tcpfilter -> skfilter": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "f9e49a8d024cec58f3b24b777298dddbd3bdda944a8f1db09fde926737745f04"
     },
     "skfilter -> cgin": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "01ab6802a5d5c9332df13fb3d948790e267d4a7f232d0f2d1249ed2e95d007dc"
     },
     "cgin -> securityin": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "b8f2deb23046151ab3f4ce52d351ec84de7f2ae49545d99923043dcbc0787081"
     },
     "securityin -> sockfilter": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "98d45861dd9320ed28d80e4baa0685c4e0b26391a69649490a4be16147565270"
     },
     "sockfilter -> own": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "978090a08c22f190b8865cda72266d944893580f7031f586236b699eda95b590"
     },
     "own -> backlog": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "798db3e40fe767477dc7f6a92a0f4570a3cae6b0a9107e9fa923193250c644a9"
     },
     "own -> dorcv": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "b385abda309bf2e7def53d3029c6dcd79d187cdad765396a84b59294ef89f84b"
     },
     "backlog -> release": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "ad7e71892bab620e9f6ff0ecc09ffad8e84983e57484803657789466e9400db1"
     },
     "release -> dorcv": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "bfdc448ad29ec5daa126be7f8c2436c93c67ee32422b74678417a18f54435dd0"
     },
     "dorcv -> established": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "bf8f6eac3420c20da32d9bb8cb0f641c03a73e6e943c38cbf0b1e9be2baa5006"
     },
     "dorcv -> state": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "8c5029219258e7a0693ad885f3c4f1b257873397ea74aa1365e539af83fa6832"
     },
     "established -> prediction": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "091326e41d0dce823a1d87bc88f93cd8f56d7f9754624b71bee894fff23316fc"
     },
     "established -> ack": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "26ae4eda2b85630f44604f62a343fcc43fcd38a6b374b35592d8d094cedfb124"
     },
     "prediction -> fast": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "b481105d952d6031c89fe94869bb234049db39672004cb3f4378e8933cc46dfd"
     },
     "prediction -> validate": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "b202ee9116c9734c61dc91b601688a852094142028c672bd2db7e162b82cfe8c"
     },
     "fast -> ready": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "120c72c49e8c10157501190a25c35cc1e412734c68e4eb673e61c319eb7cd6fe"
     },
     "validate -> data": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "3c63a7e7db055ce1b30f0312e3e080880db59d99fc9359f89220ac0c8b119ca7"
     },
     "data -> ofo": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "64fb0d080ed29cb763d5c8ebcc4957dfca4560324e4c3fa9f0c287ce98c21201"
     },
     "data -> queue": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "b7f0004baaac461981f8655a747a3fb19f499277471dfd22dce95cde378d7e4e"
     },
     "data -> finrecv": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "86ffb9c78b4bd2ca74e23af634a0b0e0144047c0fe9c47b67e1e7fd6006fb4df"
     },
     "ofo -> queue": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "d136126c3471fb9dc64485dcf8ae225f1ae29d1e97eca48d1961f20cc8835133"
     },
     "queue -> ready": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "7a0b55ae24be7876b905c22acd67e2ac84975c87d54a71b909537838e49c74f9"
     },
     "ready -> recv": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "8e4155474102f09f968e492cbe9030046d7f8a445c223dc49c768fa91df8058e"
     },
     "recv -> recvmsg": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "f9453474c22edfc922c0f59528c421c7bd19c9fa8404f7840b5228e7360b1ecb"
     },
     "recvmsg -> inetrecv": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "d4ccff137e687e7e69ec70960931e54b48b62e63061830972d24e206b0ba99ab"
     },
     "inetrecv -> tcprecv": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "0deffb19740a404770c5eb720dcc5f8dc3466fdd4f25097ab7e397bd536b61bb"
     },
     "tcprecv -> lockedrecv": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "fdbff0ca9442b862e87641bfd731cae46421a038d16c77a4805e8457c82c4c77"
     },
     "lockedrecv -> copy": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "c9043f57f31c7ab9183027450330e76934c46d2706d7b07dfcc4e3b9e2a0bac3"
     },
     "state -> listen": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "8c74b20e915466b113651e51c03ff2d2137afcb908eecaa38f77c9a701fe4ced"
     },
     "state -> synack": {
       "kind": "unclassified",
       "evidence": [],
-      "reviewed": false
+      "reviewed": false,
+      "fingerprint": "64f38398072842b56acb285c42b138ba58561f7a43c90f34efb2b138ac16908e"
     },
     "req -> accept": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "822dff5e607682c1feb74af913f96b986b19056c1bbee595b08834ae953d39f7"
+    },
+    "retrans -> transmit2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e54badde47068a9c34341c70a2de17f3b6b1c4247d7507cb5efd679c0e6246dd"
+    },
+    "send -> socksend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9cc43686a9084c120833b6da32f4d5043db796df7f6600fc892f20a39893b9b4"
+    },
+    "socksend -> inet": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "df33f37349c21573e2acab8226c6d894f766e786377a3cef2c5799334d035f15"
+    },
+    "inet -> tcpsend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b9cc396d4492ade2b89cd10730b0b67a5e08ceae64e21588f78d7f828aa9b72b"
+    },
+    "tcpsend -> locked": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f521ef38284df08a22eafb5b272cb3aff50b4ddcaf4bdf25f65a77304fb482ed"
+    },
+    "locked -> push": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3886e0b6e6bf6faa4d12ec320f6d99b4dc5f267cc88a8596d7c5ab0cfa687767"
+    },
+    "push -> pending": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d658e9f725ce6129852b939617f8f9d5a806b3a518d4ad05b61af5354d14f372"
+    },
+    "pending -> write": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2a8593cc284fd5eec8a901a2c7be75d44ff050231327326e105dff8e0bdb8d09"
+    },
+    "write -> transmit": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2ee7524f760eb9a3933a47ca2e0ad0cfde868bfe5201338334ce2d123c32872f"
+    },
+    "transmit -> transmit2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "66d37c59c7e73cbb3d5b77a954e61fab5860177ed2479df868dc373af82b48e6"
+    },
+    "transmit2 -> ipqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ab539d8f36475b465ceb661fafc8cdbb8386a8e03d9cc101777582cb9d42d0a3"
+    },
+    "ipqueue -> ipqueue2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1a56f56fe1be8ea8c2fa7dc65dfa8167afa764e03f01208ee7c8bc982476e9a9"
+    },
+    "ipqueue2 -> outroute": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "00a884354f294408325ddcd8b36ac6211bfbd5380ec58ba53a47cc5a1916957d"
+    },
+    "outroute -> localout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "056cf98755b73c12ac93081e383dc983f545d0312f84daa2401b72757c4bf573"
+    },
+    "localout -> localout2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "aed99fb9cb9c718c0532bcf15ba742c479a858d695139411d45ef6da5bdc5498"
+    },
+    "localout2 -> output": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "fd2500c3b775b43fc29fe69386db1f87815e8be7a8f876e9e005071412e17917"
+    },
+    "output -> reroute": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "208f2a54b30bcbfe0731c494594921a32de8e8952ad231d1f5aa21f9b7c431c1"
+    },
+    "output -> dstout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "894f05557ff8c9715f8bb9322845269716ae644dcdbe3404d6b7bf0a1aadec28"
+    },
+    "output -> ou0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "94bfa43716f72559517b9c4d4e7e135f9ceb464e60bea3d7a4e4aa5f1d267ebb"
+    },
+    "reroute -> dstout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "28b69919800960a884ad3748acccbe2b88426038e2560fe84b661a76be502250"
+    },
+    "dstout -> ipout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b04c44605378bd8b182c769db4960acd45c530f4bdfdc50325497eae76e75b39"
+    },
+    "ipout -> post": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "395ac447f422fbac1d88ae0169bb643d8d8886ac0b3f257b8261a5cddd1d7f24"
+    },
+    "post -> ipfinishout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d77f961c988456225d9f4cd8564b11788b72c4d77835b4a8e08760343390e984"
+    },
+    "post -> po0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0065b3f7e754da9f1c71d63299011c5ea83eb7231cec20b0eb4ae412ce2dd215"
+    },
+    "ipfinishout -> cgout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "a9321a28c470ee1d8e360d949b43d9f262d8bb6aa5a7abea08942cdb40f5cfdd"
+    },
+    "cgout -> finishout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "372f1a64bf3b5c2e5717d7203a3a2c09a9104458a65cd92043efa60244f7f357"
+    },
+    "finishout -> gso": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8cab72c1bca60bd3901af297e4f890937cc43eb87d63466806d90d39e0e44ae3"
+    },
+    "finishout -> finishout2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "45b0c2d5646f03a54e19984732e7ea1c462bdd758704413323c20f1006901f15"
+    },
+    "gso -> finishout2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6d34f961845795deec6522e98d8b80d95b216d29636ce5bca371ff27edc67c53"
+    },
+    "finishout2 -> gw": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "bc3c7e3b745c0be070ef2a79e87061b97c1699bdbed515351c24ce96201accfb"
+    },
+    "gw -> neigh": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6b2b19b79b74828b861546fb6d7bf89c9c5780dd1fa8dd9745ac91034dac439e"
+    },
+    "neigh -> connected": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "46447474d91ef042a74627876f51b805a0f9ec906caf47b073c888752fc7e166"
+    },
+    "neigh -> resolve": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "57d0b867195f2a5bb7e2cd11d816526d2bd9b295d19e59dec92f437642ef166e"
+    },
+    "connected -> devqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "372b18ec284d8ab7dd70626108e5d05673d0e7e4cbc40adf466390e235c6f31e"
+    },
+    "resolve -> devqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4a8ed4d3fab511ef922e758dd4700e8ce0e52b2ebb6d399840917d20a364ffdd"
+    },
+    "devqueue -> devqueue2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "05e131f467e0bef6ddb360f151a9c2ef292330dcffa2a21cb129ac814363a7b4"
+    },
+    "devqueue2 -> netegress": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f5cfdeaf45fe1a06812b37fd8edaf66c122ad59c3af46f290c1a570fd21c7c0d"
+    },
+    "netegress -> tcegress": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2f6904e3aa6a407cf8bbe5b75989e00fa94af30b920ed2b2ed2117c3a91628e4"
+    },
+    "tcegress -> pick": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f6d82667cb73c6db1ed1ccb8930d83d2bb739ff4347e2be197d447c85f5c379a"
+    },
+    "pick -> enqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9affc341dd212e21e7a5146a1125032b0258cf3a7e2327175c3de80f935c3246"
+    },
+    "pick -> validateout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c8bd454a3d17eb9e1c79f4e2e5de457e4444866b1a235ece221dc7fbb33aedc3"
+    },
+    "enqueue -> qrun": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "699aa5daa246b76ef51e5dcee0e01d8cf0968a2dac80f2bd77e0104113506f22"
+    },
+    "qrun -> restart": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5aeb234530a73c163fa0f4690d800fffabce10aa4f02a4bc57a090545e39537a"
+    },
+    "restart -> direct": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1460136fe98993de33d027e865fccf2521c2ff86d3ccba1e4da1f095ccf720dc"
+    },
+    "direct -> validateout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "89531ec7f913af6665f1d023f4fa9d40029cdb01fb6272ae8e713f2a7b241c4e"
+    },
+    "validateout -> hard": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "fee6354c2cdd2a101d7b7b715826b80694ba11d42a9241118c99e16f66babfbc"
+    },
+    "hard -> one": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ab2c7dbf2ff2ec18a479ca186e78e9514797259242472a11037e7cb511babae8"
+    },
+    "one -> start": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "101e17523c85412b6c136486d301493a89cee18a734c3badcbfa322b9d83ab20"
+    },
+    "start -> ndo": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "47acd3a9623310d39feedea379a680e8c7a68b9cfc380ef424d278f7bfa2ce25"
+    },
+    "ndo -> ixtx": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "493aea14faac2209676d718524f756b40cb53da0355e1279f85320d8740f90bb"
+    },
+    "hook -> legacy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d252618efb52f9ceeed9f9441121be822d77d5012516ffc6aa82ceccf037216c"
+    },
+    "hook -> nat": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e13d7bcb292fed6ffb9e04c65644782b742190f5d793c24f2fe91bfa77e1a723"
+    },
+    "hook -> nft": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7f72678fb655650807ccab8fafc237ee8dbd623c7a097a1ec845e6498fd9c244"
+    },
+    "hook -> nfbpf": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8911cd1117b3066b84e868495969c6980b67b3e7af2bca8ceaaca45528bdf663"
+    },
+    "legacy -> verdict": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b9ca566594c53ff5054b9b4a9a3bfbea1943250218bbffe7aa87b86b3e5fafd5"
+    },
+    "legacy -> xt": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "eaf53edf4ff5e62eaf0f2830a29e8fe813ac81ba608f2d90cd465fc4f0b8fea9"
+    },
+    "nat -> verdict": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "fcf8a8be11d069bf6766e05c5efbf966ce3df2ed83d80b046c7c72d5b594e9b2"
+    },
+    "nft -> verdict": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "196883ae0691756ac2ff2593c02c1c7b89266bef7d407dc60a1c6f694eae92d3"
+    },
+    "nft -> nftexec": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d31f5b4059c7ea9af8b996e4c8bad62087799ec644aa428a3088154ebe1ab359"
+    },
+    "nfbpf -> verdict": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f0e4d24f101604279c96a72d2424457ab605f3fa29e8f45d7295251cadf60f24"
+    },
+    "pr0 -> pr1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d511ce28b98007ea40af3006e3d67511f261ebc77042cf404c9f0d85773f4d9a"
+    },
+    "pr1 -> pr2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d292484246ff088725fa65536e37704161064651f3fd1caed7023af67ce13da7"
+    },
+    "pr2 -> pr3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b9b59e0848f8dd9826eef5171ce467c43e0c3522115a47fff7ed81343bc6cbe2"
+    },
+    "pr3 -> pr4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "af98a112e5d6042662b5a1392396cef5b8ec774fdd868ef5146f798be4f915ad"
+    },
+    "pr3 -> ct": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e7fc48f0cb9667ae30585821eb85cab713256bf13f2b0a1a5834eb09b7b3d0f9"
+    },
+    "pr4 -> pr5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e125428905c1b6c855bcc331392c3904cc55ea66aacbebcd1cbdb1d14c778a2f"
+    },
+    "pr5 -> pr6": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8a6cc4453bc08fda3cb27aa7b660ece9e772864b999034ed7f4cb007d3efb330"
+    },
+    "in0 -> in1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "67e63357be70add34b5e3abc44238665dd692b4a0043dbf43b353ae7da7c37c2"
+    },
+    "in1 -> in2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5971a4a479380a964ebbccc7060b1a3b2aba1da343b96fdf92dd3716e8ee62d2"
+    },
+    "in2 -> in3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "23ba9885df6515d48b765097a8865e021a8690b7a63486c6ebb3ebcd4f3428bd"
+    },
+    "in3 -> in4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9519000f3b65912209472a6d7cc906562abe2dd20dc521219ed7869fe5802a5a"
+    },
+    "in4 -> in5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f22cf42167d8825bbad749421304a2c4ed94b24c55c7f9e2b08cc464920ea749"
+    },
+    "in5 -> in6": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b8845593650395c3f2255195946cd86685b648bf260b4c78613c5682af39677a"
+    },
+    "ou0 -> ou1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "73efb3b3d3a77114b90a433df8276d3311d60dc42abfe562a726c05193621d27"
+    },
+    "ou1 -> ou2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d292484246ff088725fa65536e37704161064651f3fd1caed7023af67ce13da7"
+    },
+    "ou2 -> ou3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "543e5923be05048c6fdcb41a7b1149f302ecd8044e32d12b31026ed9515a8b90"
+    },
+    "ou3 -> ou4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "41bc55424ef4703b53c7073206556ef0766dd257383f4a1160539b2adc3638e6"
+    },
+    "ou3 -> ct": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "80e4fcda9035bbf844083313fa03838a4881e805d306009bca7f08399475e32b"
+    },
+    "ou4 -> ou5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "62810eee44895d98c21c7f8cad96a3185a5957b46f9cb66df03cbaab017801a3"
+    },
+    "ou5 -> ou6": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "548a6e0c473bd348a6287b16afe07473fb39717963ed91ca6599bdd62435793b"
+    },
+    "ou6 -> ou7": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "a33a0cfe6b91d4b3c562b705f79fde75019e2f865c5eab7b90d6e5905167568d"
+    },
+    "po0 -> po1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "99add061a4474f14c8253b21fe3c726c9a4296c95420783bf14e6a613ae9f8a4"
+    },
+    "po1 -> po2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0b5df91d7f67c79538a1985ba2debd8912f7aa3b59f605bd1b0a5a8d19458528"
+    },
+    "po2 -> po3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e11131c4626313012cd3e1239195aebf380b7327a8f1f848aae4aed5cb2bb81d"
+    },
+    "po3 -> po4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "957e32a8aabc416b5ddc9e7be93530232517d9c6f266d0b4ca66d88f7bba5794"
+    },
+    "xt -> xtbpf": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0cf96f505bc6e3a37ccdf480f57bf170d05f9cb801ff60c55a6fb3c42bb29865"
+    },
+    "events -> tcpsend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b82a8271dfb2391c4d6a0e00d10dcc96cdfff1a0a92671e9ddb599833a69e324"
+    },
+    "ixirq -> ixpoll": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1dac92a3bc0c8098829e0618eb016bcf8c95b3837cc0f9d95c179bcfac1da7f8"
+    },
+    "ixpoll -> ixrx": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5ff6e590669f8de2ef1802cbe2de043205bce27bc913686b7c232eefcfc10996"
+    },
+    "ixrx -> ixxdp": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8109409b8f1dd5d1759f698c6cf0b8ef35ab1b62dc5d3a358a505bc9f7653356"
+    },
+    "ixxdp -> ixskb": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "27f6c43cf7f2b95357d0f1593833d55651eb32aacf1b9fb00f21ce03ad8f0c09"
+    },
+    "ixskb -> gro": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0d989a6e93ef2c03a0c0c5f72cb7563cdac2e35691342ecc017f433ba292eba4"
+    },
+    "ixtx -> ixmap": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "22a8a46515e3ae87e1b153855c0f181f3cb5d3f8df0c0ce96d01b69597cb488e"
+    },
+    "ixmap -> ixcomplete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c655aa160f90b3ae0e594901fc68a8a67eaa1dbe6aa3af78f361f69628c6dfe1"
+    },
+    "conn -> conn2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f9614827ec8611d0977a95f3a63b552393b3e9bf40ca3f101a01cdcca6da16c7"
+    },
+    "conn2 -> syn": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "afb603a9981f2336c7544a46e0cf74dba92be66e272d3779093141c0355828d5"
+    },
+    "syn -> transmit": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b2a6d439f2a07f786740949cc5b3df83d30623760d253e6543d6f1b80622c269"
+    },
+    "lsn -> listen": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "77f23bb6af99beaef3af3dec1b494191796d3aae0b6e8c6b87c8d4aa6cabdbfb"
+    },
+    "fincall -> finsend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e58131c7ca5c86967b8573cc46793e0bdceb228310d8c1c08cf970925c1a1fb5"
+    },
+    "fincall -> abort": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9cd9f20b17ffaba54117c8c5fdc5498b7777aedd92adbba16758121d1ea80688"
+    },
+    "finsend -> pending": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c8d43c7828dbef63870da1af562bfc5cc8a5c065b00189f0569aea380cab4a93"
+    },
+    "abort -> transmit": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "98dbbfa481170fd884681f498f4f0eabb7bcf3b884ffca2ac8f3039f2924ad53"
+    },
+    "finish -> normal": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/gro.c",
+          "start": 573,
+          "end": 581,
+          "explanation": "GRO_NORMAL calls gro_normal_one."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "aa82403bc8cc382695ac8202bb54c66b2de36b692195a65758a1ce75d2621c49"
+    },
+    "finish -> held": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/gro.c",
+          "start": 573,
+          "end": 596,
+          "explanation": "HELD and MERGED do not separately deliver this skb from napi_skb_finish."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "4d27787b871e3c011abd23cb3021f923f26b18883fb60bff4383ce543cc638e4"
+    },
+    "finish -> mergedfree": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/gro.c",
+          "start": 573,
+          "end": 596,
+          "explanation": "MERGED_FREE releases the merged input skb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "fd0a73e04d266fb05833c5d8712771570e7b020d272246474c399e43854c4941"
+    },
+    "normal -> receive": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e3acb0708a72b11046adf828c59c4f99fdfec2bbd5d58fbeffefc2d26df437d4"
+    },
+    "held -> complete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c78553a9c7fa25bf636d2491dee659b47390360b4f9867f3b5c3c6086ba9302b"
+    },
+    "complete -> normal": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/gro.c",
+          "start": 236,
+          "end": 270,
+          "explanation": "Successful napi_gro_complete hands aggregate to gro_normal_one; errors drop it."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "9d04d9c4b3daf032e8f2a27d2caa98dd4ea46909e95a390d9c0db5cfd86c1c8f"
+    },
+    "ipfinishcore -> validdst": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6f5376a8a7930a7df3c79ddbd5b5e87aeeca3e089a7cf4fa909c436764ca2ca4"
+    },
+    "early -> validdst": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "aa63bb54a067dc73e077c631b7060307a43b10643f8d4e2561d76fdd109e82b1"
+    },
+    "validdst -> route": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 364,
+          "end": 370,
+          "explanation": "Route lookup is conditional on !skb_valid_dst(skb)."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "ded43c8138583009d6c6f28101d655c6df7d18768bb2c9ed8c3d49ae3e3ebac3"
+    },
+    "validdst -> dstin": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 364,
+          "end": 453,
+          "explanation": "Valid destination bypasses route lookup; ip_rcv_finish calls dst_input after successful core processing."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "005f1af80c849b7537ebb907892f4f8be3cace30fbc60b6cf85fa0478e824782"
+    },
+    "ack -> acksend": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_output.c",
+          "start": 4099,
+          "end": 4101,
+          "explanation": "tcp_send_ack delegates to __tcp_send_ack; ACK scheduling is conditional."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "85de1d04a2836c2b41d70bf765f4c4b2f3d386e84c842a795c7e4c8802abdafe"
+    },
+    "acksend -> transmit2": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_output.c",
+          "start": 4057,
+          "end": 4095,
+          "explanation": "__tcp_send_ack constructs ACK then calls __tcp_transmit_skb, bypassing tcp_transmit_skb wrapper."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "730a7b4faafff72d6c882fbd221f2743cf3f7f7911de084b1a31114424f8ec11"
+    },
+    "node:irq": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "bfbff2fec68fa85fa2d2d9b458bf8c260539030751c789e5ec196a00c0c78f43"
+    },
+    "node:softirq": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "149d38a387499404155950c01877bdc9d02164814888ba3fa90b85cc9fdb8c89"
+    },
+    "node:poll": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "dc9c3325a37d00f3280765232445bd70e7b830859846e412727dfd049f2d63cf"
+    },
+    "node:driver": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e7fa105b4dc327c6a8f53582bcd52c8ba333607e4bb9248eaebe1c41f9b2340a"
+    },
+    "node:native": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "a58176f9060e958e0026f09d7a9337589bf61e05adce831e3fcaa3639879614e"
+    },
+    "node:gro": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "93612943cf0dfab85d76feb40faf1a23ba112ca808e80fc38b31900fe0848b2a"
+    },
+    "node:devgro": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4b259cf6fadeb1a999516e538517f00867e6ce5c891e974f503b5cc761baa544"
+    },
+    "node:finish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "abc9052011c69a1c60aeb734468ecc95e7cc0fa36f94e184f3163a27e40cd03b"
+    },
+    "node:normal": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "83cc94e1b6bcf63fa9ece205705d6044fb0a61f786506aefaf11f57a228c6800"
+    },
+    "node:held": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6266059d10a2fff74d6345f198d7955aee60b410b341790b344455863ff2f875"
+    },
+    "node:mergedfree": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3cf568ff43af27f40692c9ab1f4b208d20514ddc991d855859e13564363875b5"
+    },
+    "node:complete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f669f4287207236830da61f3fe78a2e97c6f220635b95c58a9921a4645556bdf"
+    },
+    "node:receive": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4d20fdc7504d01fbf7f2caed3ac3526b9375e0e22e30129fb9e73693841de2c3"
+    },
+    "node:receive2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2aa5a7d4e7181a42c25d3484c5316b8ff5ef5d9afee0d12790d5e2158612bb0f"
+    },
+    "node:core": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "94705eee086d6d1c07b36aa91c0c97fde5208f8c5acc4462d8fff3cee797e442"
+    },
+    "node:generic": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0ace322078c1f30c9fc9149073dd0b4e27b4bd43b17cebc16885eb3623067f35"
+    },
+    "node:taps": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "052e2db9d1c88a3d83c033ef09804d8a3a36a7df04869841a8b4625eaa8c1454"
+    },
+    "node:tcin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6b2dc0ef015ba546202ae8303633460137ab55e443631b6b3e9bb737f35ee68e"
+    },
+    "node:tcxin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "dc702bd367fd485ac2e272d4c1fca619a28c98cddfe88b79d4698f774e102f88"
+    },
+    "node:nfin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "08bf8eddbcee9d44788fb9b30d33885189f420ebaaee80d3c8bff0c7ca2fc1ff"
+    },
+    "node:demux": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9703eddbf2ba598941df0afde22dd12319f9d77d482120d557307703504fa71e"
+    },
+    "node:iprcv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "12860d6df907824395406cabbb1cde2d390cd09e2f2f618f77ed41c9c8d6fa4f"
+    },
+    "node:ipcore": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "58a448b8f306e2218122bc03d87df538b39157754bc182a454e9b4354d20607b"
+    },
+    "node:pre": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0b6cb6867e8721d0f186484901d42a77e64533adc0f4d64f58ae59abfdd586e9"
+    },
+    "node:ipfinish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f65738ebb62b89cca669050871db2befdba8f0a246e55067219497af0e305b1e"
+    },
+    "node:ipfinishcore": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "43e0f54d125a7d861cddf8e8ba2fe3ec537824906ac1fab238dfa405844185d1"
+    },
+    "node:early": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "553c5b41fd8d0c1f5d273419e4e26f1038cb773a78b95678e1bb3fd51ac418fc"
+    },
+    "node:validdst": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6d2c300d56b39fa92273e25d93997c1555a2f232bf114c22088a6f60950a9f68"
+    },
+    "node:route": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1dda6256761e30296974085f282c23ebafd1bc461c1dc6d687bac58173e930f5"
+    },
+    "node:dstin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2b84bd5e1d741f021d9f5bdaf8553b50e9c0e1eff2e434da747fa5a8a7de58b1"
+    },
+    "node:local": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "421e4091ec53bcf7f2e208b5ff7c99e1c00595ac69ce69f3a8bc87236e6a1681"
+    },
+    "node:defrag": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b29cacbcc2a1dae4cc81ebfacce41360bb016e97f8ec302078040b58ebed33e5"
+    },
+    "node:input": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "653a852b745cee762b7c98986f05a6803012a49054cfde711ba7441fdd1a24c2"
+    },
+    "node:localfinish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "447ae8b44edfca09a9604c0eddd7a6420c3f45c48a76455c8c2adfb2feacf5ee"
+    },
+    "node:protocol": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5ea1595e96b2c1929ae8961d40beaf8f3dffb29d582ca65f30352ba3cc38a78d"
+    },
+    "node:tcprcv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7cc98988dde3090c915108fffe0bf9f0d22f9582b04f50f8f054222f81f9af5e"
+    },
+    "node:lookup": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "477f156ba12089aee6655d1b881f2cddaf61388781d915a1a8e75f7a3f40c863"
+    },
+    "node:policy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ac433cbe91f6d493763d2b263b0c9a1419b9b09df1dab6a05261259da18871b7"
+    },
+    "node:tcpfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "66ca0e642145962ba0dab9aa4fd37a3455e2b70301a4abb95d00812eae6f8dd0"
+    },
+    "node:skfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "061a58fa26e10e01b3e35665f44a56a3d780ca6673da279ba71062b59dcadb2d"
+    },
+    "node:cgin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2bbd0f1d8485c2929dac5a518b736016b392127191e1cbc0dab08a2640ea59a2"
+    },
+    "node:securityin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "cfc5c115f636a677fb6288561f108464135c1e863a7b0dbdc60badceac88b5ad"
+    },
+    "node:sockfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9d9a11bc341973a70fa19e92fa00abc4d347307241f486f51c7832d15b83fd98"
+    },
+    "node:own": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9793d4b1c1fe889197e1a22ec66965e0274555a5c8c08201f40a0d13fba4e36e"
+    },
+    "node:backlog": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "740682a9e3230acbce95e7432387d8b14b75dcd50224f9cb73bc54c2ca71a537"
+    },
+    "node:release": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "65c04a4df7bc970f7555d5f846dbcd6e5ef553171a49df5c67ce96be78ee0310"
+    },
+    "node:dorcv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "42a7351b4782000ba3de7afc0c639d9675b496ac2258aace171ba1dfcb913fec"
+    },
+    "node:established": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7c97540fe977b8fab2566d5280ae0f77182f1634aff73fc2b04f78127924b3cf"
+    },
+    "node:prediction": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "24a4f4419e10a7746eece877dfe5aac296b08a57927d2047baff5443c6ad9136"
+    },
+    "node:fast": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d801faee7659ec6104ae773aa29d640c5d5f18e3fb571263492e995da118ce29"
+    },
+    "node:validate": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4802b1716cf7b4c46a791662c0b133b9a9e90b1d95ada2efe551019c4d8427df"
+    },
+    "node:data": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "044fa72c941889f567259d74fed876757845af7d5c15fead36a3628134125831"
+    },
+    "node:ofo": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "57837371592a909f6d10783b2caf85add0a77e77fb74231dbc53f7dddebab37b"
+    },
+    "node:queue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "984c564c31b8b89c29249ca695bcc7533eb4f01fcaa4b3f5e828727d7986e50d"
+    },
+    "node:ready": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8917bbd0400c11e81c0dc55a9ab08431d720bfa66ce5b0b2172cc9bf63ef00d2"
+    },
+    "node:recv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "26d5ddb2c047047ac06281e877d735ba37e788b3e355027a16fb1004834bcd29"
+    },
+    "node:recvmsg": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d5917a8ce1eaf107807fa0ae5ee9d7ab4a353f0e05f07a10c00ed6e49ab36e87"
+    },
+    "node:inetrecv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8d4fe539089908c7a5a8200e3c67cd6b70f4b167843b22918a67dbd8d68e99ba"
+    },
+    "node:tcprecv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "425fc7b0e377fe8fa5c794034e6d2e43462244917f14363959ef9c784c393480"
+    },
+    "node:lockedrecv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "adef18cba2e487f9940bd2a84c3fecc403222774ef1366f0e10755631098c31d"
+    },
+    "node:copy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3063607cefe2e7b818c17a67e8e6ad6afbee3cab746bcb22b9d222252cc8b575"
+    },
+    "node:state": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2868bf0b0770237d013a8e687d58a319a8e529723cc6092192fc0f09ee733856"
+    },
+    "node:listen": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f4cefed7d89a056de800fca5ec01a291946095dd224be79d19b28d70b9601a7d"
+    },
+    "node:req": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6cc7948e4f730877e2006dfbaf1ca5ed093a7f9f1b357da709422c56e6421482"
+    },
+    "node:timewait": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "bddb7acbbfc0dbef587efa8dea549d6afba1515c3a19007916240b12638cad38"
+    },
+    "node:reset": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "347c5deb13de91d091727f004c3921aa00a24bf53c29cdedc0c647087d232f85"
+    },
+    "node:ack": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "564c9ae8a63f76848d2177c49648fb87948053e4daaa984c5a2213d45941c162"
+    },
+    "node:retrans": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "72fe3a325555e1801e068cb29ec53af95420cd83890f80c70a2c89d1d5e43558"
+    },
+    "node:send": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "23f6742746e38a54f8e1b4dbfe5c0fddd44962826f75bf965ef5ddef405e89b8"
+    },
+    "node:socksend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ff49280d819e6c70fc5ead9950c9052ce65b8e89dfe8b06af44a1332cb1372c0"
+    },
+    "node:inet": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e123b29d65ae98e961a0ad2c38764b842690744bc6519557fc5fee8e0adbd32b"
+    },
+    "node:tcpsend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "334fa4e1afd2da8225716ef670f5a4db3423dad04648c9f2989aa704521fa685"
+    },
+    "node:locked": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9852be10ea7c66c3f7876a8dd7dfadbf9f6c3b7e1370a7b15cf012134e66b896"
+    },
+    "node:push": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "13c8d173fb1d187c099dce17a6ee20976329c318278f51d0721bb9124335e756"
+    },
+    "node:pending": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b506b5afc0960103f3e28e10a718ca0728a3cf180d0a4dd08ad5ede06abee104"
+    },
+    "node:write": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "08796540555c41190956a4f2fb0679cac9c69789907b21d0483a0384b1dc7977"
+    },
+    "node:transmit": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ba88877a208af1ce2adc78e48db4b63a5378d49711820c10477e1062aee2cdfb"
+    },
+    "node:transmit2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5f5efdd8c5b37cdfe162c1782df9ca321aa756fac136d164cff204f0a661bc56"
+    },
+    "node:ipqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2553e90e86770ec051c7db75730b7803713534070fffafeebbf3238a096e57f1"
+    },
+    "node:ipqueue2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "346bf5a0d5392236099bdff58366dd3e4eb751cadaf993dbe425068d1d4ea0e9"
+    },
+    "node:outroute": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0f8ccf4183253065620c2e9df0305b0e93885f3585f2a7997aa98f21b2d099a5"
+    },
+    "node:localout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9a990b851d717af8a9f792b6d4b5dab9578c72978ee386016a6d1217a84eef95"
+    },
+    "node:localout2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f081bfb96acd248add89b2c1368faf05e85660c895a4b7740efedab70c771a86"
+    },
+    "node:output": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d42924107e288059a36e0e4a578549a1d5c721ae3b446041043ed6e357f6d004"
+    },
+    "node:reroute": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "26f984c59ca4f272fc12c506a5e89fe38968362575a9bc5a3ca8e9e914de1943"
+    },
+    "node:dstout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d8bf2a5f04098207720ac2644909dae555119bf484f167d35240370062db1c60"
+    },
+    "node:ipout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7d06b3502ba071bd0d5ba06898ad25ad8c12f421e62cca5db9df11a412f0ce92"
+    },
+    "node:post": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d552f4621a2e491678e4eb93b1d74634a57aafca7136cb0f2bc237dd92818f74"
+    },
+    "node:ipfinishout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "059790747541a8e2a6ac0cc3a863ec6eec8587033c8c509e5ff54854f9725933"
+    },
+    "node:cgout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1b2117760382dd1106678ca2ecd6f44e647b2e0e462b8b5057ebf6358002ff03"
+    },
+    "node:finishout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "45c51d2215aebb98da6bbb28967878eb6fe2a6c0266cb5404d9fd5a3ea36e290"
+    },
+    "node:gso": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "80c1a486753c5711488210cc35be2415151d51f424ef4dcd3128ab9deabafdde"
+    },
+    "node:finishout2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b7d34973cc340fa831d0082fe997e61b059407aac7ff6c9a06a8b9b7c0ccc779"
+    },
+    "node:gw": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "20b80b106fd0108cf907bd5cd0db12ee5df08cdda2723bc0cd0efdf39abdae21"
+    },
+    "node:neigh": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c826f5d92b6e346d3d6df93c5e7cb87bcbafe4ab002beec74077e69b79d712f1"
+    },
+    "node:connected": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "85a58152573de8cfd2a60d6c210f5aec0932aec1147f5e3ead31c23a3dc2ae5f"
+    },
+    "node:resolve": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "71509b2e47cb38994aee14cd6d370ccc9af4b3d598e859f44a4279f2a8c37227"
+    },
+    "node:devqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b728c1ae988dc3eed703bca597bde39f3798530127022c23feaff6493a6fbfec"
+    },
+    "node:devqueue2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "692f3bec9d8354f2a87bcd8e6ef664fdc3381a0f2ee60b259f766b604a8cd78c"
+    },
+    "node:netegress": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "191e8983558f3ff8356b707da350a7fe687ec7bf68300a7a00d9d4785bbe6310"
+    },
+    "node:tcegress": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d79d6bd923dddc118fe4b6526ce03842461c59eee2c7733ecc7d09b3de5702fb"
+    },
+    "node:pick": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "06186ad850b8d0e68f1aa5d0d812ff2739720fdb0c218157219a35308a2322c6"
+    },
+    "node:enqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1e57b026c361996d7bb4ef45752116a1d4264797cbc925eee688a855da0b86b1"
+    },
+    "node:qrun": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "01e9d0afee5558562d3f4fd5b90ee591ceb9c74f077be765d52a519df1ff9b79"
+    },
+    "node:restart": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4091acbb0591f0a0d5603242cf75f34a95b24d83093439865fd8d1d052563f76"
+    },
+    "node:direct": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "683526e6f7db2448b528d26b011c9c7d1731b00480e7747ec1859d835995bb3e"
+    },
+    "node:validateout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d4837e1f355ad091b106bb70e09b35c7a76823a72770bd9685891ed1eb533bde"
+    },
+    "node:hard": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "08961469d60eaed4ca99a899cbcf48d564ff63052b54cfecd1e0aca62de7ff4f"
+    },
+    "node:one": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "54607f9c0c11f7d61ee0dc2024709fef6e2fe45b3aa582a2f31ca06737b1d0ec"
+    },
+    "node:start": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3056f45e046dd695e32b2f8f1105cee929b84cf3c9c7eb599ffe833c09e2fb15"
+    },
+    "node:ndo": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "cf1a3a4aa9cbdac7bc4a8c3e775cae096c4306b984431ac09377145a97b9e0fa"
+    },
+    "node:hook": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "76678948ee8d0a3e6be923389d758470e0221453d9c28f9c3e8f916b4429df79"
+    },
+    "node:legacy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9166966e86e86f6439a1bf8800fee262065ad5ffd4fb3d04a48eb45cb1e097b7"
+    },
+    "node:nat": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "eb8c62408f788c4216d1e554a74d3a72cf343ef6625656d920d71b701babf762"
+    },
+    "node:nft": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5b5b7b2d591d1c3c6629746f54f04883660687fe763fef2e7a266c0933aeef88"
+    },
+    "node:nfbpf": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "af615dd42c41827a31b71931bdddcfaee1d6154d5b8310f88c52d70a2c8270bd"
+    },
+    "node:verdict": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "78c22c3204daec3b3f037408db95626bd4d4fd96cec6643ab97fb88ae6290850"
+    },
+    "node:acksend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "025d0672fe8e9c59bd134c794312abad5e6c605eb8520dc77cd01072279d3d00"
+    },
+    "node:pr0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "a4270862f08d34741fe2726107eff856cd185e90dcd90ceb4d5629362ab46297"
+    },
+    "node:pr1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5b780fd19418296a579cc1685254a0e1196eea20955dab598b05a21f1609d7bd"
+    },
+    "node:pr2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2cc75ee8b0f3b3a1c0392e65d5b6bf62677becfb6b67e1732a86bb65e2a10136"
+    },
+    "node:pr3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ab086852dc3c16a014852bcda270827df6f9a9c40176b9f854eb3f46c9ee9137"
+    },
+    "node:pr4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e5daaac04a2f0df414ce086e90a67b82c9b1954870a2681a1f0c5ed513351afc"
+    },
+    "node:pr5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e697cf74a8b43b5814ab744f9705f489c70465d22fce39dcf1098039148b51c3"
+    },
+    "node:pr6": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7c0df675e499574c31c9fecc2d7cff780e80c6041e99545957193cd6760983ba"
+    },
+    "node:in0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "09880427ebbe1ed05e6f0ebfb1271a8e384fede8c37263518650e335fdf799e6"
+    },
+    "node:in1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "513324ac9af8029c8632b24cb70a322c4a7098eaf112bb447a052f450cb57d70"
+    },
+    "node:in2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b1fa10526fe9ea66f27993cf2c6fb07c3956953f3e74ac912a315ed2011cb37d"
+    },
+    "node:in3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "60adda6bf398835ec240c7cec01fefa986caa8619fdb1895ac13e68bfc761e7b"
+    },
+    "node:in4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b5d6dda3bdccf2069c1eb68ed264241ac0827dffacdfe4a558a41337302a9823"
+    },
+    "node:in5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e5b7400644ea5d14611fd92fb9db61d8f1e7d4462d9bcc3220c5b7a4cc06c3c8"
+    },
+    "node:in6": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8035b9a855ef661e72640476792412c74d6465112a69a772f8b5db77607fe50c"
+    },
+    "node:ou0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9c341a44c140ca98f18ded8a321e33976c4a3843c624e69be467cc245d342375"
+    },
+    "node:ou1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5b780fd19418296a579cc1685254a0e1196eea20955dab598b05a21f1609d7bd"
+    },
+    "node:ou2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2cc75ee8b0f3b3a1c0392e65d5b6bf62677becfb6b67e1732a86bb65e2a10136"
+    },
+    "node:ou3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3a136ae6a42f6776283270c9296f9dfbe9a9616c39f09dff68b510fb644dda77"
+    },
+    "node:ou4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b423a18ca5b6c453b5102a8a073ef6683cf876e216dbd18fcb6d5fe5ee06a53e"
+    },
+    "node:ou5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f2f441bc2b119fadb514c1da1b2effa095fb6e3270a091c0c96fe8c6892ed178"
+    },
+    "node:ou6": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2a5ba297e9fa9536677d00a024fdcc79757fbe66d16febff71b81788f0851181"
+    },
+    "node:ou7": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4820072180c918169dd18f6e02b7c2a655341e6aab98d7376e5c92736c391f53"
+    },
+    "node:po0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0d6b331949919f661940aaa15a3404a6d62c78d8be7d31569a486a64f3ea7a90"
+    },
+    "node:po1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "513324ac9af8029c8632b24cb70a322c4a7098eaf112bb447a052f450cb57d70"
+    },
+    "node:po2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3b266ded41c615b9365a65cd09c1d94f2a1e9c4f29e09f6ac12a5c4113701acc"
+    },
+    "node:po3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e5b7400644ea5d14611fd92fb9db61d8f1e7d4462d9bcc3220c5b7a4cc06c3c8"
+    },
+    "node:po4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7cbdcdeb327876745c7dd84f66b8908c4bf45b42af0968bdc5c0271a2ad37961"
+    },
+    "node:ct": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3d0c457349ccd52a4204c4510a4ac5042ed3a09fec293514feb5e032b1a6c033"
+    },
+    "node:xt": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c39b2d558ce61bab6642477956b8b171e5713ee1c6ee0080569870442d9da4ec"
+    },
+    "node:nftexec": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9187e2248583928659b5d744c6a24bce3082107106646eac0f7ff8571a256106"
+    },
+    "node:ordering": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "03927853782c7ee17343f98746368d8537b4a9a9df01f7d00624d24d2a441754"
+    },
+    "node:events": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "85a3d673ceee3ffa5d7304eb6acc169fcbdcd995547c8ff5b6ce2e853c4cd70e"
+    },
+    "node:note": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2c7a97f8e9dd3763fc7594f5e2bcb091610788674974fff31559e7c9d099f4e6"
+    },
+    "node:ixirq": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9e35532641f8005d7fecfcf2fbbbab75b0a602a683a29ab63cf65b5af5e20d4c"
+    },
+    "node:ixpoll": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1a6b11307ea2432604748f731fe630a0f3c2171b25450046fa3ea7ec73c2122b"
+    },
+    "node:ixrx": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "a6e5b8e0d30e896c4a36763430c6f38d783c78388a47aea04a7ee890c47b0f0d"
+    },
+    "node:ixxdp": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6d5e28a7197cd88fdd8582d384430a5246400a851e955dda605cb80dc7b483de"
+    },
+    "node:ixskb": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b5d3e95710a5413be34461f67cd37310b54d40bb37595778e693fc9747647d70"
+    },
+    "node:ixtx": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "54b7de211d04324338d9feb4151290a2205af585295a0885ee8713643fcfd4ad"
+    },
+    "node:ixmap": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e00118ae4e3575d2254060c6f89df7eee41c77c1ea4f1b040d0a7a52a976e319"
+    },
+    "node:ixcomplete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f69de95819cb7e0cd8d6cbdf87d687dae9beaf5d51d30d16c971261b33cca2bf"
+    },
+    "node:conn": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f308893e55671b18293067d09d4de9384da6c796a95887c73258661250a11237"
+    },
+    "node:conn2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "462618ac16900e74d0d490a58f7604ffe246ded1c14a41e3308137c9e390a6e3"
+    },
+    "node:syn": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "05facff8eaa2d8c965e65370f4307dcbc6b83d96a29b0d953a3125d55f9f2b9a"
+    },
+    "node:synack": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8af09db65acff812aeb8ae4f1b88f32afc03f63206971b165ce2fa9dd3366335"
+    },
+    "node:lsn": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3a3836ae74c7ced6e5b75252d9fc490dfb58f44dc0f7d872238d9737e7aa3a80"
+    },
+    "node:accept": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d2d763210fd5ed62a86cb9019e51ad0ab1143a72eea72ceb8abca41e9234bea3"
+    },
+    "node:fincall": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d6627297c634112924d885e6f1f425d7b6f5567698fd32f0876b32a4720e36e9"
+    },
+    "node:finsend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f54809066ee86c7f1d6fdedc165c386a1bd8002a2a0d2233c33864060ac028ee"
+    },
+    "node:finrecv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "812e1f019fe0afc074ac2b8cde1d1852336dd8b71ce96086fd36bc3c54f37e63"
+    },
+    "node:abort": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "09b453eb00ae7a6a31b50f2a927c7e528a7cf9ae5f542868b9b2167b349c86f1"
+    },
+    "node:sklookup": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1db1c139a050a2bf7d2176d888cd2297640551cd473f6a810d045c9cba3fa307"
+    },
+    "node:xtbpf": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c4297924d6b9fa405e9675afb4d65b2828309419048a94ac237ed242b82d8fae"
+    }
+  },
+  "closure": {
+    "rx_and_gro": {
+      "reviewed": false,
+      "evidence": [],
+      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+    },
+    "tx_and_qdisc": {
+      "reviewed": false,
+      "evidence": [],
+      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+    },
+    "tcp_states_and_timers": {
+      "reviewed": false,
+      "evidence": [],
+      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+    },
+    "netfilter_tables_and_nat": {
+      "reviewed": false,
+      "evidence": [],
+      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+    },
+    "bpf_attachment_and_redirect": {
+      "reviewed": false,
+      "evidence": [],
+      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+    },
+    "driver_and_offloads": {
+      "reviewed": false,
+      "evidence": [],
+      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+    },
+    "errors_and_drop_paths": {
+      "reviewed": false,
+      "evidence": [],
+      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+    },
+    "config_and_scope": {
+      "reviewed": false,
+      "evidence": [],
+      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+    }
+  },
+  "obsolete": {
+    "ipfinishcore -> route": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false
@@ -371,549 +2249,15 @@
       "evidence": [],
       "reviewed": false
     },
-    "retrans -> transmit2": {
+    "early -> route": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false
     },
-    "send -> socksend": {
+    "finish -> receive": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false
-    },
-    "socksend -> inet": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "inet -> tcpsend": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "tcpsend -> locked": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "locked -> push": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "push -> pending": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pending -> write": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "write -> transmit": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "transmit -> transmit2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "transmit2 -> ipqueue": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ipqueue -> ipqueue2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ipqueue2 -> outroute": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "outroute -> localout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "localout -> localout2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "localout2 -> output": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "output -> reroute": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "output -> dstout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "output -> ou0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "reroute -> dstout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "dstout -> ipout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ipout -> post": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "post -> ipfinishout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "post -> po0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ipfinishout -> cgout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "cgout -> finishout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "finishout -> gso": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "finishout -> finishout2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "gso -> finishout2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "finishout2 -> gw": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "gw -> neigh": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "neigh -> connected": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "neigh -> resolve": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "connected -> devqueue": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "resolve -> devqueue": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "devqueue -> devqueue2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "devqueue2 -> netegress": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "netegress -> tcegress": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "tcegress -> pick": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pick -> enqueue": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pick -> validateout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "enqueue -> qrun": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "qrun -> restart": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "restart -> direct": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "direct -> validateout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "validateout -> hard": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "hard -> one": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "one -> start": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "start -> ndo": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ndo -> ixtx": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "hook -> legacy": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "hook -> nat": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "hook -> nft": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "hook -> nfbpf": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "legacy -> verdict": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "legacy -> xt": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "nat -> verdict": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "nft -> verdict": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "nft -> nftexec": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "nfbpf -> verdict": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pr0 -> pr1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pr1 -> pr2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pr2 -> pr3": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pr3 -> pr4": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pr3 -> ct": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pr4 -> pr5": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "pr5 -> pr6": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "in0 -> in1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "in1 -> in2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "in2 -> in3": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "in3 -> in4": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "in4 -> in5": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "in5 -> in6": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ou0 -> ou1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ou1 -> ou2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ou2 -> ou3": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ou3 -> ou4": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ou3 -> ct": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ou4 -> ou5": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ou5 -> ou6": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ou6 -> ou7": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "po0 -> po1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "po1 -> po2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "po2 -> po3": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "po3 -> po4": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "xt -> xtbpf": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "events -> tcpsend": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ixirq -> ixpoll": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ixpoll -> ixrx": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ixrx -> ixxdp": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ixxdp -> ixskb": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ixskb -> gro": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ixtx -> ixmap": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "ixmap -> ixcomplete": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "conn -> conn2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "conn2 -> syn": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "syn -> transmit": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "lsn -> listen": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "fincall -> finsend": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "fincall -> abort": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "finsend -> pending": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    },
-    "abort -> transmit": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false
-    }
-  },
-  "closure": {
-    "rx_and_gro": {
-      "reviewed": false,
-      "evidence": []
-    },
-    "tx_and_qdisc": {
-      "reviewed": false,
-      "evidence": []
-    },
-    "tcp_states_and_timers": {
-      "reviewed": false,
-      "evidence": []
-    },
-    "netfilter_tables_and_nat": {
-      "reviewed": false,
-      "evidence": []
-    },
-    "bpf_attachment_and_redirect": {
-      "reviewed": false,
-      "evidence": []
-    },
-    "driver_and_offloads": {
-      "reviewed": false,
-      "evidence": []
-    },
-    "errors_and_drop_paths": {
-      "reviewed": false,
-      "evidence": []
-    },
-    "config_and_scope": {
-      "reviewed": false,
-      "evidence": []
     }
   }
 }

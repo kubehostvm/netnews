@@ -11,14 +11,18 @@ digraph tcp {
  native [label="driver-specific native XDP\nbpf_prog_run_xdp()",fillcolor="#dcfce7"];
  gro [label="napi_gro_receive()"];
  devgro [label="dev_gro_receive()"];
- finish [label="napi_skb_finish() / napi_gro_complete()"];
+ finish [label="napi_skb_finish(): GRO result",shape=diamond];
+ normal [label="GRO_NORMAL → gro_normal_one()\n→ gro_normal_list() when batch flushed"];
+ held [label="GRO_HELD: stored in GRO hash\nGRO_MERGED: input merged, no separate delivery"];
+ mergedfree [label="GRO_MERGED_FREE\nfree merged input skb; no independent IP delivery"];
+ complete [label="Later flush / completion of aggregate\nnapi_gro_complete() → gro_normal_one()"];
  receive [label="netif_receive_skb_internal()\nOR netif_receive_skb_list_internal()"];
  receive2 [label="__netif_receive_skb() / list variants"];
  core [label="__netif_receive_skb_core()"];
  generic [label="do_xdp_generic() → netif_receive_generic_xdp()\n→ bpf_prog_run_generic_xdp()\n(alternative to native mode)",fillcolor="#dcfce7"];
  taps [label="ptype_all / device taps\ndeliver_skb() → packet_rcv() / tpacket_rcv()"];
  tcin [label="sch_handle_ingress()",fillcolor="#dcfce7"];
- tcxin [label="tcx_run() [TCX BPF]\nor tc_run() → tcf_classify() → cls_bpf_classify()\n→ bpf_prog_run() [classic TC-BPF]",fillcolor="#dcfce7"];
+ tcxin [label="tcx_run() [if TCX enabled]\nnon-UNSPEC → ingress verdict\nUNSPEC / no TCX → tc_run() → tcf_classify()\n→ cls_bpf_classify() → bpf_prog_run()",fillcolor="#dcfce7"];
  nfin [label="nf_ingress() → nf_hook_ingress()\nNETDEV ingress / nft netdev or inet",fillcolor="#f3e8ff"];
  demux [label="VLAN / rx_handler / protocol demux\nIPv4 handler selected"];
  iprcv [label="ip_rcv()"];
@@ -27,7 +31,8 @@ digraph tcp {
  ipfinish [label="ip_rcv_finish()"];
  ipfinishcore [label="ip_rcv_finish_core()"];
  early [label="tcp_v4_early_demux()\nif enabled / applicable"];
- route [label="ip_route_input_noref()\nif no usable cached destination"];
+ validdst [label="skb_valid_dst()?",shape=diamond];
+ route [label="ip_route_input_noref()\nonly without usable cached destination"];
  dstin [label="dst_input()"];
  local [label="ip_local_deliver()"];
  defrag [label="ip_defrag()\nif fragments remain"];
@@ -61,8 +66,12 @@ digraph tcp {
  lockedrecv [label="tcp_recvmsg_locked()"];
  copy [label="skb_copy_datagram_msg()\n→ skb_copy_datagram_iter()\ncopy data to user / consume queue"];
  irq -> softirq [label="schedules softirq, not direct call"]; softirq -> poll -> driver -> native -> gro [label="XDP_PASS"];
- gro -> devgro -> finish -> receive -> receive2 -> core -> generic -> taps -> tcin -> tcxin -> nfin -> demux -> iprcv -> ipcore -> pre -> ipfinish -> ipfinishcore;
- ipfinishcore -> early [style=dashed]; early -> route [style=dashed]; ipfinishcore -> route -> dstin -> local -> defrag -> input -> localfinish -> protocol -> tcprcv -> lookup -> policy -> tcpfilter -> skfilter -> cgin -> securityin -> sockfilter -> own;
+ gro -> devgro -> finish;
+ finish -> normal [label="GRO_NORMAL"]; normal -> receive;
+ finish -> held [label="HELD / MERGED"]; held -> complete [style=dashed,label="aggregate later delivered"]; complete -> normal;
+ finish -> mergedfree [label="MERGED_FREE"];
+ receive -> receive2 -> core -> generic -> taps -> tcin -> tcxin -> nfin -> demux -> iprcv -> ipcore -> pre -> ipfinish -> ipfinishcore;
+ ipfinishcore -> early [style=dashed]; early -> validdst; ipfinishcore -> validdst [label="early demux skipped"]; validdst -> dstin [label="yes: cached route"]; validdst -> route [label="no"]; route -> dstin; dstin -> local -> defrag -> input -> localfinish -> protocol -> tcprcv -> lookup -> policy -> tcpfilter -> skfilter -> cgin -> securityin -> sockfilter -> own;
  own -> dorcv [label="no"]; own -> backlog [label="yes"]; backlog -> release [style=dashed,label="later"]; release -> dorcv;
  dorcv -> established [label="ESTABLISHED"]; established -> prediction; prediction -> fast [label="yes"]; prediction -> validate [label="no"]; validate -> data; data -> queue [label="in order"]; data -> ofo [label="out of order"]; ofo -> queue [style=dashed,label="when gaps filled"]; fast -> ready; queue -> ready;
  ready -> recv [style=dashed,label="wakeup / independent read"]; recv -> recvmsg -> inetrecv -> tcprecv -> lockedrecv -> copy;
@@ -115,7 +124,7 @@ digraph tcp {
  devqueue [label="dev_queue_xmit()"];
  devqueue2 [label="__dev_queue_xmit()"];
  netegress [label="nf_hook_egress()\nNETDEV egress (nft)",fillcolor="#f3e8ff"];
- tcegress [label="sch_handle_egress()\n→ tcx_run() OR tc_run()/tcf_classify()\n→ cls_bpf_classify() / bpf_prog_run()",fillcolor="#dcfce7"];
+ tcegress [label="sch_handle_egress()\nTCX enabled: tcx_run(), non-UNSPEC → verdict\nUNSPEC / no TCX → tc_run()/tcf_classify()\n→ cls_bpf_classify() / bpf_prog_run()",fillcolor="#dcfce7"];
  pick [label="netdev_core_pick_tx()\nselect TX queue / qdisc"];
  enqueue [label="__dev_xmit_skb()\nqdisc enqueue / optional bypass"];
  qrun [label="qdisc_run() → __qdisc_run()"];
@@ -144,7 +153,8 @@ digraph tcp {
  hook -> legacy -> verdict; hook -> nat -> verdict; hook -> nft -> verdict; hook -> nfbpf -> verdict;
  pre -> hook [style=dotted,label="same dispatch model",constraint=false];
  }
- ack -> transmit [style=dashed]; retrans -> transmit2 [style=dashed];
+ acksend [label="__tcp_send_ack()\nconstruct pure ACK"];
+ ack -> acksend [style=dashed]; acksend -> transmit2; retrans -> transmit2 [style=dashed];
  subgraph cluster_hook_sequences {
  label="Per-hook expansion: iptables-legacy + conntrack callback order (when registered)";color="#f97316";
  node [fillcolor="#ffedd5"];

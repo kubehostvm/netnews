@@ -1,0 +1,40 @@
+#!/usr/bin/env python3
+import importlib.util
+from pathlib import Path
+import subprocess
+import tempfile
+import unittest
+
+spec = importlib.util.spec_from_file_location('review', Path(__file__).with_name('check-callgraph-coverage.py'))
+review = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(review)
+
+
+class EvidenceTests(unittest.TestCase):
+    def test_evidence_boundary(self):
+        with tempfile.TemporaryDirectory() as directory:
+            subprocess.run(['git', 'init', '-q', directory], check=True)
+            root = Path(directory)
+            (root / 'sample.c').write_text('void caller(void) { callee(); }\n')
+            subprocess.run(['git', '-C', directory, 'add', '.'], check=True)
+            subprocess.run(['git', '-C', directory, '-c', 'user.name=Test', '-c', 'user.email=test@example.com', 'commit', '-qm', 'fixture'], check=True)
+            commit = subprocess.check_output(['git', '-C', directory, 'rev-parse', 'HEAD'], text=True).strip()
+            item = dict(commit=commit, file='sample.c', start=1, end=1, explanation='Review caller body')
+            self.assertTrue(review.evidence_valid([item], root, commit))
+            for change in ({'file': 'missing.c'}, {'end': 2}, {'start': 0}, {'start': True}, {'commit': 'bad'}, {'explanation': ''}, {'file': '../sample.c'}):
+                self.assertFalse(review.evidence_valid([{**item, **change}], root, commit))
+            self.assertFalse(review.evidence_valid(['arbitrary string'], root, commit))
+            self.assertFalse(review.evidence_valid([], root, commit))
+
+    def test_diagram_regressions(self):
+        root = Path(__file__).resolve().parents[1]
+        tcp = (root / 'diagrams/host-tcp-v6.6.dot').read_text()
+        overview = (root / 'diagrams/netfilter-bpf-overview.dot').read_text()
+        for wrong in ('ack -> transmit ', 'early -> route ', 'finish -> receive ', 'bo -> bd'):
+            self.assertNotIn(wrong, tcp + overview)
+        for required in ('acksend -> transmit2', 'validdst -> dstin', 'validdst -> route', 'GRO_MERGED_FREE', 'UNSPEC / no TCX', 'brtx -> bo; bo -> bpost'):
+            self.assertIn(required, tcp + overview)
+
+
+if __name__ == '__main__':
+    unittest.main()

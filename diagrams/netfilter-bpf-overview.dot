@@ -61,7 +61,8 @@ digraph overview {
  bypass [label="BPF DROP/TX/REDIRECT branches\nNot all packets reach the IP stack",fillcolor="#fee2e2"];
  brcheck -> pre [label="not bridged / L3 input"]; broute -> pre [label="route"]; bi -> pre [label="local IPv4 delivery"];
  neigh -> ne; bpost -> ne; packet -> ne; ne -> te -> q;
- neigh -> bo [style=dashed,label="bridge device output"]; bo -> bd [label="bridge transmit decision"];
+ brtx [label="Local bridge device output\nbr_dev_xmit(): FDB lookup / flood\nselect egress port(s)",fillcolor="#dbeafe"];
+ neigh -> brtx [style=dashed,label="bridge device output"]; brtx -> bo; bo -> bpost;
  nx -> bypass [style=dashed]; gx -> bypass [style=dashed]; ti -> bypass [style=dashed]; te -> bypass [style=dashed];
  note [label="Historical reference: Jan Engelhardt, 2014-Feb-28, Linux 2.6.36+ (not all Linux 2.x).\nRe-drawn stage model, not copied SVG artwork. Blue: bridge/L2; orange: IPv4 hooks; green/purple: modern extensions.\nPriority is per-hook, lower runs earlier. raw_before_defrag may move raw to -450.\nNAT rules normally see the first connection packet; conntrack applies subsequent translations.\nMODERN Netfilter BPF may attach inside IPv4 hooks at configured priority (since 6.4).\niptables -m bpf runs BPF within a rule match (xt_bpf); not a separate Netfilter hook.\nBridge NF_BR_* and IPv4 NF_INET_* are distinct hook families. XFRM arrows summarize mode-dependent paths.\nARP/IPv6/hardware offload details excluded. Every hook can terminate/divert a packet.",shape=note,fillcolor="#f8fafc"];
  q -> note [style=invis];
