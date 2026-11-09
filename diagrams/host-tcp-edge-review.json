@@ -1,0 +1,919 @@
+{
+  "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+  "edges": {
+    "irq -> softirq": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "softirq -> poll": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "poll -> driver": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "driver -> native": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "driver -> ixpoll": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "native -> gro": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "gro -> devgro": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "devgro -> finish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "finish -> receive": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "receive -> receive2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "receive2 -> core": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "core -> generic": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "generic -> taps": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "taps -> tcin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "tcin -> tcxin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "tcxin -> nfin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "nfin -> demux": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "demux -> iprcv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "iprcv -> ipcore": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ipcore -> pre": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pre -> ipfinish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pre -> hook": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pre -> pr0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ipfinish -> ipfinishcore": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ipfinishcore -> early": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ipfinishcore -> route": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "early -> route": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "route -> dstin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "dstin -> local": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "local -> defrag": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "defrag -> input": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "input -> localfinish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "input -> in0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "localfinish -> protocol": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "protocol -> tcprcv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "tcprcv -> lookup": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "lookup -> policy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "lookup -> req": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "lookup -> timewait": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "lookup -> reset": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "lookup -> sklookup": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "policy -> tcpfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "tcpfilter -> skfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "skfilter -> cgin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "cgin -> securityin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "securityin -> sockfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "sockfilter -> own": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "own -> backlog": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "own -> dorcv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "backlog -> release": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "release -> dorcv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "dorcv -> established": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "dorcv -> state": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "established -> prediction": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "established -> ack": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "prediction -> fast": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "prediction -> validate": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "fast -> ready": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "validate -> data": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "data -> ofo": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "data -> queue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "data -> finrecv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ofo -> queue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "queue -> ready": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ready -> recv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "recv -> recvmsg": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "recvmsg -> inetrecv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "inetrecv -> tcprecv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "tcprecv -> lockedrecv": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "lockedrecv -> copy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "state -> listen": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "state -> synack": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "req -> accept": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ack -> transmit": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "retrans -> transmit2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "send -> socksend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "socksend -> inet": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "inet -> tcpsend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "tcpsend -> locked": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "locked -> push": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "push -> pending": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pending -> write": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "write -> transmit": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "transmit -> transmit2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "transmit2 -> ipqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ipqueue -> ipqueue2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ipqueue2 -> outroute": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "outroute -> localout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "localout -> localout2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "localout2 -> output": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "output -> reroute": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "output -> dstout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "output -> ou0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "reroute -> dstout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "dstout -> ipout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ipout -> post": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "post -> ipfinishout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "post -> po0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ipfinishout -> cgout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "cgout -> finishout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "finishout -> gso": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "finishout -> finishout2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "gso -> finishout2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "finishout2 -> gw": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "gw -> neigh": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "neigh -> connected": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "neigh -> resolve": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "connected -> devqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "resolve -> devqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "devqueue -> devqueue2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "devqueue2 -> netegress": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "netegress -> tcegress": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "tcegress -> pick": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pick -> enqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pick -> validateout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "enqueue -> qrun": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "qrun -> restart": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "restart -> direct": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "direct -> validateout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "validateout -> hard": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "hard -> one": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "one -> start": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "start -> ndo": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ndo -> ixtx": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "hook -> legacy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "hook -> nat": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "hook -> nft": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "hook -> nfbpf": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "legacy -> verdict": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "legacy -> xt": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "nat -> verdict": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "nft -> verdict": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "nft -> nftexec": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "nfbpf -> verdict": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pr0 -> pr1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pr1 -> pr2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pr2 -> pr3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pr3 -> pr4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pr3 -> ct": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pr4 -> pr5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "pr5 -> pr6": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "in0 -> in1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "in1 -> in2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "in2 -> in3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "in3 -> in4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "in4 -> in5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "in5 -> in6": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ou0 -> ou1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ou1 -> ou2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ou2 -> ou3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ou3 -> ou4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ou3 -> ct": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ou4 -> ou5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ou5 -> ou6": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ou6 -> ou7": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "po0 -> po1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "po1 -> po2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "po2 -> po3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "po3 -> po4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "xt -> xtbpf": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "events -> tcpsend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ixirq -> ixpoll": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ixpoll -> ixrx": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ixrx -> ixxdp": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ixxdp -> ixskb": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ixskb -> gro": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ixtx -> ixmap": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "ixmap -> ixcomplete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "conn -> conn2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "conn2 -> syn": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "syn -> transmit": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "lsn -> listen": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "fincall -> finsend": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "fincall -> abort": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "finsend -> pending": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    },
+    "abort -> transmit": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false
+    }
+  },
+  "closure": {
+    "rx_and_gro": {
+      "reviewed": false,
+      "evidence": []
+    },
+    "tx_and_qdisc": {
+      "reviewed": false,
+      "evidence": []
+    },
+    "tcp_states_and_timers": {
+      "reviewed": false,
+      "evidence": []
+    },
+    "netfilter_tables_and_nat": {
+      "reviewed": false,
+      "evidence": []
+    },
+    "bpf_attachment_and_redirect": {
+      "reviewed": false,
+      "evidence": []
+    },
+    "driver_and_offloads": {
+      "reviewed": false,
+      "evidence": []
+    },
+    "errors_and_drop_paths": {
+      "reviewed": false,
+      "evidence": []
+    },
+    "config_and_scope": {
+      "reviewed": false,
+      "evidence": []
+    }
+  }
+}
