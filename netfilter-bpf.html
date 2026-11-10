@@ -51,7 +51,7 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <h3>批处理、乱序和邻居输出分支</h3>
 <p>IPv4 单包走 <code>ip_rcv → NF_HOOK → ip_rcv_finish</code>；批处理另走 <code>ip_list_rcv → ip_sublist_rcv → NF_HOOK_LIST → ip_list_rcv_finish → ip_sublist_rcv_finish</code>。两者共享 <code>ip_rcv_finish_core</code>，成功后返回各自调用者，再交给 <code>dst_input</code>；批处理中的 NFQUEUE 报文回注可使用单包 continuation。</p>
 <p>乱序恢复由 <code>tcp_ofo_queue</code> 自行合并或加入接收队列，不调用 <code>tcp_queue_rcv</code>。邻居输出先判断能否使用缓存 L2 头，否则调用 <code>n-&gt;output</code>；<code>neigh_resolve_output</code> 也可能立即发送，并不总要等待 ARP。解析排队、失败和 L2 头构造失败另列分支。</p>
-<p>SYN/ACK 通过 <code>tcp_v4_send_synack → ip_build_and_send_pkt → ip_local_out</code> 输出；RST 回复通过 <code>tcp_v4_send_reset → ip_send_unicast_reply → ip_push_pending_frames → ip_send_skb → ip_local_out</code> 输出。两者接入 OUTPUT/POSTROUTING，不强行经过普通 TCP 数据发送包装函数。noqueue 分支直接调用单 skb 校验，不经过列表校验。</p>
+<p>SYN/ACK 通过 <code>tcp_v4_send_synack → ip_build_and_send_pkt → ip_local_out</code> 输出；RST 回复通过 <code>tcp_v4_send_reset → ip_send_unicast_reply → ip_push_pending_frames → ip_send_skb → ip_local_out</code> 输出。两者接入 OUTPUT/POSTROUTING，不强行经过普通 TCP 数据发送包装函数。noqueue 分支直接调用单 skb 校验，不经过列表校验。qdisc 的 sch_direct_xmit 仅在 validate=true 时调用列表校验；已校验的重排队 skb 可以跳过该步骤。</p>
 <h3>各 hook 的函数级执行顺序</h3>
 <p>图二还包含四列独立展开：PREROUTING 的 defrag → raw → conntrack → mangle → DNAT；INPUT 的 mangle → filter → security → SNAT → confirm；OUTPUT 的 defrag → raw → conntrack → mangle/reroute → DNAT/reroute → filter/security；POSTROUTING 的 mangle → SNAT → confirm。每列都给出 v6.6 回调函数名，虚线与主图对应。未注册的模块不执行；nft/BPF 可插入配置的优先级，不能理解为固定在 legacy 之后。</p>
 <p>输入函数或 hook 名称可高亮匹配节点，并放大定位；重复点击可遍历结果。页面内 SVG 支持选择文字和点击关键节点跳转到 v6.6 源文件，也可单独打开或下载。</p>

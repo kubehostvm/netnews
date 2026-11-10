@@ -641,13 +641,21 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "1460136fe98993de33d027e865fccf2521c2ff86d3ccba1e4da1f095ccf720dc"
+      "fingerprint": "71945cb629af3c6e35928bded7226f82efa6458347edbdd2fedbefd0ed9287df"
     },
     "direct -> validateout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "921f134df4d2679f0d20da46bd773902a7ab5c9608536789e8f4a7db65f9abb9"
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 314,
+          "end": 327,
+          "explanation": "sch_direct_xmit calls validate_xmit_skb_list only when validate is true."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "71f2f98e05d832bd85564e7c5ca8680102f1bea6a219eba6ae5b8df26a712638"
     },
     "hard -> one": {
       "kind": "unclassified",
@@ -1741,7 +1749,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "683526e6f7db2448b528d26b011c9c7d1731b00480e7747ec1859d835995bb3e"
+      "fingerprint": "03553c1280440613d9880c58ca1163327875985cf8a58e2af57128a65147fb88"
     },
     "node:validateout": {
       "kind": "unclassified",
@@ -2562,48 +2570,62 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "d73cbaddc9ccf23217e657c3e44a8e400044b94ac616c3f59b5327eb43872b8a"
+    },
+    "direct -> hard": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 325,
+          "end": 342,
+          "explanation": "When validate=false skip list validator; a nonempty skb and running TX queue permit dev_hard_start_xmit."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "24fbbae5e2ad43db46cb3ab2495c30335193c9faf6d13d7dfd9fee36355f430d"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
+      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
+      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
+      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
+      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
+      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
+      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
+      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
+      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
     }
   },
   "obsolete": {

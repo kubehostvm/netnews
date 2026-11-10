@@ -146,7 +146,7 @@ digraph tcp {
  enqueue [label="__dev_xmit_skb()\nqdisc enqueue / optional bypass"];
  qrun [label="qdisc_run() → __qdisc_run()"];
  restart [label="qdisc_restart()\n→ dequeue_skb()"];
- direct [label="sch_direct_xmit()"];
+ direct [label="sch_direct_xmit(): validate?",shape=diamond];
  validateout [label="validate_xmit_skb_list()\niterate skb list"];
  validatesingle [label="validate_xmit_skb()\nsoftware GSO/checksum fallback if needed"];
  hard [label="dev_hard_start_xmit()"];
@@ -158,7 +158,7 @@ digraph tcp {
  finishout -> finishout2 [label="ordinary packet"]; finishout -> gso [label="oversized / GSO"]; gso -> finishout2;
  finishout2 -> gw -> neigh; neigh -> hh [label="cache usable"]; hh -> devqueue;
  neigh -> noutput [label="otherwise"]; noutput -> connected [label="connected callback"]; noutput -> resolve [label="resolve callback"];
- resolve -> event; event -> devqueue [label="0 and valid L2 header: immediate output"]; event -> waitarp [label="nonzero: queued / consumed"]; event -> neighdrop [style=dashed,label="0 but L2 header construction fails"]; connected -> neighdrop [style=dashed,label="L2 header construction fails"]; waitarp -> noutput [style=dashed,label="later resolution succeeds"]; waitarp -> neighdrop [style=dashed,label="failure / eviction"]; connected -> devqueue -> devqueue2 -> netegress -> tcegress -> pick -> enqueue -> qrun -> restart -> direct -> validateout -> validatesingle -> hard -> one -> start -> ndo;
+ resolve -> event; event -> devqueue [label="0 and valid L2 header: immediate output"]; event -> waitarp [label="nonzero: queued / consumed"]; event -> neighdrop [style=dashed,label="0 but L2 header construction fails"]; connected -> neighdrop [style=dashed,label="L2 header construction fails"]; waitarp -> noutput [style=dashed,label="later resolution succeeds"]; waitarp -> neighdrop [style=dashed,label="failure / eviction"]; connected -> devqueue -> devqueue2 -> netegress -> tcegress -> pick -> enqueue -> qrun -> restart -> direct; direct -> validateout [label="validate=true"]; direct -> hard [label="validate=false: already validated skb"]; validateout -> validatesingle -> hard -> one -> start -> ndo;
  pick -> validatesingle [style=dashed,label="noqueue path; skips list validator"];
  }
  subgraph cluster_hooks {
