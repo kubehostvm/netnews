@@ -101,13 +101,13 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "ee4007f8e8bd1b09b65b22a77572efc8ec4410723260d52e191845a523eb19ad"
+      "fingerprint": "f183c2579cca790dc87fe05dd8cf4b51015379986026b3081052aca2c335345c"
     },
     "iprcv -> ipcore": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "8d366346a5496eb9e78580fdaadcb64bdd54cdabb89738b2d860b3abcc10d981"
+      "fingerprint": "73fa0f3087861629cd4c0880b1b0e2ba3c84081b9faff89bd3072dca7cf0b426"
     },
     "ipcore -> pre": {
       "kind": "unclassified",
@@ -144,12 +144,6 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "b35784ae400947f8ccbded37ca2e2e0626df26caf7e6ac6c67f40c5aea397aa3"
-    },
-    "route -> dstin": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "09a80cbc528f32bcdf3772fa2efc28a8e45a278fbb774f094a1d952f98124b24"
     },
     "dstin -> local": {
       "kind": "unclassified",
@@ -341,7 +335,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "64fb0d080ed29cb763d5c8ebcc4957dfca4560324e4c3fa9f0c287ce98c21201"
+      "fingerprint": "fc228c59ea86f13d18dd42d2af1af108ae529cf2a5056aae37a9d9d08624c494"
     },
     "data -> queue": {
       "kind": "unclassified",
@@ -354,18 +348,6 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "86ffb9c78b4bd2ca74e23af634a0b0e0144047c0fe9c47b67e1e7fd6006fb4df"
-    },
-    "ofo -> queue": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "d136126c3471fb9dc64485dcf8ae225f1ae29d1e97eca48d1961f20cc8835133"
-    },
-    "queue -> ready": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "7a0b55ae24be7876b905c22acd67e2ac84975c87d54a71b909537838e49c74f9"
     },
     "ready -> recv": {
       "kind": "unclassified",
@@ -605,31 +587,13 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "6b2b19b79b74828b861546fb6d7bf89c9c5780dd1fa8dd9745ac91034dac439e"
-    },
-    "neigh -> connected": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "46447474d91ef042a74627876f51b805a0f9ec906caf47b073c888752fc7e166"
-    },
-    "neigh -> resolve": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "57d0b867195f2a5bb7e2cd11d816526d2bd9b295d19e59dec92f437642ef166e"
+      "fingerprint": "725eab71d50b0be3eecf4836f53aec6f19ba4a233284a85a7c8cb762363ffdd9"
     },
     "connected -> devqueue": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "372b18ec284d8ab7dd70626108e5d05673d0e7e4cbc40adf466390e235c6f31e"
-    },
-    "resolve -> devqueue": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "4a8ed4d3fab511ef922e758dd4700e8ce0e52b2ebb6d399840917d20a364ffdd"
+      "fingerprint": "5d35f1c4fa7017c03ef1925f6a2b041a39801d5c01cc52d200d03c081cfde19c"
     },
     "devqueue -> devqueue2": {
       "kind": "unclassified",
@@ -1127,20 +1091,6 @@
       "reviewed": true,
       "fingerprint": "ded43c8138583009d6c6f28101d655c6df7d18768bb2c9ed8c3d49ae3e3ebac3"
     },
-    "validdst -> dstin": {
-      "kind": "conditional",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/ip_input.c",
-          "start": 364,
-          "end": 453,
-          "explanation": "Valid destination bypasses route lookup; ip_rcv_finish calls dst_input after successful core processing."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "005f1af80c849b7537ebb907892f4f8be3cace30fbc60b6cf85fa0478e824782"
-    },
     "ack -> acksend": {
       "kind": "conditional",
       "evidence": [
@@ -1299,7 +1249,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "12860d6df907824395406cabbb1cde2d390cd09e2f2f618f77ed41c9c8d6fa4f"
+      "fingerprint": "1512e27b6f58da4d4596da76bed9ab1f2b7afce4dabcaf702b15278994adadc6"
     },
     "node:ipcore": {
       "kind": "unclassified",
@@ -1485,7 +1435,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "57837371592a909f6d10783b2caf85add0a77e77fb74231dbc53f7dddebab37b"
+      "fingerprint": "0aede290134a476471b637919ebc90e8df285ad4d58de5b00436e19041a31729"
     },
     "node:queue": {
       "kind": "unclassified",
@@ -1737,19 +1687,19 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "c826f5d92b6e346d3d6df93c5e7cb87bcbafe4ab002beec74077e69b79d712f1"
+      "fingerprint": "38fde561e78f07375904f7f3798009a2f8e9ce6ffbe9bffb6f345ced7509764d"
     },
     "node:connected": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "85a58152573de8cfd2a60d6c210f5aec0932aec1147f5e3ead31c23a3dc2ae5f"
+      "fingerprint": "60414b757275a65c6b4938ad9bb7f0450b6f52a505c04c71e92b0cfe6f754f5d"
     },
     "node:resolve": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "71509b2e47cb38994aee14cd6d370ccc9af4b3d598e859f44a4279f2a8c37227"
+      "fingerprint": "2d286784619715bd17932cd84521ea4bc3a4282bc2642d317cea73281da43729"
     },
     "node:devqueue": {
       "kind": "unclassified",
@@ -2194,48 +2144,374 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "c4297924d6b9fa405e9675afb4d65b2828309419048a94ac237ed242b82d8fae"
+    },
+    "demux -> iplist": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "681bf7e05aabf54edde3695cb69183e2df1553a0ceab99c20ce27639ab41ed86"
+    },
+    "iplist -> sublist": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 643,
+          "end": 675,
+          "explanation": "ip_list_rcv validates each skb with ip_rcv_core and calls ip_sublist_rcv for device/net groups."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "93e4f4de3e808dfcab56f2431ce8d3c46a66a923f4c145ea6f569e0829d122cd"
+    },
+    "sublist -> prelist": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 634,
+          "end": 639,
+          "explanation": "ip_sublist_rcv invokes NF_HOOK_LIST for PREROUTING."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "bc653b74f617e3bc7baf857635acbc577103fa48d03415c7c6b58eb5bcb3a9bf"
+    },
+    "prelist -> listfinish": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 634,
+          "end": 639,
+          "explanation": "Remaining accepted list entries are passed to ip_list_rcv_finish after NF_HOOK_LIST."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "a502f04adb6c21fa175e84b470b990ef382d5c35669ff2ed4284e8f6022d41df"
+    },
+    "prelist -> ipfinish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6702b9c5cc55d92f91a20fbaaa8dd62cda93fc6f751bb2f13510b635ccc975b9"
+    },
+    "listfinish -> ipfinishcore": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 594,
+          "end": 614,
+          "explanation": "List finish applies l3mdev_ip_rcv then invokes ip_rcv_finish_core for each skb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "6258bf5fb3506e77b0ef963ce722f43b5d852b1b042691263f6b7cb8cfacbb05"
+    },
+    "subfinish -> dstin": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 574,
+          "end": 582,
+          "explanation": "ip_sublist_rcv_finish iterates grouped skbs and invokes dst_input."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "cfe4eb8d5e40850e61f1d81318227d63bc8d89cdc3affd31c6f1ecc018118888"
+    },
+    "delivery -> subfinish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2d38fa0b443e67de83e52a40d9d0a74af7b28081b82f953ea7067ac30a3c5454"
+    },
+    "delivery -> dstin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "32203e5503439c5bf896fb47673e2c9f640d7f6007162ff311b2678b2595df6c"
+    },
+    "validdst -> delivery": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "53172cd9496a4372857cfe0a5cf13c8e18dc03e27103e12edb79c85b5b7d5b00"
+    },
+    "route -> delivery": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9ee87d99b0f996e5f5bd33d5c11b4f8d011ac6cf0f21b8e6889d9e9c3408fb4c"
+    },
+    "data -> ofodrain": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f33edb722b1102eb8e55ea6170bd273dbc19f2bd153e09b6f484349a9b2f9887"
+    },
+    "ofo -> ofodrain": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "60194db7ab5c2929db42058552f02ae522ef3e342ddd2226743b43ce996140ce"
+    },
+    "ofodrain -> recvqueue": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_input.c",
+          "start": 4750,
+          "end": 4795,
+          "explanation": "tcp_ofo_queue coalesces or directly queues skb via __skb_queue_tail; it does not call tcp_queue_rcv."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "7ed0c46269de0d9f7228ba052c87a6dc0776d8635c92641c18ca583ee788f16f"
+    },
+    "recvqueue -> ready": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c1b78c73e65a2ed040bbef198e77cb799e099ce59b09423e6c260cdf29e698f2"
+    },
+    "queue -> recvqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "31982cc204948d769229dcbe999396c4fed7d4eee8fc7385d8ab8f869b9e8174"
+    },
+    "neigh -> hh": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "include/net/neighbour.h",
+          "start": 529,
+          "end": 542,
+          "explanation": "Cache path requires !skip_cache, NUD_CONNECTED and nonzero hh_len."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "4532e6906b1290277f25d7d710a4a50215ae163050df2c61d098303323a9c649"
+    },
+    "neigh -> noutput": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "include/net/neighbour.h",
+          "start": 529,
+          "end": 542,
+          "explanation": "Fallback executes READ_ONCE(n->output)(n, skb)."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "b18f87631f0e12316c53643a0ee2fa01d21398083b2b53330ab074e7af6881b8"
+    },
+    "hh -> devqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4b7249597bbd666ed321474f3f304f2887f2c80044e4a18ffe14cc3ed52e27ad"
+    },
+    "noutput -> connected": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "aa0be025ccfc426f900438496beccad26ba964d87e27b26a3bae24e2cdb29fa4"
+    },
+    "noutput -> resolve": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "26b0749b93f858368fd0525735c7f1c8c74f4d9e6ec43aed93fb5bfaf9a2cc7f"
+    },
+    "event -> waitarp": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e791ca6f7eb634cf2d70796362541d6d9969694bb1388c2839a926c06088e500"
+    },
+    "event -> devqueue": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/neighbour.c",
+          "start": 1536,
+          "end": 1567,
+          "explanation": "When event_send is zero and dev_hard_header succeeds, call dev_queue_xmit."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "88481f5fa724a1de7e367a2c07f1677ff9cee7e4f96bf447284c64769cf68db3"
+    },
+    "waitarp -> noutput": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5818e15b4acadd7e825e52b50e8169f0d2c0ba18992e1ea6535e27f662397fa6"
+    },
+    "waitarp -> neighdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8516e0b720a003ba2b11081eb394faa2338e203cc71c3bc745d6e13ce921863c"
+    },
+    "resolve -> event": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/neighbour.c",
+          "start": 1536,
+          "end": 1567,
+          "explanation": "neigh_resolve_output calls neigh_event_send; zero continues immediate L2 construction."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "1810cc0772b9c43db6125601fcbb8ba3c47881f1b28f7af3410e22328fcb5e42"
+    },
+    "node:iplist": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "01a607c96bb97b471f93d161e79c2c4d5feccea54ae51674464598e00690eee5"
+    },
+    "node:sublist": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8de961b4946155c146c062e5deff394c6a230d88c9fc322543d5ff1f432d1eb2"
+    },
+    "node:prelist": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "bae62e73d02105eb355ca984b3ac4a4eb0730966439f72861e3b0825a335e398"
+    },
+    "node:listfinish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "625e2c4b0b3df4b86a082e9af43242297d5b75346ab678f4b50b9f7aaffe8954"
+    },
+    "node:subfinish": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9e0c3aef37e81cbabd5ce2d9266eaaf0f1213efbfc0c887470f99aa676ced707"
+    },
+    "node:delivery": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d7d2fb23c7f2c80cac5968486b80da1c6901dc7425cb083ffa1322b666f8e513"
+    },
+    "node:ofodrain": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7d961022e1a5c228f1842c80e3acc45fc593c2effa8c9ee067287b3b365cf5e5"
+    },
+    "node:recvqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e57150103da7f8dae1dfd4c9dc045ce27c496dcfb2620fb1841295b5a2eca1ac"
+    },
+    "node:hh": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d760ce12235621f606c241b0df7af77443cac495ef37a104c5232db27fe99f8d"
+    },
+    "node:noutput": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c0fec8f83fc0626fdcedeece60a25fd520a4210e175f03b6dad2583fbc09045d"
+    },
+    "node:event": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2795562be2ab0595dc0d961b2c8b18dd98c3f85399b411d814740d3dad37a0eb"
+    },
+    "node:waitarp": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "be3b3e8d26f49433363beb7acd9e3c2b12eb7e8c6b37bc599e34e259865161c8"
+    },
+    "node:neighdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "45dc1c980b7eac420dcc02a7232b25e719b4a03d88b590ef0de01ba324d3370e"
+    },
+    "event -> neighdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e3b0856362570d47c54c6b172ef5f25ccd6e91369f9ee1be77f0dff1c66bfc47"
+    },
+    "connected -> neighdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "fb5a41cd4ae62b756b904d506e5af5eb97eb571897518cd2a9e4019e4318a4f1"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "bd807038d738d5c5c827b650966cf5735ac722a00ecfe26fd9f2eb591a896318"
+      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
     }
   },
   "obsolete": {
@@ -2258,6 +2534,56 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false
+    },
+    "neigh -> connected": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "46447474d91ef042a74627876f51b805a0f9ec906caf47b073c888752fc7e166"
+    },
+    "resolve -> devqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4a8ed4d3fab511ef922e758dd4700e8ce0e52b2ebb6d399840917d20a364ffdd"
+    },
+    "route -> dstin": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "09a80cbc528f32bcdf3772fa2efc28a8e45a278fbb774f094a1d952f98124b24"
+    },
+    "queue -> ready": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7a0b55ae24be7876b905c22acd67e2ac84975c87d54a71b909537838e49c74f9"
+    },
+    "neigh -> resolve": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "57d0b867195f2a5bb7e2cd11d816526d2bd9b295d19e59dec92f437642ef166e"
+    },
+    "ofo -> queue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d136126c3471fb9dc64485dcf8ae225f1ae29d1e97eca48d1961f20cc8835133"
+    },
+    "validdst -> dstin": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 364,
+          "end": 453,
+          "explanation": "Valid destination bypasses route lookup; ip_rcv_finish calls dst_input after successful core processing."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "005f1af80c849b7537ebb907892f4f8be3cace30fbc60b6cf85fa0478e824782"
     }
   }
 }

@@ -32,8 +32,12 @@ class EvidenceTests(unittest.TestCase):
         overview = (root / 'diagrams/netfilter-bpf-overview.dot').read_text()
         for wrong in ('ack -> transmit ', 'early -> route ', 'finish -> receive ', 'bo -> bd'):
             self.assertNotIn(wrong, tcp + overview)
-        for required in ('acksend -> transmit2', 'validdst -> dstin', 'validdst -> route', 'GRO_MERGED_FREE', 'UNSPEC / no TCX', 'brtx -> bo; bo -> bpost'):
+        for required in ('acksend -> transmit2', 'validdst -> delivery', 'validdst -> route', 'GRO_MERGED_FREE', 'UNSPEC / no TCX', 'brtx -> bo; bo -> bpost'):
             self.assertIn(required, tcp + overview)
+        for wrong in ('ofo -> queue ', 'neigh -> connected [label="resolved"]', 'neigh -> resolve [label="unresolved"]'):
+            self.assertNotIn(wrong, tcp)
+        for required in ('ip_list_rcv()', 'NF_HOOK_LIST(PREROUTING)', 'ip_sublist_rcv_finish()', 'subfinish -> dstin', 'ofodrain -> recvqueue', 'READ_ONCE(n->output)', 'event -> devqueue', 'event -> waitarp'):
+            self.assertIn(required, tcp)
 
 
 if __name__ == '__main__':

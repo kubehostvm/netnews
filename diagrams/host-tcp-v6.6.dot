@@ -25,7 +25,13 @@ digraph tcp {
  tcxin [label="tcx_run() [if TCX enabled]\nnon-UNSPEC → ingress verdict\nUNSPEC / no TCX → tc_run() → tcf_classify()\n→ cls_bpf_classify() → bpf_prog_run()",fillcolor="#dcfce7"];
  nfin [label="nf_ingress() → nf_hook_ingress()\nNETDEV ingress / nft netdev or inet",fillcolor="#f3e8ff"];
  demux [label="VLAN / rx_handler / protocol demux\nIPv4 handler selected"];
- iprcv [label="ip_rcv()"];
+ iplist [label="Batch handler: ip_list_rcv()\n→ ip_rcv_core() for each skb\ngroup by device / netns"];
+ sublist [label="ip_sublist_rcv()"];
+ prelist [label="NF_HOOK_LIST(PREROUTING)\nsame priority sequence as single-packet hook\nqueued packets may later use ip_rcv_finish()",fillcolor="#ffedd5"];
+ listfinish [label="ip_list_rcv_finish()\n→ l3mdev_ip_rcv() per remaining skb\n→ ip_rcv_finish_core()"];
+ subfinish [label="ip_sublist_rcv_finish()\n→ dst_input() for each grouped skb"];
+ delivery [label="Successful core return to caller\nsingle skb: ip_rcv_finish() → dst_input()\nbatch: group by dst → ip_sublist_rcv_finish()",shape=diamond];
+ iprcv [label="Single-packet handler: ip_rcv()"];
  ipcore [label="ip_rcv_core()\nIPv4 header validation"];
  pre [label="NF_HOOK(NF_INET_PRE_ROUTING) = PREROUTING\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100",fillcolor="#ffedd5"];
  ipfinish [label="ip_rcv_finish()"];
@@ -56,7 +62,9 @@ digraph tcp {
  fast [label="fast path: checksum / ACK processing\ntcp_queue_rcv() for payload"];
  validate [label="slow path: tcp_validate_incoming()\n→ tcp_ack() / tcp_urg() as needed"];
  data [label="tcp_data_queue()"];
- ofo [label="tcp_data_queue_ofo()\n→ later tcp_ofo_queue()"];
+ ofo [label="tcp_data_queue_ofo()\nstore out-of-order skb in RB tree"];
+ ofodrain [label="Later in-order data: tcp_ofo_queue()\n→ tcp_try_coalesce() / tcp_rcv_nxt_update()\n→ __skb_queue_tail() OR kfree_skb_partial()\nFIN may call tcp_fin(); duplicates may drop"];
+ recvqueue [label="Socket receive queue (data structure)\nnot a function call",shape=cylinder];
  queue [label="tcp_queue_rcv()\nreceive queue / coalescing"];
  ready [label="tcp_data_ready() → sk->sk_data_ready()\nusually sock_def_readable()\nwake readers when conditions met"];
  recv [label="read / recv / recvfrom / recvmsg\nseparate application syscall"];
@@ -70,10 +78,14 @@ digraph tcp {
  finish -> normal [label="GRO_NORMAL"]; normal -> receive;
  finish -> held [label="HELD / MERGED"]; held -> complete [style=dashed,label="aggregate later delivered"]; complete -> normal;
  finish -> mergedfree [label="MERGED_FREE"];
- receive -> receive2 -> core -> generic -> taps -> tcin -> tcxin -> nfin -> demux -> iprcv -> ipcore -> pre -> ipfinish -> ipfinishcore;
- ipfinishcore -> early [style=dashed]; early -> validdst; ipfinishcore -> validdst [label="early demux skipped"]; validdst -> dstin [label="yes: cached route"]; validdst -> route [label="no"]; route -> dstin; dstin -> local -> defrag -> input -> localfinish -> protocol -> tcprcv -> lookup -> policy -> tcpfilter -> skfilter -> cgin -> securityin -> sockfilter -> own;
+ receive -> receive2 -> core -> generic -> taps -> tcin -> tcxin -> nfin -> demux;
+ demux -> iprcv [label="single handler"]; iprcv -> ipcore -> pre -> ipfinish -> ipfinishcore;
+ demux -> iplist [label="list handler"]; iplist -> sublist -> prelist -> listfinish -> ipfinishcore;
+ prelist -> ipfinish [style=dashed,label="NFQUEUE reinjection continuation"];
+ ipfinishcore -> early [style=dashed]; early -> validdst; ipfinishcore -> validdst [label="early demux skipped"]; validdst -> delivery [label="yes: cached route"]; validdst -> route [label="no"]; route -> delivery;
+ delivery -> dstin [label="single"]; delivery -> subfinish [label="batch"]; subfinish -> dstin; dstin -> local -> defrag -> input -> localfinish -> protocol -> tcprcv -> lookup -> policy -> tcpfilter -> skfilter -> cgin -> securityin -> sockfilter -> own;
  own -> dorcv [label="no"]; own -> backlog [label="yes"]; backlog -> release [style=dashed,label="later"]; release -> dorcv;
- dorcv -> established [label="ESTABLISHED"]; established -> prediction; prediction -> fast [label="yes"]; prediction -> validate [label="no"]; validate -> data; data -> queue [label="in order"]; data -> ofo [label="out of order"]; ofo -> queue [style=dashed,label="when gaps filled"]; fast -> ready; queue -> ready;
+ dorcv -> established [label="ESTABLISHED"]; established -> prediction; prediction -> fast [label="yes"]; prediction -> validate [label="no"]; validate -> data; data -> queue [label="in order"]; data -> ofo [label="out of order"]; data -> ofodrain [style=dashed,label="in-order data fills gap"]; ofo -> ofodrain [style=dashed,label="stored skb processed later, not direct call"]; ofodrain -> recvqueue; queue -> recvqueue; fast -> ready; recvqueue -> ready [style=dashed,label="caller may notify reader"];
  ready -> recv [style=dashed,label="wakeup / independent read"]; recv -> recvmsg -> inetrecv -> tcprecv -> lockedrecv -> copy;
  }
  subgraph cluster_states {
@@ -118,9 +130,14 @@ digraph tcp {
  gso [label="ip_finish_output_gso()\nor ip_fragment()",fillcolor="#fef9c3"];
  finishout2 [label="ip_finish_output2()"];
  gw [label="ip_neigh_for_gw()"];
- neigh [label="neigh_output()"];
- connected [label="neigh_connected_output()\nOR neigh_hh_output() [cached L2 header]"];
- resolve [label="neigh_resolve_output()\n→ neigh_event_send()\nARP unresolved: queue / probe",fillcolor="#fef9c3"];
+ neigh [label="neigh_output():\n!skip_cache && NUD_CONNECTED && hh_len?",shape=diamond];
+ hh [label="neigh_hh_output()\ncached L2 header → dev_queue_xmit()"];
+ noutput [label="READ_ONCE(n->output)(n, skb)\ncallback selected by neighbour state"];
+ event [label="neigh_event_send() result",shape=diamond];
+ waitarp [label="Resolution pending: skb queued / ARP probe\nlater neighbour update may release queue"];
+ neighdrop [label="Failed resolution / queue limit / dead neighbour\nerror report / skb disposal",fillcolor="#fee2e2"];
+ connected [label="neigh_connected_output()\nconstruct L2 header → dev_queue_xmit()"];
+ resolve [label="neigh_resolve_output()\n→ neigh_event_send()\nmay transmit immediately, not always unresolved",fillcolor="#fef9c3"];
  devqueue [label="dev_queue_xmit()"];
  devqueue2 [label="__dev_queue_xmit()"];
  netegress [label="nf_hook_egress()\nNETDEV egress (nft)",fillcolor="#f3e8ff"];
@@ -138,7 +155,9 @@ digraph tcp {
  send -> socksend -> inet -> tcpsend -> locked -> push -> pending -> write -> transmit -> transmit2 -> ipqueue -> ipqueue2 -> outroute -> localout -> localout2 -> output -> dstout -> ipout -> post -> ipfinishout -> cgout -> finishout;
  output -> reroute [style=dashed]; reroute -> dstout [style=dashed];
  finishout -> finishout2 [label="ordinary packet"]; finishout -> gso [label="oversized / GSO"]; gso -> finishout2;
- finishout2 -> gw -> neigh; neigh -> connected [label="resolved"]; neigh -> resolve [label="unresolved"]; resolve -> devqueue [style=dashed,label="after resolution"]; connected -> devqueue -> devqueue2 -> netegress -> tcegress -> pick -> enqueue -> qrun -> restart -> direct -> validateout -> hard -> one -> start -> ndo;
+ finishout2 -> gw -> neigh; neigh -> hh [label="cache usable"]; hh -> devqueue;
+ neigh -> noutput [label="otherwise"]; noutput -> connected [label="connected callback"]; noutput -> resolve [label="resolve callback"];
+ resolve -> event; event -> devqueue [label="0 and valid L2 header: immediate output"]; event -> waitarp [label="nonzero: queued / consumed"]; event -> neighdrop [style=dashed,label="0 but L2 header construction fails"]; connected -> neighdrop [style=dashed,label="L2 header construction fails"]; waitarp -> noutput [style=dashed,label="later resolution succeeds"]; waitarp -> neighdrop [style=dashed,label="failure / eviction"]; connected -> devqueue -> devqueue2 -> netegress -> tcegress -> pick -> enqueue -> qrun -> restart -> direct -> validateout -> hard -> one -> start -> ndo;
  pick -> validateout [style=dashed,label="noqueue / direct transmit path"];
  }
  subgraph cluster_hooks {

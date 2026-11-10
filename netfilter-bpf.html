@@ -48,6 +48,9 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <p>图二新增 <strong>ixgbe / MSI-X / 普通 RX</strong> 实例：<code>ixgbe_msix_clean_rings → napi_schedule_irqoff → ixgbe_poll → ixgbe_clean_rx_irq → ixgbe_run_xdp → ixgbe_build_skb/ixgbe_construct_skb → ixgbe_rx_skb → napi_gro_receive</code>；发送为 <code>ixgbe_xmit_frame → __ixgbe_xmit_frame → ixgbe_xmit_frame_ring → ixgbe_tx_map</code>，稍后由 <code>ixgbe_clean_tx_irq</code> 回收。未配置 Native XDP 时不会执行其程序，AF_XDP zero-copy 是另一分支。</p>
 <p>另列 connect 主动建连、listen/accept 被动建连、SYN/ACK、shutdown/close、FIN 和主动 RST 路径，并连回既有发送/接收处理。它们不是一次 sendmsg 的同步子调用；图中用独立区域与虚线区分。</p>
 <p>源码：<a href="https://github.com/torvalds/linux/blob/v6.6/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c">ixgbe_main.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/af_inet.c">af_inet.c</a>、<a href="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/tcp.c">tcp.c</a>。换成 virtio_net、mlx5 或其他驱动时，驱动节点必须替换，不能沿用 ixgbe 调用链。</p>
+<h3>批处理、乱序和邻居输出分支</h3>
+<p>IPv4 单包走 <code>ip_rcv → NF_HOOK → ip_rcv_finish</code>；批处理另走 <code>ip_list_rcv → ip_sublist_rcv → NF_HOOK_LIST → ip_list_rcv_finish → ip_sublist_rcv_finish</code>。两者共享 <code>ip_rcv_finish_core</code>，成功后返回各自调用者，再交给 <code>dst_input</code>；批处理中的 NFQUEUE 报文回注可使用单包 continuation。</p>
+<p>乱序恢复由 <code>tcp_ofo_queue</code> 自行合并或加入接收队列，不调用 <code>tcp_queue_rcv</code>。邻居输出先判断能否使用缓存 L2 头，否则调用 <code>n-&gt;output</code>；<code>neigh_resolve_output</code> 也可能立即发送，并不总要等待 ARP。解析排队、失败和 L2 头构造失败另列分支。</p>
 <h3>各 hook 的函数级执行顺序</h3>
 <p>图二还包含四列独立展开：PREROUTING 的 defrag → raw → conntrack → mangle → DNAT；INPUT 的 mangle → filter → security → SNAT → confirm；OUTPUT 的 defrag → raw → conntrack → mangle/reroute → DNAT/reroute → filter/security；POSTROUTING 的 mangle → SNAT → confirm。每列都给出 v6.6 回调函数名，虚线与主图对应。未注册的模块不执行；nft/BPF 可插入配置的优先级，不能理解为固定在 legacy 之后。</p>
 <p>输入函数或 hook 名称可高亮匹配节点，并放大定位；重复点击可遍历结果。页面内 SVG 支持选择文字和点击关键节点跳转到 v6.6 源文件，也可单独打开或下载。</p>
