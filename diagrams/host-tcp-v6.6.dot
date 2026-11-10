@@ -147,7 +147,8 @@ digraph tcp {
  qrun [label="qdisc_run() → __qdisc_run()"];
  restart [label="qdisc_restart()\n→ dequeue_skb()"];
  direct [label="sch_direct_xmit()"];
- validateout [label="validate_xmit_skb_list()\n→ validate_xmit_skb()\nsoftware GSO/checksum fallback if needed"];
+ validateout [label="validate_xmit_skb_list()\niterate skb list"];
+ validatesingle [label="validate_xmit_skb()\nsoftware GSO/checksum fallback if needed"];
  hard [label="dev_hard_start_xmit()"];
  one [label="xmit_one()\n→ dev_queue_xmit_nit() [AF_PACKET TX tap]"];
  start [label="netdev_start_xmit()\n→ __netdev_start_xmit()"];
@@ -157,8 +158,8 @@ digraph tcp {
  finishout -> finishout2 [label="ordinary packet"]; finishout -> gso [label="oversized / GSO"]; gso -> finishout2;
  finishout2 -> gw -> neigh; neigh -> hh [label="cache usable"]; hh -> devqueue;
  neigh -> noutput [label="otherwise"]; noutput -> connected [label="connected callback"]; noutput -> resolve [label="resolve callback"];
- resolve -> event; event -> devqueue [label="0 and valid L2 header: immediate output"]; event -> waitarp [label="nonzero: queued / consumed"]; event -> neighdrop [style=dashed,label="0 but L2 header construction fails"]; connected -> neighdrop [style=dashed,label="L2 header construction fails"]; waitarp -> noutput [style=dashed,label="later resolution succeeds"]; waitarp -> neighdrop [style=dashed,label="failure / eviction"]; connected -> devqueue -> devqueue2 -> netegress -> tcegress -> pick -> enqueue -> qrun -> restart -> direct -> validateout -> hard -> one -> start -> ndo;
- pick -> validateout [style=dashed,label="noqueue / direct transmit path"];
+ resolve -> event; event -> devqueue [label="0 and valid L2 header: immediate output"]; event -> waitarp [label="nonzero: queued / consumed"]; event -> neighdrop [style=dashed,label="0 but L2 header construction fails"]; connected -> neighdrop [style=dashed,label="L2 header construction fails"]; waitarp -> noutput [style=dashed,label="later resolution succeeds"]; waitarp -> neighdrop [style=dashed,label="failure / eviction"]; connected -> devqueue -> devqueue2 -> netegress -> tcegress -> pick -> enqueue -> qrun -> restart -> direct -> validateout -> validatesingle -> hard -> one -> start -> ndo;
+ pick -> validatesingle [style=dashed,label="noqueue path; skips list validator"];
  }
  subgraph cluster_hooks {
  label="Inside each IPv4 Netfilter hook: actual rule dispatch (not a sixth chain)";color="#f97316";
@@ -254,6 +255,12 @@ digraph tcp {
  lsn -> listen [style=dotted,constraint=false]; req -> accept [style=dashed,constraint=false,label="accept queue"]; fincall -> finsend -> pending [style=dotted,constraint=false];
  data -> finrecv [style=dashed,constraint=false]; fincall -> abort [style=dashed]; abort -> transmit [style=dotted,constraint=false];
  }
+ synackout [label="tcp_v4_send_synack()\n→ tcp_make_synack()\n→ ip_build_and_send_pkt()"];
+ resetout [label="tcp_v4_send_reset()\n→ ip_send_unicast_reply()\n→ ip_append_data()\n→ ip_push_pending_frames() → ip_send_skb()"];
+ listen -> synackout [style=dashed,label="SYN/ACK output"]; synackout -> localout;
+ reset -> resetout [style=dashed,label="RST reply output"]; resetout -> localout;
+ reuse [label="Listener SO_REUSEPORT selection\ninet_lookup_reuseport() → reuseport_select_sock()\nSK_REUSEPORT: bpf_run_sk_reuseport()\ncompat filter: run_bpf_filter() → bpf_prog_run_save_cb()\nMay fall back to hash selection",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/core/sock_reuseport.c",target="_blank"];
+ lookup -> reuse [style=dashed,label="reuseport listener group",constraint=false];
  sklookup [label="Listener lookup only (not established hash hit):\n__inet_lookup_listener() → inet_lookup_run_sk_lookup()\n→ bpf_sk_lookup_run_v4() [BPF_PROG_TYPE_SK_LOOKUP]\nMay select socket / reject; netns attachment",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/inet_hashtables.c",target="_blank"];
  lookup -> sklookup [style=dashed,label="listener lookup",constraint=false];
  xtbpf [label="iptables -m bpf: optional rule match\nipt_do_table() → match->match()\n→ bpf_mt() / bpf_mt_v1()\n→ bpf_prog_run() / bpf_prog_run_save_cb()\nSOCKET_FILTER program returns match boolean, not NF verdict",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/xt_bpf.c",target="_blank"];

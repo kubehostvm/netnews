@@ -36,6 +36,9 @@ class EvidenceTests(unittest.TestCase):
             self.assertIn(required, tcp + overview)
         for wrong in ('ofo -> queue ', 'neigh -> connected [label="resolved"]', 'neigh -> resolve [label="unresolved"]'):
             self.assertNotIn(wrong, tcp)
+        self.assertNotIn('pick -> validateout ', tcp)
+        for required in ('synackout -> localout', 'resetout -> localout', 'bpf_run_sk_reuseport()', 'pick -> validatesingle', 'validateout -> validatesingle'):
+            self.assertIn(required, tcp)
         for required in ('ip_list_rcv()', 'NF_HOOK_LIST(PREROUTING)', 'ip_sublist_rcv_finish()', 'subfinish -> dstin', 'ofodrain -> recvqueue', 'READ_ONCE(n->output)', 'event -> devqueue', 'event -> waitarp'):
             self.assertIn(required, tcp)
 

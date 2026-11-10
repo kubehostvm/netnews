@@ -625,12 +625,6 @@
       "reviewed": false,
       "fingerprint": "9affc341dd212e21e7a5146a1125032b0258cf3a7e2327175c3de80f935c3246"
     },
-    "pick -> validateout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "c8bd454a3d17eb9e1c79f4e2e5de457e4444866b1a235ece221dc7fbb33aedc3"
-    },
     "enqueue -> qrun": {
       "kind": "unclassified",
       "evidence": [],
@@ -653,13 +647,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "89531ec7f913af6665f1d023f4fa9d40029cdb01fb6272ae8e713f2a7b241c4e"
-    },
-    "validateout -> hard": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "fee6354c2cdd2a101d7b7b715826b80694ba11d42a9241118c99e16f66babfbc"
+      "fingerprint": "921f134df4d2679f0d20da46bd773902a7ab5c9608536789e8f4a7db65f9abb9"
     },
     "hard -> one": {
       "kind": "unclassified",
@@ -1759,7 +1747,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "d4837e1f355ad091b106bb70e09b35c7a76823a72770bd9685891ed1eb533bde"
+      "fingerprint": "a9561d9c468f198b10cbac274062770e3add30a52ec885b6d6105c730487d32a"
     },
     "node:hard": {
       "kind": "unclassified",
@@ -2470,48 +2458,152 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "fb5a41cd4ae62b756b904d506e5af5eb97eb571897518cd2a9e4019e4318a4f1"
+    },
+    "lookup -> reuse": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/inet_hashtables.c",
+          "start": 357,
+          "end": 425,
+          "explanation": "Conditional listener reuseport selection calls reuseport_select_sock, including after SK_LOOKUP where permitted."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "d019f7ce18c9f34f82b2986d65ded8b4b181a261463bbc0641fbb426cfa6875e"
+    },
+    "listen -> synackout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0de584e49207bbbd9f015e7b7d38cb6ec88f21ac0eb7642c4739d70cf055fe54"
+    },
+    "reset -> resetout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b2f01b340d0004a50e2650d565e12028ef72f3583cbcc782b938d30b2ccaecb6"
+    },
+    "pick -> validatesingle": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 4334,
+          "end": 4369,
+          "explanation": "Noqueue path directly invokes validate_xmit_skb before dev_hard_start_xmit, not list validator."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "d90ae123637f05b9096d4e4af0e8eccb9fd9c2c99bf4cd809e058a8e4e8afe01"
+    },
+    "validateout -> validatesingle": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "91df141656c4566a7de225e9e62b7edd5919047376831ad4f7d1e49f38116f7e"
+    },
+    "validatesingle -> hard": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "985bf83379a9291823bbcf1a575753e502519f418006cf6a32077239f433472f"
+    },
+    "synackout -> localout": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 147,
+          "end": 193,
+          "explanation": "ip_build_and_send_pkt sends SYN/ACK skb through ip_local_out."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "8f25bbf1f7e2121763f4756a8f110b4c26b39dda4c9dd54767090ddcac453d7a"
+    },
+    "resetout -> localout": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 1482,
+          "end": 1506,
+          "explanation": "ip_push_pending_frames calls ip_send_skb which invokes ip_local_out; reset reply calls pending frames."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "a0e824cc24da0cd846a11fa27b1ef00ca338788d35b228544dfd347af0422b05"
+    },
+    "node:validatesingle": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "eeb8d9a45485a0b8b3210f8149755bd3ed9cee87c9187c77a9cb725f38d4e185"
+    },
+    "node:synackout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f76c7b503e33a3b999a724bc35fd15e8934afaf072e40e4853984e372cc4ac9b"
+    },
+    "node:resetout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "cadf1da1a4014154b932eaf92a8ac38d65240b94dab5ee3ed7abc6fd523a7b47"
+    },
+    "node:reuse": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d73cbaddc9ccf23217e657c3e44a8e400044b94ac616c3f59b5327eb43872b8a"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
+      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
+      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
+      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
+      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
+      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
+      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
+      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "d84646e655436b25bcdf4e27139eac782f1b113e30105ac06e5ed443de8bfa32"
+      "fingerprint": "a2b04990264b7fd867fa6ddc855a64039d8b592868680f35e81ee24e9e05360f"
     }
   },
   "obsolete": {
@@ -2584,6 +2676,18 @@
       ],
       "reviewed": true,
       "fingerprint": "005f1af80c849b7537ebb907892f4f8be3cace30fbc60b6cf85fa0478e824782"
+    },
+    "pick -> validateout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c8bd454a3d17eb9e1c79f4e2e5de457e4444866b1a235ece221dc7fbb33aedc3"
+    },
+    "validateout -> hard": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "fee6354c2cdd2a101d7b7b715826b80694ba11d42a9241118c99e16f66babfbc"
     }
   }
 }

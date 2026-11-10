@@ -51,6 +51,7 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <h3>批处理、乱序和邻居输出分支</h3>
 <p>IPv4 单包走 <code>ip_rcv → NF_HOOK → ip_rcv_finish</code>；批处理另走 <code>ip_list_rcv → ip_sublist_rcv → NF_HOOK_LIST → ip_list_rcv_finish → ip_sublist_rcv_finish</code>。两者共享 <code>ip_rcv_finish_core</code>，成功后返回各自调用者，再交给 <code>dst_input</code>；批处理中的 NFQUEUE 报文回注可使用单包 continuation。</p>
 <p>乱序恢复由 <code>tcp_ofo_queue</code> 自行合并或加入接收队列，不调用 <code>tcp_queue_rcv</code>。邻居输出先判断能否使用缓存 L2 头，否则调用 <code>n-&gt;output</code>；<code>neigh_resolve_output</code> 也可能立即发送，并不总要等待 ARP。解析排队、失败和 L2 头构造失败另列分支。</p>
+<p>SYN/ACK 通过 <code>tcp_v4_send_synack → ip_build_and_send_pkt → ip_local_out</code> 输出；RST 回复通过 <code>tcp_v4_send_reset → ip_send_unicast_reply → ip_push_pending_frames → ip_send_skb → ip_local_out</code> 输出。两者接入 OUTPUT/POSTROUTING，不强行经过普通 TCP 数据发送包装函数。noqueue 分支直接调用单 skb 校验，不经过列表校验。</p>
 <h3>各 hook 的函数级执行顺序</h3>
 <p>图二还包含四列独立展开：PREROUTING 的 defrag → raw → conntrack → mangle → DNAT；INPUT 的 mangle → filter → security → SNAT → confirm；OUTPUT 的 defrag → raw → conntrack → mangle/reroute → DNAT/reroute → filter/security；POSTROUTING 的 mangle → SNAT → confirm。每列都给出 v6.6 回调函数名，虚线与主图对应。未注册的模块不执行；nft/BPF 可插入配置的优先级，不能理解为固定在 legacy 之后。</p>
 <p>输入函数或 hook 名称可高亮匹配节点，并放大定位；重复点击可遍历结果。页面内 SVG 支持选择文字和点击关键节点跳转到 v6.6 源文件，也可单独打开或下载。</p>
@@ -62,6 +63,7 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 <tr><td>CGROUP_SKB</td><td>ingress：tcp_filter 中；egress：ip_finish_output 中</td><td>需要 socket/cgroup 上下文，不是宿主所有转发流量的通用 hook</td></tr>
 <tr><td>SOCKET_FILTER</td><td>sk_filter_trim_cap 中、cgroup ingress 后</td><td>socket 上附着的 cBPF/eBPF；tcpdump 的 AF_PACKET filter 是另一 socket 上的过滤，不能混成 TCP socket filter</td></tr>
 <tr><td>iptables <code>-m bpf</code> / xt_bpf</td><td>ipt_do_table 的规则匹配回调中：bpf_mt / bpf_mt_v1</td><td>执行 SOCKET_FILTER 类型程序或编译的经典 BPF，返回匹配真假；是否 ACCEPT/DROP 仍由规则 target 决定。不是独立 hook，也不是 BPF_PROG_TYPE_NETFILTER</td></tr>
+<tr><td>SO_REUSEPORT BPF</td><td>inet_lookup_reuseport → reuseport_select_sock</td><td>监听组选择：SK_REUSEPORT 程序走 bpf_run_sk_reuseport，兼容过滤程序走 run_bpf_filter；可回退哈希选择。不是 SK_LOOKUP，也非已建立连接每包必经</td></tr>
 <tr><td>SK_LOOKUP</td><td>__inet_lookup_listener → inet_lookup_run_sk_lookup → bpf_sk_lookup_run_v4</td><td>附着 netns；TCP 监听 socket 查找时可选择 socket/拒绝。已建立连接命中 established 哈希时不经过此点</td></tr>
 <tr><td>NETFILTER</td><td>NF_INET hook 内、按 link 的 priority 排序</td><td>直接参与 Netfilter 回调；不是 iptables match/target 或 TC；v6.6 对合法 hook/priority 有校验</td></tr>
 <tr><td>CGROUP_SOCK_ADDR / SOCK_OPS</td><td>连接前或 TCP 事件回调</td><td>不是每个数据包的固定串行阶段</td></tr>
