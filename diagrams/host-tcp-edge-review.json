@@ -439,13 +439,21 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "00a884354f294408325ddcd8b36ac6211bfbd5380ec58ba53a47cc5a1916957d"
+      "fingerprint": "8d6bfabeb4812bac94499d31345eda558be0c9850ba6b3d03ca85da8c994f8d6"
     },
     "outroute -> localout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "056cf98755b73c12ac93081e383dc983f545d0312f84daa2401b72757c4bf573"
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 500,
+          "end": 535,
+          "explanation": "Successful route builds IPv4 header and calls ip_local_out."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "29375a6711154de95dc7fbbb084dc46c675d7927db3377cfb882b70840355f2e"
     },
     "localout -> localout2": {
       "kind": "unclassified",
@@ -454,22 +462,24 @@
       "fingerprint": "aed99fb9cb9c718c0532bcf15ba742c479a858d695139411d45ef6da5bdc5498"
     },
     "localout2 -> output": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "fd2500c3b775b43fc29fe69386db1f87815e8be7a8f876e9e005071412e17917"
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 114,
+          "end": 129,
+          "explanation": "After l3mdev output, NF local-out hook continues to dst_output."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "357d5e21ba39eda2c72b14c2e308ee54376f1af53c13986c35ca1fbcceb22c90"
     },
     "output -> reroute": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
       "fingerprint": "208f2a54b30bcbfe0731c494594921a32de8e8952ad231d1f5aa21f9b7c431c1"
-    },
-    "output -> dstout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "894f05557ff8c9715f8bb9322845269716ae644dcdbe3404d6b7bf0a1aadec28"
     },
     "output -> ou0": {
       "kind": "unclassified",
@@ -482,24 +492,6 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "28b69919800960a884ad3748acccbe2b88426038e2560fe84b661a76be502250"
-    },
-    "dstout -> ipout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "b04c44605378bd8b182c769db4960acd45c530f4bdfdc50325497eae76e75b39"
-    },
-    "ipout -> post": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "395ac447f422fbac1d88ae0169bb643d8d8886ac0b3f257b8261a5cddd1d7f24"
-    },
-    "post -> ipfinishout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "630d213c40b56a4bb1b98eabaf1ff7c290e1ab43c67ac95589ee5ccccfd00607"
     },
     "post -> po0": {
       "kind": "unclassified",
@@ -515,7 +507,7 @@
           "file": "net/ipv4/ip_output.c",
           "start": 314,
           "end": 327,
-          "explanation": "ip_finish_output invokes BPF_CGROUP_RUN_PROG_INET_EGRESS before __ip_finish_output; rejection frees skb."
+          "explanation": "ip_finish_output runs cgroup egress before __ip_finish_output."
         }
       ],
       "reviewed": true,
@@ -637,7 +629,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "32bc47cef910cd8afbe9263cb4a4d044420bc71aa98fe04e0264e79df71652d4"
+      "fingerprint": "a503d4e27a59249440a3c4734560c2b43f24209f73ca62cbb726b5bea61cda64"
     },
     "hook -> legacy": {
       "kind": "unclassified",
@@ -890,18 +882,6 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "0d989a6e93ef2c03a0c0c5f72cb7563cdac2e35691342ecc017f433ba292eba4"
-    },
-    "ixtx -> ixmap": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "22a8a46515e3ae87e1b153855c0f181f3cb5d3f8df0c0ce96d01b69597cb488e"
-    },
-    "ixmap -> ixcomplete": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "c655aa160f90b3ae0e594901fc68a8a67eaa1dbe6aa3af78f361f69628c6dfe1"
     },
     "conn -> conn2": {
       "kind": "unclassified",
@@ -1557,7 +1537,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "0f8ccf4183253065620c2e9df0305b0e93885f3585f2a7997aa98f21b2d099a5"
+      "fingerprint": "ff62507b61526229673b5cbb59b62a5c5e8d1e9e87ae382e3ef5cecd267efdd4"
     },
     "node:localout": {
       "kind": "unclassified",
@@ -3152,48 +3132,220 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "59a85069f3d8acaf7b82c8dc3eabf65499299ddd3fbe682912d5f04bd7752149"
+    },
+    "ixtx -> ixspace": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8d5cb7fddee687ce7de33df6054371aa048d3b9a69077a3b19b0b196996c023a"
+    },
+    "ixspace -> ixbusy": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 8735,
+          "end": 8742,
+          "explanation": "ixgbe_maybe_stop_tx returns NETDEV_TX_BUSY when the ring cannot fit the descriptor count."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "1c84654f44a0d390f30ae9a506a0d817909b2772f7e29b5704acbc7a3121a9dd"
+    },
+    "ixspace -> ixsetup": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 8744,
+          "end": 8750,
+          "explanation": "Available ring space records the first descriptor and continues setup."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "de61ea584e3fdba6b3889c5f3f85290675d7e86927b83058c1de352af7c1cccf"
+    },
+    "ixbusy -> busy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c0045ac961513191dcb5afb4c2328e28cb5c3d49ced2ff122b0703e54aae4276"
+    },
+    "ixsetup -> ixdrop": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 8751,
+          "end": 8839,
+          "explanation": "VLAN, timestamp, TSO, checksum and IPsec setup can jump to out_drop, which frees skb and returns OK."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "cc1c69ef6e5952fa0aa70699ef2da99a0f39f3e57772d5cd89fc1c1fa18eff52"
+    },
+    "ixsetup -> ixmap": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "347279765c21e7ba1d13cc54f2b4929a94004e09f36e58f6bb5a05465b87c204"
+    },
+    "ixmap -> ixdrop": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 8848,
+          "end": 8864,
+          "explanation": "Failed TX mapping cleans the skb/timestamp and returns NETDEV_TX_OK; no qdisc retry."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "714fb48022a09486b358a13a3c862fc1a99b1c9dfe23c93e16129aac15a76b14"
+    },
+    "ixmap -> ixok": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 8848,
+          "end": 8851,
+          "explanation": "Successful ixgbe_tx_map returns NETDEV_TX_OK after mapping descriptors."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "68c20500f03e8460a67cf898e603698555580d259ba9e39d97db08731888f13f"
+    },
+    "ixok -> ixcomplete": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 1114,
+          "end": 1160,
+          "explanation": "TX completion is later reclaimed by ixgbe_clean_tx_irq."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "13b0458692cd071fe32f5ba6118e265fdc1d8d0344900316fcd0d7d95fbce979"
+    },
+    "node:ixspace": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "47784a9b7ae7909682de0e6173b64e5c6ea83f5163c9705c533bc63614660e29"
+    },
+    "node:ixbusy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6cdfa7553bd4a1bfe229b7c1f2fa80db8f64b4c680c65ba37f154ad2e2d30295"
+    },
+    "node:ixsetup": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4c63d51bd26221b35eda35d946d135e087936aa11e0fdd016239f80731912805"
+    },
+    "node:ixdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "babb250f349ffd2f49d7b521d36fa525bcb78bc65ba64ec2253fb1b114d4dd38"
+    },
+    "node:ixok": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3954810b94296dd560f972b138775cf6d1977c7080567fd588927d87e24fa6b3"
+    },
+    "outroute -> noroute": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 475,
+          "end": 541,
+          "explanation": "__ip_queue_xmit routes with ip_route_output_ports and sends route/strict-route errors to no_route, freeing skb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "2bac096b161b342db6d4fe5c8856edaa0e6b771ca697f32c2181b3c64697fcf8"
+    },
+    "localout2 -> l3drop": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 100,
+          "end": 118,
+          "explanation": "__ip_local_out calls l3mdev_ip_out and returns zero when it consumes the skb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "c646390b9e5ed9494e6ca2cee5cee7de9b4e173f62ae3ae1b70ef5d0c6356bd9"
+    },
+    "node:noroute": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "cfeb2c67db6690851645ec7c491c4af0d0c77602590d02fb2b0e5eac859341eb"
+    },
+    "node:l3drop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "669057cee86b2c2d2e9f965029e3e1d73e30f3e719f0762e02619ee7c85027d5"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
+      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
+      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
+      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
+      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
+      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
+      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
+      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
+      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
     }
   },
   "obsolete": {
@@ -3412,6 +3564,42 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "1df30b8b8812a135fbb720940e43a842cb74dd352df9f4f88e295b7f0cf219ea"
+    },
+    "ixtx -> ixmap": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "22a8a46515e3ae87e1b153855c0f181f3cb5d3f8df0c0ce96d01b69597cb488e"
+    },
+    "ixmap -> ixcomplete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c655aa160f90b3ae0e594901fc68a8a67eaa1dbe6aa3af78f361f69628c6dfe1"
+    },
+    "dstout -> ipout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b04c44605378bd8b182c769db4960acd45c530f4bdfdc50325497eae76e75b39"
+    },
+    "output -> dstout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "894f05557ff8c9715f8bb9322845269716ae644dcdbe3404d6b7bf0a1aadec28"
+    },
+    "ipout -> post": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "395ac447f422fbac1d88ae0169bb643d8d8886ac0b3f257b8261a5cddd1d7f24"
+    },
+    "post -> ipfinishout": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "630d213c40b56a4bb1b98eabaf1ff7c290e1ab43c67ac95589ee5ccccfd00607"
     }
   }
 }

@@ -144,8 +144,10 @@ digraph tcp {
  transmit2 [label="__tcp_transmit_skb()\nbuild TCP header / checksum / TCP options"];
  ipqueue [label="icsk_af_ops->queue_xmit\n→ ip_queue_xmit()"];
  ipqueue2 [label="__ip_queue_xmit()"];
- outroute [label="cached dst OR ip_route_output_flow()\nconstruct IPv4 header"];
+ outroute [label="cached dst OR ip_route_output_ports()\nconstruct IPv4 header",shape=diamond];
+ noroute [label="route error / strict-route failure\nIPSTATS OUTNOROUTES\nkfree_skb_reason() → -EHOSTUNREACH",fillcolor="#fee2e2"];
  localout [label="ip_local_out()"];
+ l3drop [label="l3mdev_ip_out() consumes skb\nreturn 0: no Netfilter OUTPUT",fillcolor="#fee2e2"];
  localout2 [label="__ip_local_out()"];
  output [label="nf_hook(NF_INET_LOCAL_OUT) = OUTPUT\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100\n→ filter 0 → [security +50]",fillcolor="#ffedd5"];
  reroute [label="mangle / NAT callback may invoke\nip_route_me_harder() if mark/address changed",fillcolor="#fef9c3"];
@@ -192,7 +194,8 @@ digraph tcp {
  one [label="xmit_one()\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\n→ trace_net_dev_start_xmit()\n→ netdev_start_xmit()\n→ __netdev_start_xmit()\n→ ndo_start_xmit()\n→ trace_net_dev_xmit()"];
  start [label="TX completion / driver return\nconsumed or incomplete skb returned",shape=note];
  ndo [label="driver-specific TX DMA ring / completion\nixgbe_xmit_frame() → ixgbe_tx_map()\ncompletion later reclaims skb"];
- send -> socksend -> inet -> tcpsend -> locked -> push -> pending -> write -> transmit -> transmit2 -> ipqueue -> ipqueue2 -> outroute -> localout -> localout2 -> output -> dstout -> ipout -> post -> ipfinishout;
+ send -> socksend -> inet -> tcpsend -> locked -> push -> pending -> write -> transmit -> transmit2 -> ipqueue -> ipqueue2 -> outroute;
+ outroute -> noroute [label="route error"]; outroute -> localout [label="route available / header built"]; localout -> localout2; localout2 -> l3drop [label="l3mdev consumes"]; localout2 -> output [label="hook continues"];
  output -> reroute [style=dashed]; reroute -> dstout [style=dashed];
  ipfinishout -> cgout [label="run cgroup program"]; cgout -> cgdrop [label="reject"]; cgout -> finishout [label="allow / congestion notification"]; finishout -> finishout2 [label="ordinary packet"]; finishout -> gso [label="oversized / GSO"]; gso -> finishout2;
  finishout2 -> gw -> neigh; neigh -> hh [label="cache usable"]; hh -> devqueue;
@@ -276,11 +279,19 @@ digraph tcp {
  ixxdp [label="ixgbe_run_xdp()\n→ bpf_prog_run_xdp() [if attached]",fillcolor="#dcfce7"];
  ixskb [label="ixgbe_build_skb() OR ixgbe_construct_skb()\n→ ixgbe_rx_skb() → napi_gro_receive()"];
  ixtx [label="ixgbe_xmit_frame()\n→ __ixgbe_xmit_frame()\n→ ixgbe_xmit_frame_ring()"];
+ ixspace [label="TX ring has descriptors?",shape=diamond,fillcolor="#e0f2fe"];
+ ixbusy [label="ixgbe_maybe_stop_tx()\n→ NETDEV_TX_BUSY\nqdisc requeues skb",fillcolor="#fee2e2"];
+ ixsetup [label="ixgbe_xmit_frame_ring()\nVLAN / timestamp / TSO / checksum / IPsec setup"];
+ ixdrop [label="setup or map failure\ndev_kfree_skb_any()\nreturn NETDEV_TX_OK: consumed, no qdisc retry",fillcolor="#fee2e2"];
  ixmap [label="ixgbe_tx_map()\nDMA mapping / descriptors / tail doorbell"];
+ ixok [label="NETDEV_TX_OK\nNIC owns descriptors; completion later"];
  ixcomplete [label="Later ixgbe_poll() → ixgbe_clean_tx_irq()\nTX completion / reclaim skb & DMA mapping"];
  ixirq -> ixpoll [style=dashed,label="NAPI scheduling"]; ixpoll -> ixrx -> ixxdp -> ixskb [label="PASS"];
  driver -> ixpoll [style=dotted,constraint=false,label="example callback"]; ixskb -> gro [style=dotted,constraint=false];
- ndo -> ixtx [style=dotted,constraint=false]; ixtx -> ixmap -> ixcomplete [style=dashed,label="completion later"];
+ ndo -> ixtx [style=dotted,constraint=false,label="ixgbe ndo_start_xmit"]; ixtx -> ixspace;
+ ixspace -> ixbusy [label="no space"]; ixbusy -> busy [style=dashed,label="driver BUSY"]; ixspace -> ixsetup [label="space available"];
+ ixsetup -> ixdrop [label="invalid VLAN / offload / map setup failure"]; ixsetup -> ixmap [label="setup succeeds"];
+ ixmap -> ixdrop [label="DMA map failure"]; ixmap -> ixok [label="mapped"]; ixok -> ixcomplete [style=dashed,label="completion later"];
  }
  subgraph cluster_lifecycle {
  label="TCP lifecycle: active/passive open and normal FIN close (separate syscalls/events)";color="#ca8a04";
