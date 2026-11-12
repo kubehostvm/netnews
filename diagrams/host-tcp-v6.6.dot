@@ -150,10 +150,13 @@ digraph tcp {
  l3drop [label="l3mdev_ip_out() consumes skb\nreturn 0: no Netfilter OUTPUT",fillcolor="#fee2e2"];
  localout2 [label="__ip_local_out()"];
  output [label="nf_hook(NF_INET_LOCAL_OUT) = OUTPUT\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100\n→ filter 0 → [security +50]",fillcolor="#ffedd5"];
+ outdrop [label="OUTPUT verdict DROP/QUEUE/STOLEN\nstop or divert skb",fillcolor="#fee2e2"];
  reroute [label="mangle / NAT callback may invoke\nip_route_me_harder() if mark/address changed",fillcolor="#fef9c3"];
  dstout [label="dst_output()"];
  ipout [label="ip_output()"];
  post [label="NF_HOOK_COND(NF_INET_POST_ROUTING) = POSTROUTING\nmangle -150 → nat/SNAT +100\n→ conntrack confirm INT_MAX",fillcolor="#ffedd5"];
+ postdrop [label="POSTROUTING verdict DROP/QUEUE/STOLEN\nstop or divert skb",fillcolor="#fee2e2"];
+ postskip [label="IPSKB_REROUTED: skip repeated POSTROUTING hook\ncontinue directly to ip_finish_output()",fillcolor="#fef9c3"];
  ipfinishout [label="ip_finish_output(): cgroup egress verdict",shape=diamond];
  cgdrop [label="BPF cgroup egress reject\n→ kfree_skb_reason() / drop",fillcolor="#fee2e2"];
  cgout [label="BPF_CGROUP_RUN_PROG_INET_EGRESS\n→ __cgroup_bpf_run_filter_skb()",fillcolor="#dcfce7"];
@@ -195,8 +198,12 @@ digraph tcp {
  start [label="TX completion / driver return\nconsumed or incomplete skb returned",shape=note];
  ndo [label="driver-specific TX DMA ring / completion\nixgbe_xmit_frame() → ixgbe_tx_map()\ncompletion later reclaims skb"];
  send -> socksend -> inet -> tcpsend -> locked -> push -> pending -> write -> transmit -> transmit2 -> ipqueue -> ipqueue2 -> outroute;
- outroute -> noroute [label="route error"]; outroute -> localout [label="route available / header built"]; localout -> localout2; localout2 -> l3drop [label="l3mdev consumes"]; localout2 -> output [label="hook continues"];
- output -> reroute [style=dashed]; reroute -> dstout [style=dashed];
+ outroute -> noroute [label="route error"]; outroute -> localout [label="route available / header built"]; localout -> localout2; localout2 -> l3drop [label="l3mdev consumes"]; localout2 -> output [label="hook runs"];
+ output -> outdrop [label="DROP/QUEUE/STOLEN"]; output -> dstout [label="ACCEPT → dst_output()"];
+ reroute -> dstout [style=dashed,label="route changed → dst_output()"];
+ dstout -> ipout -> post;
+ post -> postdrop [label="DROP/QUEUE/STOLEN"]; post -> ipfinishout [label="normal hook continuation"];
+ post -> postskip [label="rerouted flag / hook condition false"]; postskip -> ipfinishout;
  ipfinishout -> cgout [label="run cgroup program"]; cgout -> cgdrop [label="reject"]; cgout -> finishout [label="allow / congestion notification"]; finishout -> finishout2 [label="ordinary packet"]; finishout -> gso [label="oversized / GSO"]; gso -> finishout2;
  finishout2 -> gw -> neigh; neigh -> hh [label="cache usable"]; hh -> devqueue;
  neigh -> noutput [label="otherwise"]; noutput -> connected [label="neigh_connected_output"]; noutput -> resolve [label="neigh_resolve_output"]; noutput -> directneigh [label="neigh_direct_output"]; noutput -> blackhole [label="neigh_blackhole"]; directneigh -> devqueue; blackhole -> neighdrop;

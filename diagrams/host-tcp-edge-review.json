@@ -472,14 +472,8 @@
           "explanation": "After l3mdev output, NF local-out hook continues to dst_output."
         }
       ],
-      "reviewed": true,
-      "fingerprint": "357d5e21ba39eda2c72b14c2e308ee54376f1af53c13986c35ca1fbcceb22c90"
-    },
-    "output -> reroute": {
-      "kind": "unclassified",
-      "evidence": [],
       "reviewed": false,
-      "fingerprint": "208f2a54b30bcbfe0731c494594921a32de8e8952ad231d1f5aa21f9b7c431c1"
+      "fingerprint": "08759fc325280f80703ea4cd61c2c9084891f5ef80debd6a05b435aded8f9fc0"
     },
     "output -> ou0": {
       "kind": "unclassified",
@@ -491,7 +485,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "28b69919800960a884ad3748acccbe2b88426038e2560fe84b661a76be502250"
+      "fingerprint": "63c4aa29907a9b726581055182581207588e5b9ef8a6cfa8bbca1f670edf0eee"
     },
     "post -> po0": {
       "kind": "unclassified",
@@ -528,21 +522,45 @@
       "fingerprint": "80c7f41a3061544345f93e03bf4dd6f44028647d1e37fa379618ea0eef92b375"
     },
     "finishout -> gso": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 304,
+          "end": 307,
+          "explanation": "GSO skb selects ip_finish_output_gso."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "8cab72c1bca60bd3901af297e4f890937cc43eb87d63466806d90d39e0e44ae3"
     },
     "finishout -> finishout2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 304,
+          "end": 311,
+          "explanation": "Ordinary non-GSO/non-fragmented output calls ip_finish_output2."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "45b0c2d5646f03a54e19984732e7ea1c462bdd758704413323c20f1006901f15"
     },
     "gso -> finishout2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 245,
+          "end": 290,
+          "explanation": "GSO segmentation eventually calls ip_fragment with ip_finish_output2 for each segment; valid network length can call ip_finish_output2 directly."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "6d34f961845795deec6522e98d8b80d95b216d29636ce5bca371ff27edc67c53"
     },
     "finishout2 -> gw": {
@@ -3304,48 +3322,170 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "669057cee86b2c2d2e9f965029e3e1d73e30f3e719f0762e02619ee7c85027d5"
+    },
+    "output -> outdrop": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "include/linux/netfilter.h",
+          "start": 230,
+          "end": 270,
+          "explanation": "Netfilter hook verdicts other than ACCEPT stop or divert the skb; exact callback is rule/config dependent."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "261b36e1f06b6ce845356b5007a8e11ec2c8cc5e5f33954aff7baa8ac2868682"
+    },
+    "output -> dstout": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 116,
+          "end": 129,
+          "explanation": "__ip_local_out registers the local-out hook continuation dst_output; ip_local_out invokes it when the hook returns 1."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "f1c929abc628bc3b10e0bf1b7c29b4b4b0a9cfe977ff9a4c6f837ebad11763ac"
+    },
+    "dstout -> ipout": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 424,
+          "end": 435,
+          "explanation": "The IPv4 dst output operation reaches ip_output, which registers POST_ROUTING."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "b04c44605378bd8b182c769db4960acd45c530f4bdfdc50325497eae76e75b39"
+    },
+    "ipout -> post": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 424,
+          "end": 435,
+          "explanation": "ip_output calls NF_HOOK_COND for POST_ROUTING."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "395ac447f422fbac1d88ae0169bb643d8d8886ac0b3f257b8261a5cddd1d7f24"
+    },
+    "post -> postdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6c30720ceb3fc4838f89ba91ee9799b16a256755564e9e4684e5386c54e6a811"
+    },
+    "post -> postskip": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 424,
+          "end": 435,
+          "explanation": "IPSKB_REROUTED makes the NF_HOOK_COND condition false, skipping repeated POST_ROUTING."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "53d0ed24de0ccb14d030a41a410aff6b5fe1a91e5d3e7c9914e6024ab572cf30"
+    },
+    "post -> ipfinishout": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 424,
+          "end": 435,
+          "explanation": "When the rerouted condition permits the hook, POST_ROUTING continuation is ip_finish_output."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "27c77787cd97d051b27d5f8231430b712fa2e6cc34fb440fac951dc9df7110fb"
+    },
+    "postskip -> ipfinishout": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 293,
+          "end": 311,
+          "explanation": "The rerouted path reaches ip_finish_output through the output continuation after the hook condition is skipped."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "e5b15e142d5a2491282cf7271060b196abd226be04e375e038482272821a91c4"
+    },
+    "node:outdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4f5d269ddda56bed2bb28a2bdd2a8fb0f0ddc34f9f6aebde0d10bf12d8daaf59"
+    },
+    "node:postdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5831a628ec5ffd69185d6ca591ecbdd3d2e34124d6830270d2bf8e3840c6c532"
+    },
+    "node:postskip": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2c77c013bf3fdcb959a0512a5d7d6032fdd50252652555aa8569b064489aecb8"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
+      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
+      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
+      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
+      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
+      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
+      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
+      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "803647bb23c0468cbe53434c09b4efdd56d9a03638554480c615ab598018cb82"
+      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
     }
   },
   "obsolete": {
@@ -3600,6 +3740,12 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "630d213c40b56a4bb1b98eabaf1ff7c290e1ab43c67ac95589ee5ccccfd00607"
+    },
+    "output -> reroute": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "208f2a54b30bcbfe0731c494594921a32de8e8952ad231d1f5aa21f9b7c431c1"
     }
   }
 }
