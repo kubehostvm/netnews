@@ -63,7 +63,7 @@ def main():
         label = obj['label']
         units['node:' + obj['name']] = {'label': label}
         normalized = label.replace('\\\\n', ' ')
-        matches = list(re.finditer(r'([A-Za-z_][A-Za-z0-9]*)\(\)', normalized))
+        matches = list(re.finditer(r'([A-Za-z][A-Za-z0-9_]*)\(\)', normalized))
         calls = []
         for left, right in zip(matches, matches[1:]):
             between = normalized[left.end():right.start()]
@@ -80,6 +80,7 @@ def main():
     for key, value in units.items():
         digest = fingerprint(value)
         item = ledger.setdefault(key, {'kind': 'unclassified', 'evidence': [], 'reviewed': False})
+        item['claim'] = value
         if item.get('fingerprint') != digest:
             item['reviewed'] = False
         item['fingerprint'] = digest
