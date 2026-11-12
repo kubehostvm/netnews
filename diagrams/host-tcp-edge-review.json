@@ -499,7 +499,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "d77f961c988456225d9f4cd8564b11788b72c4d77835b4a8e08760343390e984"
+      "fingerprint": "630d213c40b56a4bb1b98eabaf1ff7c290e1ab43c67ac95589ee5ccccfd00607"
     },
     "post -> po0": {
       "kind": "unclassified",
@@ -508,16 +508,32 @@
       "fingerprint": "0065b3f7e754da9f1c71d63299011c5ea83eb7231cec20b0eb4ae412ce2dd215"
     },
     "ipfinishout -> cgout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "a9321a28c470ee1d8e360d949b43d9f262d8bb6aa5a7abea08942cdb40f5cfdd"
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 314,
+          "end": 327,
+          "explanation": "ip_finish_output invokes BPF_CGROUP_RUN_PROG_INET_EGRESS before __ip_finish_output; rejection frees skb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "6441cfe1566bd802d3324d1eedba7a13b816e0e0047c6304854df9dd842f9a32"
     },
     "cgout -> finishout": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "372f1a64bf3b5c2e5717d7203a3a2c09a9104458a65cd92043efa60244f7f357"
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 318,
+          "end": 324,
+          "explanation": "Success or congestion notification continues to __ip_finish_output."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "80c7f41a3061544345f93e03bf4dd6f44028647d1e37fa379618ea0eef92b375"
     },
     "finishout -> gso": {
       "kind": "unclassified",
@@ -1589,7 +1605,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "059790747541a8e2a6ac0cc3a863ec6eec8587033c8c509e5ff54854f9725933"
+      "fingerprint": "17771a5d397baf4853df02ad5bba4f74e86b14940882dd9be624b211f46cb48a"
     },
     "node:cgout": {
       "kind": "unclassified",
@@ -1709,7 +1725,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "729decb29b8d198e53f21efa0321b63f21507c6a746b32b1a60958cd2bbc7032"
+      "fingerprint": "3ab2af1fd801a3ab4afbb370e73e43d26c97bf3f2b4594e7676507846ec71dd5"
     },
     "node:start": {
       "kind": "unclassified",
@@ -2265,13 +2281,13 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "aa0be025ccfc426f900438496beccad26ba964d87e27b26a3bae24e2cdb29fa4"
+      "fingerprint": "e82b522a2f3a34964d786e61250d5534a6e1bd5e326f8a201a0f293b5f7d0960"
     },
     "noutput -> resolve": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "26b0749b93f858368fd0525735c7f1c8c74f4d9e6ec43aed93fb5bfaf9a2cc7f"
+      "fingerprint": "cdf62eda90c5a091e533c5423dd4ab49753e88e0d93bb4a29e88143fa92edcb8"
     },
     "event -> waitarp": {
       "kind": "unclassified",
@@ -2735,13 +2751,13 @@
         {
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
           "file": "net/core/dev.c",
-          "start": 3560,
-          "end": 3575,
-          "explanation": "xmit_one reaches netdev_start_xmit and ndo_start_xmit."
+          "start": 3562,
+          "end": 3576,
+          "explanation": "xmit_one emits TX tap before netdev_start_xmit and device ndo callback."
         }
       ],
       "reviewed": true,
-      "fingerprint": "f637e78cd99d88eabbfb9bbbf38b73bb325f7edb3259391a164b439bcd9374bf"
+      "fingerprint": "5a3f324847a1f379a7e9d26bf322c3e8dcef5761ec6be6d5141232e73810d9fd"
     },
     "start -> result": {
       "kind": "conditional",
@@ -2806,8 +2822,8 @@
           "explanation": "dev_hard_start_xmit loops each skb and calls xmit_one."
         }
       ],
-      "reviewed": true,
-      "fingerprint": "88fe1a5dc22a904adff09a9a7ec1f59a02534cfa8f34a5869372bcb0312fb029"
+      "reviewed": false,
+      "fingerprint": "fd454959dacc826e1f421652b98fbfc600a154cbc4316ee7daa7fe8df9732fc7"
     },
     "flush -> normal": {
       "kind": "conditional",
@@ -3064,48 +3080,120 @@
       ],
       "reviewed": true,
       "fingerprint": "98ba8d72309c4925d0fc5d02f6628924f83535cd7863faa35a2f0bb471d18215"
+    },
+    "cgout -> cgdrop": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 318,
+          "end": 326,
+          "explanation": "Non-success/non-congestion cgroup egress verdict drops skb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "6d34d62f11bab25d67defa906d7fdd7fa4b4cc1f42249a409144b1b940b89f4a"
+    },
+    "noutput -> directneigh": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/neighbour.c",
+          "start": 1594,
+          "end": 1598,
+          "explanation": "Neighbour direct output calls dev_queue_xmit."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "b3e01da60d470008da5235105b1f7c71bc0ac595e14cb6c07a21ac756def7553"
+    },
+    "noutput -> blackhole": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/neighbour.c",
+          "start": 92,
+          "end": 96,
+          "explanation": "Blackhole neighbour callback frees skb and returns ENETDOWN."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "5a62ec689388775b86bb7c5f803cfb905a0c6b5eeffe17cb6828c92083383ed8"
+    },
+    "directneigh -> devqueue": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "24bc2931f810ae2ed75159daaf376944055c14ccf950cd0aa2b8771631ecc0ac"
+    },
+    "blackhole -> neighdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "fa3f54b7b6f419b495278c4af268881580f67a610067865b0525985d606a1c7d"
+    },
+    "node:cgdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "950ab0eed6484a5e8914dc2ebe4990377b3156c54c1d7ec692e39ccb23e586dd"
+    },
+    "node:directneigh": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2851e8f155e12f682c070a883b0753180eec6984e271018777fa5e6944f0735e"
+    },
+    "node:blackhole": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "59a85069f3d8acaf7b82c8dc3eabf65499299ddd3fbe682912d5f04bd7752149"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
+      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
+      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
+      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
+      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
+      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
+      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
+      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
+      "fingerprint": "4e1a9b4e93a36e529198e03f7f2c8d8ce73b411679bc50521ccd26c68e8c3af8"
     }
   },
   "obsolete": {
