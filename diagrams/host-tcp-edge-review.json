@@ -863,19 +863,19 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "5ff6e590669f8de2ef1802cbe2de043205bce27bc913686b7c232eefcfc10996"
+      "fingerprint": "2ea4c7714a801b67b8486f2e3dcf4d88a64c44b75fbf7e1cb7a4a4e28e36a378"
     },
     "ixrx -> ixxdp": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "8109409b8f1dd5d1759f698c6cf0b8ef35ab1b62dc5d3a358a505bc9f7653356"
+      "fingerprint": "44788c40ded756aa6f04ca3941373989e7804b20778fc13e555bad655b8c37df"
     },
     "ixxdp -> ixskb": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "27f6c43cf7f2b95357d0f1593833d55651eb32aacf1b9fb00f21ce03ad8f0c09"
+      "fingerprint": "a1706593c35ae8b7707daadb8bf80add997f38dc2b8122522adb7a3b7dbaed98"
     },
     "ixskb -> gro": {
       "kind": "unclassified",
@@ -1981,7 +1981,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "6d5e28a7197cd88fdd8582d384430a5246400a851e955dda605cb80dc7b483de"
+      "fingerprint": "3beffe8bb7a76c548b9bdde8b0fd049e8e21e2e6084d2663640efaa7ed751af8"
     },
     "node:ixskb": {
       "kind": "unclassified",
@@ -2005,7 +2005,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "d237fbecdf70f829e29d048c882899030d18871946076315cbef8712a905b3c6"
+      "fingerprint": "d433805ae720de0506b276476e79fb9e2042e8a4b627c5e63322c6810621bb0c"
     },
     "node:conn": {
       "kind": "unclassified",
@@ -3256,8 +3256,8 @@
           "explanation": "Completion waits for EOP/DD, consumes skb, unmaps DMA buffers, updates next_to_clean and stats."
         }
       ],
-      "reviewed": true,
-      "fingerprint": "c9ed5ab278ddcdf6f36d7490ad5b1418df1ba8e78d3ce1185114f5707782d992"
+      "reviewed": false,
+      "fingerprint": "1c4d053c28b111ca884e4e395f9ef29a26cefcbe447260d1fdff32f3f7dda2e4"
     },
     "node:ixspace": {
       "kind": "unclassified",
@@ -3692,48 +3692,200 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "3639456a329a3345a75a565b6744a51d6fb3337aa64f5d2d09f00f7cdeb17ac8"
+    },
+    "qrun -> quota": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 410,
+          "end": 423,
+          "explanation": "__qdisc_run subtracts packet quota after each qdisc restart and stops when exhausted."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "87f700fafff1b10e77052e76caeeb52bf7fe50b1200f7c2db872c444eb51adb5"
+    },
+    "quota -> resched": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 415,
+          "end": 423,
+          "explanation": "Quota exhaustion schedules the qdisc with __netif_schedule for the normal qdisc case."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "dc9ac0f216c381d17e45a785f8d6b5d4b6906a30b3738ca775dc78bf8f7e3630"
+    },
+    "resched -> qrun": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 410,
+          "end": 425,
+          "explanation": "A later scheduled qdisc run re-enters __qdisc_run and qdisc_restart."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "25acd969b057959a2bb9b78a7c8af093c2c01ccdab089bb3b61d97317f4e03ad"
+    },
+    "ixxdp -> ixxdptx": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 2208,
+          "end": 2222,
+          "explanation": "XDP_TX calls ixgbe_xmit_xdp_ring with an xdp_frame."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "c1b8065f43406392b24b95eee8c0f9978e613b2e4af74232a1c4c3c27b50231c"
+    },
+    "ixxdp -> ixxdpredir": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 2223,
+          "end": 2235,
+          "explanation": "XDP_REDIRECT uses redirect processing and does not enter skb TX."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "130813cd20ce699ef80d50a536f4faa0723975bb03ae3f9c629d3aa400366840"
+    },
+    "ixxdp -> ixxdprother": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 2198,
+          "end": 2238,
+          "explanation": "Other XDP actions consume/drop or report an invalid action."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "945eb07fb499d871373e7ea37333b3acfd2de303b5bac30f19b4b6e34ffd99b5"
+    },
+    "ixxdptx -> ixxdpcomplete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7689fd06187d036aa850f0b885e0717afb72cefc75eadf5bc347469012199bb3"
+    },
+    "ixxdpredir -> ixxdpcomplete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f5465c5bffe4d0c74d950d3b8087a5ca102d6386b7d091b02570a45f0aa64cdd"
+    },
+    "ixcomplete -> ixwake": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 1251,
+          "end": 1263,
+          "explanation": "Normal TX cleanup calls __netif_txq_completed_wake after freeing descriptors."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "70c061a791bc0bdb0cf5233dbbee400f1e72c002b5e4ddc79b0ae7da90d2ef3d"
+    },
+    "node:quota": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "12409cb07b8c1c863605e120e92388a0da42a272d299209b58d808bb77f016e6"
+    },
+    "node:resched": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "21290ccee78a6ec323874cdd1368f485e58a027769e1a6a0cefbb435c2697697"
+    },
+    "node:ixxdptx": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1b81c3e6da1c20a0dbc6bb9a94741d94a13513b3058dad1ca980fb4594833f95"
+    },
+    "node:ixxdpredir": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c03dbd4b7c9c9d3dad1f776fbd3c14d6f98d1d0e2925a566b76872bbd4e3940a"
+    },
+    "node:ixxdprother": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "dd3ac861da09760c5dbc0eaa027060df94c06cfa8461e828a2736db58bf52a70"
+    },
+    "node:ixwake": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "26058aeb97820f3356940a62179d5afdb921a3137b888f0d52e9c5635bb40e5b"
+    },
+    "node:ixxdpcomplete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "49f4398f9b7579e163d72a71c34c2fc028bd54fb7c0c85b128e2de0ee26f597c"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
+      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
+      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
+      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
+      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
+      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
+      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
+      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
+      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
     }
   },
   "obsolete": {

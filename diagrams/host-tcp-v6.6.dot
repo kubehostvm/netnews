@@ -189,6 +189,8 @@ digraph tcp {
  bypass [label="TCQ_F_CAN_BYPASS + qdisc empty\n→ sch_direct_xmit(validate=true)\nthen qdisc run if needed",fillcolor="#fef9c3"];
  enqueued [label="q->enqueue()\n→ qdisc_run() / __qdisc_run()",fillcolor="#eef2f6"];
  qrun [label="qdisc_run() → __qdisc_run()"];
+ quota [label="TX quota exhausted?",shape=diamond];
+ resched [label="__netif_schedule(q)\nreschedule qdisc for later",fillcolor="#fef9c3"];
  restart [label="qdisc_restart()\n→ dequeue_skb()"];
  direct [label="sch_direct_xmit(): validate?",shape=diamond];
  again [label="XFRM offload: validate reports again?",shape=diamond];
@@ -224,7 +226,7 @@ digraph tcp {
  validatesingle -> validskb; validskb -> txstate [label="yes"]; validskb -> done [label="no: no driver call"];
  txstate -> hard [label="no"]; txstate -> missed [label="yes"]; missed -> result [label="skb consumed / no driver call"];
  hard -> one -> ndo -> start -> result;
- result -> done [label="all skb consumed"]; result -> sentchain [label="partial chain / queue stopped"]; result -> busy [label="BUSY / incomplete"]; sentchain -> busy; busy -> qrun [style=dashed,label="retry returned skb chain"];
+ result -> done [label="all skb consumed"]; result -> sentchain [label="partial chain / queue stopped"]; result -> busy [label="BUSY / incomplete"]; sentchain -> busy; busy -> qrun [style=dashed,label="retry returned skb chain"]; qrun -> quota [style=dashed,label="quota exhausted"]; quota -> resched [label="qdisc active"]; resched -> qrun [style=dashed,label="later scheduled run"];
  pick -> validatesingle [style=dashed,label="device has no qdisc / noqueue path; skips list validator"];
  }
  subgraph cluster_hooks {
@@ -295,7 +297,10 @@ digraph tcp {
  ixirq [label="ixgbe_msix_clean_rings()\n→ napi_schedule_irqoff()"];
  ixpoll [label="ixgbe_poll()"];
  ixrx [label="ixgbe_clean_rx_irq()\nRX descriptor / DMA page processing"];
- ixxdp [label="ixgbe_run_xdp()\n→ bpf_prog_run_xdp() [if attached]",fillcolor="#dcfce7"];
+ ixxdp [label="ixgbe_run_xdp()\n→ bpf_prog_run_xdp()",shape=diamond,fillcolor="#dcfce7"];
+ ixxdptx [label="XDP_TX\n→ ixgbe_xmit_xdp_ring()\n→ XDP TX descriptor / xdp_frame",fillcolor="#dcfce7"];
+ ixxdpredir [label="XDP_REDIRECT\n→ xdp_do_redirect()\n→ redirect target / XDP completion",fillcolor="#dcfce7"];
+ ixxdprother [label="XDP_DROP / ABORT / invalid\nconsume or drop xdp buffer",fillcolor="#fee2e2"];
  ixskb [label="ixgbe_build_skb() OR ixgbe_construct_skb()\n→ ixgbe_rx_skb() → napi_gro_receive()"];
  ixtx [label="ixgbe_xmit_frame()\n→ __ixgbe_xmit_frame()\n→ ixgbe_xmit_frame_ring()"];
  ixspace [label="TX ring has descriptors?",shape=diamond,fillcolor="#e0f2fe"];
@@ -304,8 +309,13 @@ digraph tcp {
  ixdrop [label="setup or map failure\ndev_kfree_skb_any()\nreturn NETDEV_TX_OK: consumed, no qdisc retry",fillcolor="#fee2e2"];
  ixmap [label="ixgbe_tx_map()\nDMA mapping / descriptors / tail doorbell"];
  ixok [label="NETDEV_TX_OK\nNIC owns descriptors; completion later"];
- ixcomplete [label="Later ixgbe_poll() → ixgbe_clean_tx_irq()\ncheck EOP/DD completion\n→ napi_consume_skb()\n→ DMA unmap head/pages\n→ next_to_clean / stats update\n→ wake/restart stopped TX queue"];
- ixirq -> ixpoll [style=dashed,label="NAPI scheduling"]; ixpoll -> ixrx -> ixxdp -> ixskb [label="PASS"];
+ ixcomplete [label="Later ixgbe_poll() → ixgbe_clean_tx_irq()\ncheck EOP/DD completion\n→ napi_consume_skb()\n→ DMA unmap head/pages\n→ next_to_clean / stats update"];
+ ixwake [label="__netif_txq_completed_wake()\nrestart stopped TX subqueue when descriptors available"];
+ ixxdpcomplete [label="ixgbe_clean_xdp_tx_irq()\n→ xdp_return_frame() / DMA unmap\nseparate XDP TX completion",fillcolor="#dcfce7"];
+ ixirq -> ixpoll [style=dashed,label="NAPI scheduling"]; ixpoll -> ixrx -> ixxdp;
+ ixxdp -> ixskb [label="XDP_PASS"]; ixxdp -> ixxdptx [label="XDP_TX"]; ixxdp -> ixxdpredir [label="XDP_REDIRECT"]; ixxdp -> ixxdprother [label="DROP/ABORT/invalid"];
+ ixxdptx -> ixxdpcomplete [style=dashed,label="XDP TX completion"]; ixxdpredir -> ixxdpcomplete [style=dashed,label="redirect completion where applicable"];
+ ixcomplete -> ixwake [style=dashed,label="descriptor space freed"];
  driver -> ixpoll [style=dotted,constraint=false,label="example callback"]; ixskb -> gro [style=dotted,constraint=false];
  ndo -> ixtx [style=dotted,constraint=false,label="ixgbe ndo_start_xmit"]; ixtx -> ixspace;
  ixspace -> ixbusy [label="no space"]; ixbusy -> busy [style=dashed,label="driver BUSY"]; ixspace -> ixsetup [label="space available"];
