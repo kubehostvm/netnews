@@ -43,12 +43,6 @@
       "reviewed": false,
       "fingerprint": "d1c042fe7412ebb92960f3e5f398abc8957a0b61b3871c870b91ed1b0a6cc460"
     },
-    "receive -> receive2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "739207e2f2096646e0cae80b02bd46d3237df3e2788c10d6e20af513dc4c057e"
-    },
     "receive2 -> core": {
       "kind": "unclassified",
       "evidence": [],
@@ -181,36 +175,6 @@
       "reviewed": false,
       "fingerprint": "37b52743e5dd0c5f1bac6c12a4f81d9cd6c772b6bff04822f3344628ac6a04e6"
     },
-    "lookup -> policy": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "61f24f3d4dbc0e2ea4bd0c090fee640007c03315c267a9696713beb6ec4c6f64"
-    },
-    "lookup -> req": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "dada8ebdddde88cdfc6548953325485d3c9851ed00328ef7c73d35e884ba1c9e"
-    },
-    "lookup -> timewait": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "723d8f0ef898b6e87be3e4ad4ca321d836b5825e5cb48aa5aad2f19f449e7719"
-    },
-    "lookup -> reset": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "1a4a95c7a4ae24d52fc7b4028529b431f66d945d3445465f01bf01b769c7ee02"
-    },
-    "lookup -> sklookup": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "b0b9e5e6733fb124adc47e04695e014c8fd51a8dcc65a58e20950a1a46979d1c"
-    },
     "policy -> tcpfilter": {
       "kind": "unclassified",
       "evidence": [],
@@ -245,7 +209,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "978090a08c22f190b8865cda72266d944893580f7031f586236b699eda95b590"
+      "fingerprint": "3fbdd9d41c05c8762ea9c9d4ba50a0a912f0ab5357150a014a9e132c960e5555"
     },
     "own -> backlog": {
       "kind": "unclassified",
@@ -281,7 +245,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "8c5029219258e7a0693ad885f3c4f1b257873397ea74aa1365e539af83fa6832"
+      "fingerprint": "0b350ae285b075da056708878287a3b1135c483b70eef7323f6881a5677eaea5"
     },
     "established -> prediction": {
       "kind": "unclassified",
@@ -386,9 +350,17 @@
       "fingerprint": "64f38398072842b56acb285c42b138ba58561f7a43c90f34efb2b138ac16908e"
     },
     "req -> accept": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_ipv4.c",
+          "start": 2035,
+          "end": 2105,
+          "explanation": "TCP_NEW_SYN_RECV request processing can create/hand off a child socket that later enters accept queue."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "822dff5e607682c1feb74af913f96b986b19056c1bbee595b08834ae953d39f7"
     },
     "retrans -> transmit2": {
@@ -974,8 +946,8 @@
           "explanation": "GRO_NORMAL calls gro_normal_one."
         }
       ],
-      "reviewed": true,
-      "fingerprint": "aa82403bc8cc382695ac8202bb54c66b2de36b692195a65758a1ce75d2621c49"
+      "reviewed": false,
+      "fingerprint": "abd56f0c824011b3982bf02b052eff1ca7d7ce3a9aaaa7487184b1ab24394e94"
     },
     "finish -> held": {
       "kind": "conditional",
@@ -1009,7 +981,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "e3acb0708a72b11046adf828c59c4f99fdfec2bbd5d58fbeffefc2d26df437d4"
+      "fingerprint": "78a99c1578b93ce0d21d507dbba8c8bef9cc17180aa78e7400349f2a912c19d7"
     },
     "held -> complete": {
       "kind": "unclassified",
@@ -1028,8 +1000,8 @@
           "explanation": "Successful napi_gro_complete hands aggregate to gro_normal_one; errors drop it."
         }
       ],
-      "reviewed": true,
-      "fingerprint": "9d04d9c4b3daf032e8f2a27d2caa98dd4ea46909e95a390d9c0db5cfd86c1c8f"
+      "reviewed": false,
+      "fingerprint": "9aeddb841cb591d43a960d12c479fe2716670a3de7a7e28e43c98c8dccb7c557"
     },
     "ipfinishcore -> validdst": {
       "kind": "unclassified",
@@ -1137,7 +1109,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "83cc94e1b6bcf63fa9ece205705d6044fb0a61f786506aefaf11f57a228c6800"
+      "fingerprint": "4ac5a4d6eaf98a8098110f33dab7188041ba0e4b2f4a6097492b2e012bf4d713"
     },
     "node:held": {
       "kind": "unclassified",
@@ -2718,9 +2690,17 @@
       "fingerprint": "7d2f82ce3bedbb55144aad5370ab21314c6d869dd1b5cc0c0f0d9fe735832cd9"
     },
     "generic -> genericrun": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 5369,
+          "end": 5375,
+          "explanation": "Generic XDP program is run only when its static key is enabled."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "eb45eafb2d74089f880e8ad7b8d2f27c1aa30575edd6c5a87a890aa66db1bfb2"
     },
     "generic -> nogeneric": {
@@ -2731,7 +2711,7 @@
           "file": "net/core/dev.c",
           "start": 5369,
           "end": 5375,
-          "explanation": "Generic XDP runs only when the static key/program condition is present; otherwise receive core continues."
+          "explanation": "Without generic XDP condition the receive core continues without the program."
         }
       ],
       "reviewed": true,
@@ -2828,48 +2808,304 @@
       ],
       "reviewed": true,
       "fingerprint": "88fe1a5dc22a904adff09a9a7ec1f59a02534cfa8f34a5869372bcb0312fb029"
+    },
+    "flush -> normal": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 6589,
+          "end": 6598,
+          "explanation": "NAPI completion flushes GRO then delivers normal list."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "928ddb6cca7f69c970e27cc9a02ccfd084d7adf1ba9a7aaf465f1e746d5d917d"
+    },
+    "receive -> rps": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "058adb16e6b755617ff8217b5a703b046f61adb20150a3314cb672a44c6d17e5"
+    },
+    "rps -> backlogcpu": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 5065,
+          "end": 5078,
+          "explanation": "RPS chooses another CPU and enqueue_to_backlog returns from current receive path."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "6e1c54ec7af090b81f4cfc03f74bf9f6626efcaec50ae071f2ea95a637f9fdc7"
+    },
+    "rps -> localcpu": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 5065,
+          "end": 5084,
+          "explanation": "Without RPS handoff the skb continues in the current receive path."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "a0a6dbdee7d1bb324a157449b90b231eb14eb01da2910c5e3ab9f849b005c4be"
+    },
+    "backlogcpu -> core": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 4785,
+          "end": 4840,
+          "explanation": "The per-CPU backlog later invokes the receive processing path."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "ab5b793a2c5f93981d9ddefd8cc8b3e73dd49d7994cc2bdf7c0ac333cccf79f0"
+    },
+    "localcpu -> receive2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c08f577df08575cc0844b1292274345af309bafe8bd85d3edbc764c86b40fd74"
+    },
+    "node:flush": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4cdf92b74a192aad2c68c06dfd13ac80427b28bf0709c47062ee811b196421b0"
+    },
+    "node:rps": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8703626f058da80b7941a720d0fb6e46a03837107799793412fe7174b86126cd"
+    },
+    "node:backlogcpu": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "792e37c90d7cf811e7f4aa9ffa7b7def7dfdc8aa94cbc88a73b655b802e18dbf"
+    },
+    "node:localcpu": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "aa1048e2651b4f940567674e8514752fe113563aaab6fa29108fc9a0971e9de9"
+    },
+    "lookup -> stateclass": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f51afe1cd49e675807aa2356c3fd804026cc00d45cb429f179eca866e04b3baf"
+    },
+    "stateclass -> establishedpath": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "dde4ad5ed4f03474cb45682c2f21ebcc1add8e878379c458aceb8537ccd481fd"
+    },
+    "stateclass -> requestpath": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "10a17345b27fa8453b8c2339ca50adb46b123f72138765b9da6bcc0b2e6aeae2"
+    },
+    "stateclass -> timepath": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_ipv4.c",
+          "start": 2031,
+          "end": 2034,
+          "explanation": "TCP_TIME_WAIT is selected immediately after socket lookup."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "30b55273f322da14f86645def5f76e3a0e812286fda676ae8bf4122e32b24c36"
+    },
+    "stateclass -> nosocket": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_ipv4.c",
+          "start": 2024,
+          "end": 2029,
+          "explanation": "Lookup miss enters no_tcp_socket path rather than socket filter path."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "2b03104796d074c7c28d74a487b4b7e2d220f6b9d1acbeb6d2cb709add53b0a7"
+    },
+    "requestpath -> requestfilter": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_ipv4.c",
+          "start": 2035,
+          "end": 2080,
+          "explanation": "Request/listener path performs policy, MD5 and tcp_filter checks before tcp_check_req."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "9f4de1eae0d95898e17656bbb02eb0a33554f15c61364c40b70dc9fe10de864f"
+    },
+    "requestpath -> req": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "05bce67333d3aef46817dccbb57750c8436a2a8db23ea7f3646fafc2c66bd654"
+    },
+    "requestpath -> sklookup": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "74d8ce354881dd4851de7f2ccb4bf26305b4ef61c385eb942ecea80915d4bd8f"
+    },
+    "timepath -> timewait": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c967a29f536576a89e35736c4f20ae3b6836b17c85eb65d672502769a256884f"
+    },
+    "nosocket -> reset": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0e5e528f2198684981ddc5703b2bb6bd8792532f60747eafbbb1f7dabcce587f"
+    },
+    "node:stateclass": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1740712d71934d75e99b5f063e38e0c2d95aa0e115965022dd434af5c6331302"
+    },
+    "node:establishedpath": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "dd965b7133c096e9777983fd054241ffb3b93706ce2ad64993662aef94dd652b"
+    },
+    "node:requestfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9ffd09a24495955190976d8afa5cbfbe9ff7a274b0d9a1e5e97d64e096cdffcc"
+    },
+    "node:requestpath": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ec5c46c3daa7647f324f6662704053b18ebfa5e9d97cf952162dd84d2b3ad67f"
+    },
+    "node:timepath": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "745f821b2c7e558598b3e270ea1d40f3dad86360e6911dc6fd771633fdbe4aaa"
+    },
+    "node:nosocket": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "fbeffe802b806987f9e5fac578fbbf57453376a5b84a02bed8e679b2b17b0aa5"
+    },
+    "establishedpath -> policy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "bbcf076b13d9452a3291e8099e89a34668050415376d0f241c7ede02d55002a3"
+    },
+    "requestfilter -> policy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "586f775b8c9d09b14569e6cc423319a9dfc99ddfb1f638a542a76806f486de90"
+    },
+    "requestcheck -> req": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2fffadccef97698dad83d6b6ce150774a8be03e5bae584c1853a665e5cb3acac"
+    },
+    "sockfilter -> requestcheck": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "345e0267d34213ef94ac3dfdef59c8535f0a1646822b39499aac4def8f3c88cb"
+    },
+    "node:requestcheck": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7ed6505303c42cf61edddf077310b5d379749b52be82e76f6f4f9192e6862549"
+    },
+    "accept -> requestcheck": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/inet_connection_sock.c",
+          "start": 657,
+          "end": 740,
+          "explanation": "inet_csk_accept removes an established child from the accept queue; this is a lifecycle continuation, not packet receive."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "98ba8d72309c4925d0fc5d02f6628924f83535cd7863faa35a2f0bb471d18215"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
+      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
+      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
+      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
+      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
+      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
+      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
+      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
+      "fingerprint": "fa5266e44eab9fa97bc6bf19d7e5941acd2eb0869bba64634d6a705a647f04b7"
     }
   },
   "obsolete": {
@@ -3022,6 +3258,72 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "c9715981731b31d098b794dcb62680e6acfb4f31b2369e6fca0c9506ad78a382"
+    },
+    "receive -> receive2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "739207e2f2096646e0cae80b02bd46d3237df3e2788c10d6e20af513dc4c057e"
+    },
+    "lookup -> req": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "dada8ebdddde88cdfc6548953325485d3c9851ed00328ef7c73d35e884ba1c9e"
+    },
+    "lookup -> sklookup": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b0b9e5e6733fb124adc47e04695e014c8fd51a8dcc65a58e20950a1a46979d1c"
+    },
+    "lookup -> timewait": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "723d8f0ef898b6e87be3e4ad4ca321d836b5825e5cb48aa5aad2f19f449e7719"
+    },
+    "lookup -> policy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "61f24f3d4dbc0e2ea4bd0c090fee640007c03315c267a9696713beb6ec4c6f64"
+    },
+    "lookup -> reset": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1a4a95c7a4ae24d52fc7b4028529b431f66d945d3445465f01bf01b769c7ee02"
+    },
+    "commonfilter -> policy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8ed6cfe9a61d71578919588cbdadef06be72020925efacdf7d677f0d385d2fc6"
+    },
+    "node:commonfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e754ef2f19e5ea5f606c6071a716a4e8fdeb6c59a699d5002b0234c91fed3b8e"
+    },
+    "requestfilter -> commonfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "faa56ea200ffbbfdd5db7cb33c1edd67ac3d24da4df5bb2b0f0dca0c88af3235"
+    },
+    "establishedpath -> commonfilter": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "685e5d60f550fb933902d88e1562cbd843e711b398ea5bb8a73b3df08df89268"
+    },
+    "requestfilter -> req": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1df30b8b8812a135fbb720940e43a842cb74dd352df9f4f88e295b7f0cf219ea"
     }
   }
 }

@@ -28,7 +28,7 @@ digraph overview {
  label="NETWORK LAYER — IPv4 Netfilter priorities / routing / XFRM";color="#94a3b8";
  pre [label="PREROUTING\ndefrag -400 → raw -300 → conntrack -200\n→ mangle -150 → nat/DNAT -100",fillcolor="#ffedd5"];
  route [label="Routing decision",shape=diamond];
- input [label="INPUT / LOCAL_IN\nmangle -150 → filter 0 → [security +50]\n→ nat/SNAT +100 → conntrack confirm INT_MAX",fillcolor="#ffedd5"];
+ input [label="INPUT / LOCAL_IN\nmangle -150 → filter 0 → [security +50]\n→ nat/DNAT +100 → conntrack confirm INT_MAX",fillcolor="#ffedd5"];
  xin [label="XFRM policy / socket lookup\nEncrypted local packet: XFRM decode\n(e.g. ESP tunnel decapsulation)"];
  dec [label="Inner packet re-enters receive stack\nExact entry depends on XFRM mode",fillcolor="#fef9c3"];
  fw [label="FORWARD\nmangle -150 → filter 0 → [security +50]",fillcolor="#ffedd5"];

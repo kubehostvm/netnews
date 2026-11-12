@@ -14,11 +14,15 @@ digraph tcp {
  gro [label="napi_gro_receive()"];
  devgro [label="dev_gro_receive()"];
  finish [label="napi_skb_finish(): GRO result",shape=diamond];
- normal [label="GRO_NORMAL → gro_normal_one()\n→ gro_normal_list() when batch flushed"];
+ normal [label="GRO_NORMAL → gro_normal_one()\n→ gro_normal_list() when NAPI flushes"];
+ flush [label="napi_complete_done() / poll completion\n→ napi_gro_flush() → gro_normal_list()",fillcolor="#fef9c3"];
  held [label="GRO_HELD: stored in GRO hash\nGRO_MERGED: input merged, no separate delivery"];
  mergedfree [label="GRO_MERGED_FREE\nfree merged input skb; no independent IP delivery"];
  complete [label="Later flush / completion of aggregate\nnapi_gro_complete() → gro_normal_one()"];
  receive [label="netif_receive_skb_internal()\nOR netif_receive_skb_list_internal()"];
+ rps [label="RPS enabled and target CPU differs?",shape=diamond];
+ backlogcpu [label="get_rps_cpu()\n→ enqueue_to_backlog(skb, cpu)\nreturn; target CPU processes later",fillcolor="#fef9c3"];
+ localcpu [label="No RPS handoff\ncontinue on current CPU"];
  receive2 [label="__netif_receive_skb() / list variants"];
  core [label="__netif_receive_skb_core()"];
  generic [label="Generic XDP attached?",shape=diamond,fillcolor="#dcfce7"];
@@ -51,6 +55,13 @@ digraph tcp {
  protocol [label="ip_protocol_deliver_rcu()\nXFRM policy / protocol selection"];
  tcprcv [label="tcp_v4_rcv()\nheader / checksum setup"];
  lookup [label="__inet_lookup_skb()\ncached socket / established hash / listener"];
+ stateclass [label="Socket state after lookup",shape=diamond];
+ establishedpath [label="ESTABLISHED: policy / MD5 / socket filter\nthen socket ownership and tcp_v4_do_rcv()"];
+ requestfilter [label="TCP_NEW_SYN_RECV / LISTEN: policy / MD5 / socket filter"];
+ requestcheck [label="tcp_check_req() / request socket transition\nchild process or discard/reset"];
+ requestpath [label="TCP_NEW_SYN_RECV / LISTEN\nrequest or listener checks\nthen tcp_check_req() / tcp_v4_do_rcv()"];
+ timepath [label="TCP_TIME_WAIT\nXFRM/checksum → tcp_timewait_state_process()"];
+ nosocket [label="No socket\nXFRM/checksum → optional tcp_v4_send_reset()\nthen drop skb"];
  policy [label="xfrm4_policy_check()\ntcp_inbound_md5_hash() / nf_reset_ct()"];
  tcpfilter [label="tcp_filter()"];
  skfilter [label="sk_filter_trim_cap()"];
@@ -81,16 +92,26 @@ digraph tcp {
  native -> xdp_run [label="yes"]; native -> noxdp [label="no"]; xdp_run -> gro [label="XDP_PASS"]; noxdp -> gro;
  gro -> devgro -> finish;
  finish -> normal [label="GRO_NORMAL"]; normal -> receive;
- finish -> held [label="HELD / MERGED"]; held -> complete [style=dashed,label="aggregate later delivered"]; complete -> normal;
+ finish -> held [label="HELD / MERGED"]; held -> complete [style=dashed,label="aggregate later delivered"]; complete -> normal; flush -> normal [style=dashed,label="pending GRO list delivery"];
  finish -> mergedfree [label="MERGED_FREE"];
- receive -> receive2 -> core -> generic;
+ receive -> rps;
+ rps -> backlogcpu [label="yes: hand off"]; rps -> localcpu [label="no"]; backlogcpu -> core [style=dashed,label="later backlog poll"];
+ localcpu -> receive2 -> core -> generic;
  generic -> genericrun [label="yes"]; generic -> nogeneric [label="no"]; genericrun -> taps [label="XDP_PASS"]; nogeneric -> taps;
  taps -> tcin -> tcxin -> nfin -> demux;
  demux -> iprcv [label="single handler"]; iprcv -> ipcore -> pre -> ipfinish -> ipfinishcore;
  demux -> iplist [label="list handler"]; iplist -> sublist -> prelist -> listfinish -> ipfinishcore;
  prelist -> ipfinish [style=dashed,label="NFQUEUE reinjection continuation"];
  ipfinishcore -> early [style=dashed]; early -> validdst; ipfinishcore -> validdst [label="early demux skipped"]; validdst -> delivery [label="yes: cached route"]; validdst -> route [label="no"]; route -> delivery;
- delivery -> dstin [label="single"]; delivery -> subfinish [label="batch"]; subfinish -> dstin; dstin -> local -> defrag -> input -> localfinish -> protocol -> tcprcv -> lookup -> policy -> tcpfilter -> skfilter -> cgin -> securityin -> sockfilter -> own;
+ delivery -> dstin [label="single"]; delivery -> subfinish [label="batch"]; subfinish -> dstin; dstin -> local -> defrag -> input -> localfinish -> protocol -> tcprcv -> lookup -> stateclass;
+ stateclass -> establishedpath [label="ESTABLISHED"]; stateclass -> requestpath [label="NEW_SYN_RECV / LISTEN"]; stateclass -> timepath [label="TIME_WAIT"]; stateclass -> nosocket [label="lookup miss"];
+ establishedpath -> policy; requestpath -> requestfilter;
+ requestfilter -> policy [style=dashed,label="shared policy/check stage"];
+ policy -> tcpfilter -> skfilter -> cgin -> securityin -> sockfilter;
+ sockfilter -> own [label="established socket"];
+ sockfilter -> requestcheck [label="request/listener path"];
+ requestcheck -> req [style=dashed,label="request accepted / child socket"];
+ timepath -> timewait [style=dashed,label="time-wait handler"]; nosocket -> reset [style=dashed,label="no-socket handler"];
  own -> dorcv [label="no"]; own -> backlog [label="yes"]; backlog -> release [style=dashed,label="later"]; release -> dorcv;
  dorcv -> established [label="ESTABLISHED"]; established -> prediction; prediction -> fast [label="yes"]; prediction -> validate [label="no"]; validate -> data; data -> queue [label="in order"]; data -> ofo [label="out of order"]; data -> ofodrain [style=dashed,label="in-order data fills gap"]; ofo -> ofodrain [style=dashed,label="stored skb processed later, not direct call"]; ofodrain -> recvqueue; queue -> recvqueue; fast -> ready; recvqueue -> ready [style=dashed,label="caller may notify reader"];
  ready -> recv [style=dashed,label="wakeup / independent read"]; recv -> recvmsg -> inetrecv -> tcprecv -> lockedrecv -> copy;
@@ -105,7 +126,7 @@ digraph tcp {
  reset [label="No socket / invalid segment:\ntcp_v4_send_reset() if allowed"];
  ack [label="tcp_ack_snd_check() / delayed ACK\n→ tcp_send_ack() [timer also possible]"];
  retrans [label="tcp_retransmit_timer()\n→ tcp_retransmit_skb()\n→ __tcp_retransmit_skb()"];
- dorcv -> state [label="other states"]; state -> listen [style=dashed]; lookup -> req [style=dashed,label="request socket"]; lookup -> timewait [style=dashed]; lookup -> reset [style=dashed,label="no socket"];
+ dorcv -> state [label="non-ESTABLISHED state"]; state -> listen [style=dashed]; requestpath -> req [style=dashed,label="request socket"]; req -> accept [style=dashed,label="accept queue"]; accept -> requestcheck [style=dashed,label="child socket established"];
  established -> ack [style=dashed,label="ACK needed"];
  }
  subgraph cluster_tx {
@@ -272,7 +293,7 @@ digraph tcp {
  finrecv [label="Incoming in-order FIN:\ntcp_data_queue() → tcp_fin()\nTCP_CLOSE_WAIT / CLOSING / TIME_WAIT transitions\nACK scheduling / reader EOF wakeup"];
  abort [label="Abortive close / unread data / reset conditions:\ntcp_send_active_reset() → tcp_transmit_skb()\nNot the same as tcp_v4_send_reset() reply path"];
  conn -> conn2 -> syn; syn -> transmit [style=dotted,constraint=false]; state -> synack [style=dashed,constraint=false];
- lsn -> listen [style=dotted,constraint=false]; req -> accept [style=dashed,constraint=false,label="accept queue"]; fincall -> finsend -> pending [style=dotted,constraint=false];
+ lsn -> listen [style=dotted,constraint=false]; fincall -> finsend -> pending [style=dotted,constraint=false];
  data -> finrecv [style=dashed,constraint=false]; fincall -> abort [style=dashed]; abort -> transmit [style=dotted,constraint=false];
  }
  synackout [label="tcp_v4_send_synack()\n→ tcp_make_synack()\n→ ip_build_and_send_pkt()"];
@@ -282,7 +303,7 @@ digraph tcp {
  reuse [label="Listener SO_REUSEPORT selection\ninet_lookup_reuseport() → reuseport_select_sock()\nSK_REUSEPORT: bpf_run_sk_reuseport()\ncompat filter: run_bpf_filter() → bpf_prog_run_save_cb()\nMay fall back to hash selection",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/core/sock_reuseport.c",target="_blank"];
  lookup -> reuse [style=dashed,label="reuseport listener group",constraint=false];
  sklookup [label="Listener lookup only (not established hash hit):\n__inet_lookup_listener() → inet_lookup_run_sk_lookup()\n→ bpf_sk_lookup_run_v4() [BPF_PROG_TYPE_SK_LOOKUP]\nMay select socket / reject; netns attachment",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/ipv4/inet_hashtables.c",target="_blank"];
- lookup -> sklookup [style=dashed,label="listener lookup",constraint=false];
+ requestpath -> sklookup [style=dashed,label="listener lookup",constraint=false];
  xtbpf [label="iptables -m bpf: optional rule match\nipt_do_table() → match->match()\n→ bpf_mt() / bpf_mt_v1()\n→ bpf_prog_run() / bpf_prog_run_save_cb()\nSOCKET_FILTER program returns match boolean, not NF verdict",fillcolor="#dcfce7",URL="https://github.com/torvalds/linux/blob/v6.6/net/netfilter/xt_bpf.c",target="_blank"];
  xt -> xtbpf [style=dashed,label="if matching rule uses -m bpf"];
  // Source links are also available when opening the SVG directly.
