@@ -2503,9 +2503,9 @@
         {
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
           "file": "net/sched/sch_generic.c",
-          "start": 320,
-          "end": 342,
-          "explanation": "After optional validation, sch_direct_xmit checks whether skb remains before locking and transmit."
+          "start": 325,
+          "end": 351,
+          "explanation": "sch_direct_xmit validates conditionally, then handles null skb before device transmit."
         }
       ],
       "reviewed": true,
@@ -2535,9 +2535,9 @@
         {
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
           "file": "net/sched/sch_generic.c",
-          "start": 330,
-          "end": 342,
-          "explanation": "A remaining skb enters the frozen/stopped TX queue test."
+          "start": 339,
+          "end": 346,
+          "explanation": "A surviving skb is checked against frozen/stopped TX queue."
         }
       ],
       "reviewed": true,
@@ -2555,9 +2555,9 @@
         {
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
           "file": "net/sched/sch_generic.c",
-          "start": 334,
-          "end": 342,
-          "explanation": "Stopped/frozen queue calls qdisc_maybe_clear_missed and skips driver xmit."
+          "start": 339,
+          "end": 345,
+          "explanation": "Stopped queue clears missed state and skips device transmit."
         }
       ],
       "reviewed": true,
@@ -2576,9 +2576,17 @@
       "fingerprint": "e3789bb3831957c3b7c242eb71878d06dfdfc26e078a14ed6b6cbc715303131d"
     },
     "result -> busy": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 353,
+          "end": 364,
+          "explanation": "Incomplete driver return is requeued and causes qdisc backoff."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "8f2be30ff988ff19903dfd47dbfd51814598262a8e22d0ab9da828b54453a871"
     },
     "result -> done": {
@@ -2588,15 +2596,31 @@
       "fingerprint": "4b5d335d7a612ca8793ac0e4820276770d1b2e8b1f100b2ec29b3157ac7a2514"
     },
     "busy -> qrun": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 388,
+          "end": 407,
+          "explanation": "qdisc restart returns false after requeue; later qdisc run retries."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "f18cb3811a028aada76d3ba06af80af0464102d42fd24e66015a9a62e0c56b49"
     },
     "validateout -> again": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 254,
+          "end": 257,
+          "explanation": "dequeue_skb marks gso_skb validate=false unless XFRM offload requires revalidation."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "acb073f8b565fd0b39c7db2a70c309d84181c2cac1fc1173ee2b48081cc107ea"
     },
     "validatesingle -> validskb": {
@@ -3560,15 +3584,31 @@
       "fingerprint": "bcc4ff198d0c9d7c94bac5d6e0567c1113c46a5940ffed2512af2edb374e0ddf"
     },
     "bypass -> direct": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3785,
+          "end": 3805,
+          "explanation": "Empty bypass-capable qdisc calls sch_direct_xmit directly."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "b7b871371556e5384d21457b70c812f7a4a1f7191c5ecebbce1962d5eeaad1b9"
     },
     "enqueued -> qrun": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3808,
+          "end": 3815,
+          "explanation": "Normal qdisc enqueue invokes qdisc_run."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "20fa0e4fa61a723e0909951a8a3f42c4414c58f547c925785486fd3ead91b212"
     },
     "node:nfegressdrop": {
