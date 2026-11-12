@@ -301,6 +301,7 @@ digraph tcp {
  ixxdptx [label="XDP_TX\n→ ixgbe_xmit_xdp_ring()\n→ XDP TX descriptor / xdp_frame",fillcolor="#dcfce7"];
  ixxdpredir [label="XDP_REDIRECT\n→ xdp_do_redirect()\n→ redirect target / XDP completion",fillcolor="#dcfce7"];
  ixxdprother [label="XDP_DROP / ABORT / invalid\nconsume or drop xdp buffer",fillcolor="#fee2e2"];
+ ixredirflush [label="ixgbe_clean_rx_irq() end\nXDP_REDIRECT → xdp_do_flush_map()\nredirect map flush, not ixgbe TX completion",fillcolor="#dcfce7"];
  ixskb [label="ixgbe_build_skb() OR ixgbe_construct_skb()\n→ ixgbe_rx_skb() → napi_gro_receive()"];
  ixtx [label="ixgbe_xmit_frame()\n→ __ixgbe_xmit_frame()\n→ ixgbe_xmit_frame_ring()"];
  ixspace [label="TX ring has descriptors?",shape=diamond,fillcolor="#e0f2fe"];
@@ -311,11 +312,16 @@ digraph tcp {
  ixok [label="NETDEV_TX_OK\nNIC owns descriptors; completion later"];
  ixcomplete [label="Later ixgbe_poll() → ixgbe_clean_tx_irq()\ncheck EOP/DD completion\n→ napi_consume_skb()\n→ DMA unmap head/pages\n→ next_to_clean / stats update"];
  ixwake [label="__netif_txq_completed_wake()\nrestart stopped TX subqueue when descriptors available"];
+ ixhang [label="check_for_tx_hang() → ixgbe_check_tx_hang()\nnetif_stop_subqueue() → ixgbe_tx_timeout_reset()",fillcolor="#fee2e2"];
+ ixwatch [label="ixgbe_tx_timeout() / ixgbe_reset_subtask()\n→ ixgbe_reinit_locked()\nreset/reinitialize adapter",fillcolor="#fef9c3"];
  ixxdpcomplete [label="ixgbe_clean_xdp_tx_irq()\n→ xdp_return_frame() / DMA unmap\nseparate XDP TX completion",fillcolor="#dcfce7"];
  ixirq -> ixpoll [style=dashed,label="NAPI scheduling"]; ixpoll -> ixrx -> ixxdp;
  ixxdp -> ixskb [label="XDP_PASS"]; ixxdp -> ixxdptx [label="XDP_TX"]; ixxdp -> ixxdpredir [label="XDP_REDIRECT"]; ixxdp -> ixxdprother [label="DROP/ABORT/invalid"];
- ixxdptx -> ixxdpcomplete [style=dashed,label="XDP TX completion"]; ixxdpredir -> ixxdpcomplete [style=dashed,label="redirect completion where applicable"];
+ ixxdptx -> ixxdpcomplete [style=dashed,label="XDP TX completion"]; ixxdpredir -> ixredirflush [style=dashed,label="flush at RX poll end"]; ixredirflush -> ixpoll [style=dashed,label="return to RX poll"];
  ixcomplete -> ixwake [style=dashed,label="descriptor space freed"];
+ ixcomplete -> ixhang [style=dashed,label="TX hang detected"];
+ ixhang -> ixwatch [style=dashed,label="reset scheduled"];
+ ixwatch -> ixcomplete [style=dashed,label="after reinit / later completion"];
  driver -> ixpoll [style=dotted,constraint=false,label="example callback"]; ixskb -> gro [style=dotted,constraint=false];
  ndo -> ixtx [style=dotted,constraint=false,label="ixgbe ndo_start_xmit"]; ixtx -> ixspace;
  ixspace -> ixbusy [label="no space"]; ixbusy -> busy [style=dashed,label="driver BUSY"]; ixspace -> ixsetup [label="space available"];

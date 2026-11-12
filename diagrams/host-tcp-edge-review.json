@@ -3783,12 +3783,6 @@
       "reviewed": false,
       "fingerprint": "7689fd06187d036aa850f0b885e0717afb72cefc75eadf5bc347469012199bb3"
     },
-    "ixxdpredir -> ixxdpcomplete": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "f5465c5bffe4d0c74d950d3b8087a5ca102d6386b7d091b02570a45f0aa64cdd"
-    },
     "ixcomplete -> ixwake": {
       "kind": "conditional",
       "evidence": [
@@ -3797,7 +3791,7 @@
           "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
           "start": 1251,
           "end": 1263,
-          "explanation": "Normal TX cleanup calls __netif_txq_completed_wake after freeing descriptors."
+          "explanation": "Normal TX completion invokes __netif_txq_completed_wake to restart a stopped subqueue."
         }
       ],
       "reviewed": true,
@@ -3844,48 +3838,128 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "49f4398f9b7579e163d72a71c34c2fc028bd54fb7c0c85b128e2de0ee26f597c"
+    },
+    "ixxdpredir -> ixredirflush": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 2423,
+          "end": 2429,
+          "explanation": "RX poll flushes XDP redirect map separately at the end of clean_rx_irq."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "8ee9d9bce0a4513c0945d3901558e9729f53981ede19bac7a133ef49e964c220"
+    },
+    "ixredirflush -> ixpoll": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 2423,
+          "end": 2430,
+          "explanation": "Redirect flush completes before RX poll returns."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "d264b77266d792d77d8294c729185e35621f59ce6bc4b2b124744c07a6e8e806"
+    },
+    "ixcomplete -> ixhang": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 1218,
+          "end": 1248,
+          "explanation": "TX hang detection stops a non-XDP subqueue and schedules adapter reset."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "64f099651160ced8667ad0465c0d1876c982118fe2c9f8ac4e406a06fadfad91"
+    },
+    "ixhang -> ixwatch": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 6229,
+          "end": 6239,
+          "explanation": "ndo_tx_timeout invokes ixgbe_tx_timeout_reset; service task runs reset subtask/reinit."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "aebb73e1cde4a092f14da5e15af8678a0686057426876245db46bfcaac756e84"
+    },
+    "ixwatch -> ixcomplete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "aea1992f1660162be1a71a24adf1aed1ecd40fe37e4ccfb814d429abe126704c"
+    },
+    "node:ixredirflush": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "329726dd6a08e600a83618cf4d8438543f331c199ace57a7ac04133890df356f"
+    },
+    "node:ixhang": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "cabd41736061b65ffaaf0b0006db14e34c0556a7900a8582a0c1497e750d10cf"
+    },
+    "node:ixwatch": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6e4f2244db1e28e3a7a63e92ed729657f403b1c1f35eb7594ef9df26cb8375e3"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
+      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
+      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
+      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
+      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
+      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
+      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
+      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "20f6bd520b65aebf01a80f929842c21ed7430b4af87143179e712dd339885191"
+      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
     }
   },
   "obsolete": {
@@ -4164,6 +4238,12 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "699aa5daa246b76ef51e5dcee0e01d8cf0968a2dac80f2bd77e0104113506f22"
+    },
+    "ixxdpredir -> ixxdpcomplete": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f5465c5bffe4d0c74d950d3b8087a5ca102d6386b7d091b02570a45f0aa64cdd"
     }
   }
 }
