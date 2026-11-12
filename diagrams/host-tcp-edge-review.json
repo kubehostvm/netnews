@@ -591,31 +591,13 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "f5cfdeaf45fe1a06812b37fd8edaf66c122ad59c3af46f290c1a570fd21c7c0d"
-    },
-    "netegress -> tcegress": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "2f6904e3aa6a407cf8bbe5b75989e00fa94af30b920ed2b2ed2117c3a91628e4"
-    },
-    "tcegress -> pick": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "f6d82667cb73c6db1ed1ccb8930d83d2bb739ff4347e2be197d447c85f5c379a"
+      "fingerprint": "6945abab7a14741590ea71b5226f20952342a4b07fbb42c3d0495b59d5b0cfc2"
     },
     "pick -> enqueue": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "9affc341dd212e21e7a5146a1125032b0258cf3a7e2327175c3de80f935c3246"
-    },
-    "enqueue -> qrun": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "699aa5daa246b76ef51e5dcee0e01d8cf0968a2dac80f2bd77e0104113506f22"
+      "fingerprint": "47e3eefc24b4ec963a8c89a626f624e275b13955fabf0641a14e5924d3a50f51"
     },
     "qrun -> restart": {
       "kind": "unclassified",
@@ -1669,13 +1651,13 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "191e8983558f3ff8356b707da350a7fe687ec7bf68300a7a00d9d4785bbe6310"
+      "fingerprint": "55cc122a74d102124a99eb2b693bfff0193af2a9d77051f5b5ebc5f607142670"
     },
     "node:tcegress": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "d79d6bd923dddc118fe4b6526ce03842461c59eee2c7733ecc7d09b3de5702fb"
+      "fingerprint": "7cc50e5068531ccbd39832c983a37d400bd1d1686d2a040c3c2b7baf0985735b"
     },
     "node:pick": {
       "kind": "unclassified",
@@ -1687,7 +1669,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "1e57b026c361996d7bb4ef45752116a1d4264797cbc925eee688a855da0b86b1"
+      "fingerprint": "76134ac4dbcc378249b5474b6cc836c8328c8d7c618517414e516f80c99ef1d9"
     },
     "node:qrun": {
       "kind": "unclassified",
@@ -2460,8 +2442,8 @@
           "explanation": "Noqueue path directly invokes validate_xmit_skb before dev_hard_start_xmit, not list validator."
         }
       ],
-      "reviewed": true,
-      "fingerprint": "d90ae123637f05b9096d4e4af0e8eccb9fd9c2c99bf4cd809e058a8e4e8afe01"
+      "reviewed": false,
+      "fingerprint": "0ea956bea3a6b9745d225b0e20cc6b0e212c173e80f2d65fd640e3a09a1e40f2"
     },
     "synackout -> localout": {
       "kind": "conditional",
@@ -3444,48 +3426,240 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "2c77c013bf3fdcb959a0512a5d7d6032fdd50252652555aa8569b064489aecb8"
+    },
+    "netegress -> nfegressdrop": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 4300,
+          "end": 4306,
+          "explanation": "nf_hook_egress may return no skb and exits __dev_queue_xmit."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "7d2a743851882a3170a62a0656d98a1abb55e8fd476581e2e6070f7474c3e49c"
+    },
+    "netegress -> nfegressok": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 4300,
+          "end": 4318,
+          "explanation": "A surviving skb proceeds to egress TC and TX queue selection after nft egress."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "e9d1a28efd356ec57261ae3ebdcf6f826322b83294945b1bfbc6df1c3a5e7b21"
+    },
+    "nfegressok -> tcegress": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 4310,
+          "end": 4318,
+          "explanation": "nf_skip_egress surrounds sch_handle_egress after nft egress processing."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "23d4539467ec9f4c528629f323775ef198fcb7f31dce64dd8850505fc9e9d425"
+    },
+    "tcegress -> tcredirect": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 4079,
+          "end": 4084,
+          "explanation": "TC egress REDIRECT calls skb_do_redirect and returns no skb with NET_XMIT_SUCCESS."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "9548813b04be2dafc8abb66c48ff8f464af2ec891bda30b98dd594480901f0c3"
+    },
+    "tcegress -> tcdrop": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 4085,
+          "end": 4088,
+          "explanation": "TC egress SHOT frees skb and returns NET_XMIT_DROP."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "ae471a9ec5b883492a5de7313dd73af4768e698a4b3fd20dabc4ff98811ebdfd"
+    },
+    "tcegress -> tcconsume": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 4090,
+          "end": 4097,
+          "explanation": "STOLEN/QUEUED/TRAP/CONSUMED consume or divert skb and return success."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "8388a8c5c06ce5f29f24e02de169bddde2007e34af99c3b74fc724fce5ca22b9"
+    },
+    "tcegress -> tcpass": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 4066,
+          "end": 4078,
+          "explanation": "No entry or TCX UNSPEC falls through to traditional TC; ordinary return keeps skb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "368d0ef2c5cb3ecf9ed7f42b92525bf2e2acad3f78446cd09bf6e6f5f660dcec"
+    },
+    "tcpass -> pick": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "abef0501d875c7e65634fd1e34e942d6ebbb24bce35a4f7b7f4f8f77416eccc7"
+    },
+    "enqueue -> bypass": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3785,
+          "end": 3805,
+          "explanation": "Empty CAN_BYPASS qdisc calls sch_direct_xmit before enqueue."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "f3be8e635ae3642cb4d734f61ab69addb8d4b672f7ecf2a880d914676d63915d"
+    },
+    "enqueue -> enqueued": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3808,
+          "end": 3815,
+          "explanation": "Non-bypass path calls dev_qdisc_enqueue and qdisc_run."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "bcc4ff198d0c9d7c94bac5d6e0567c1113c46a5940ffed2512af2edb374e0ddf"
+    },
+    "bypass -> direct": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b7b871371556e5384d21457b70c812f7a4a1f7191c5ecebbce1962d5eeaad1b9"
+    },
+    "enqueued -> qrun": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "20fa0e4fa61a723e0909951a8a3f42c4414c58f547c925785486fd3ead91b212"
+    },
+    "node:nfegressdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "819ff2a5ce390202dfdaaf1e01b5893e179c464707c9589bbeb859b812974808"
+    },
+    "node:nfegressok": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ed643a78d35e1e09b6b6cbb668d51b3fbedcc41efa39d59ec8640633f0933972"
+    },
+    "node:tcredirect": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "85d998272d7df688a835e97e1df5236eb07b9cddbd5e0a7648eb7cf869b64dbc"
+    },
+    "node:tcdrop": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4534563fcfb241403c90d2042bb7908fcf6e0d042bb1f0222829d15613ae7183"
+    },
+    "node:tcconsume": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e900ba6d86749e9b8e186fd0ea330b4f310261e3e6cfc964dd401f0e3848d9d3"
+    },
+    "node:tcpass": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "77c9513f884b4306142aca0608c37fa9d1145912dcc5dba3d7aba1b12b976e04"
+    },
+    "node:bypass": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ef5f9a6df8d5e558d8298790d17e20e095215919eaba4f171c87655c9d1d774a"
+    },
+    "node:enqueued": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ea96b960a2e0ecf7ae46f8c04b3691f00ab175dab008346343ee73cbc2a10d7b"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
+      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
+      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
+      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
+      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
+      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
+      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
+      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "c246dd8c4f57f2401366c226ceb65037d5efeb93ba1244ea6c6af8eba4ae0172"
+      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
     }
   },
   "obsolete": {
@@ -3746,6 +3920,24 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "208f2a54b30bcbfe0731c494594921a32de8e8952ad231d1f5aa21f9b7c431c1"
+    },
+    "tcegress -> pick": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f6d82667cb73c6db1ed1ccb8930d83d2bb739ff4347e2be197d447c85f5c379a"
+    },
+    "netegress -> tcegress": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2f6904e3aa6a407cf8bbe5b75989e00fa94af30b920ed2b2ed2117c3a91628e4"
+    },
+    "enqueue -> qrun": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "699aa5daa246b76ef51e5dcee0e01d8cf0968a2dac80f2bd77e0104113506f22"
     }
   }
 }

@@ -176,10 +176,18 @@ digraph tcp {
  resolve [label="neigh_resolve_output()\n→ neigh_event_send()\nmay transmit immediately, not always unresolved",fillcolor="#fef9c3"];
  devqueue [label="dev_queue_xmit()"];
  devqueue2 [label="__dev_queue_xmit()"];
- netegress [label="nf_hook_egress()\nNETDEV egress (nft)",fillcolor="#f3e8ff"];
- tcegress [label="sch_handle_egress()\nTCX enabled: tcx_run(), non-UNSPEC → verdict\nUNSPEC / no TCX → tc_run()/tcf_classify()\n→ cls_bpf_classify() / bpf_prog_run()",fillcolor="#dcfce7"];
+ netegress [label="nf_hook_egress(): nft NETDEV egress",shape=diamond,fillcolor="#f3e8ff"];
+ nfegressdrop [label="nft egress DROP/QUEUE/STOLEN\nstop or divert skb",fillcolor="#fee2e2"];
+ nfegressok [label="nft egress ACCEPT\ncontinue to TC egress",fillcolor="#f3e8ff"];
+ tcegress [label="sch_handle_egress(): TCX → TC fallback",shape=diamond,fillcolor="#dcfce7"];
+ tcredirect [label="TC egress REDIRECT\nskb_do_redirect() / NET_XMIT_SUCCESS\nno qdisc for this skb",fillcolor="#dcfce7"];
+ tcdrop [label="TC egress SHOT\nkfree_skb_reason() / NET_XMIT_DROP",fillcolor="#fee2e2"];
+ tcconsume [label="TC egress STOLEN/QUEUED/TRAP/CONSUMED\nconsume or divert skb",fillcolor="#fef9c3"];
+ tcpass [label="TC egress pass / UNSPEC\ncontinue to TX queue selection",fillcolor="#dcfce7"];
  pick [label="netdev_core_pick_tx()\nselect TX queue / qdisc"];
- enqueue [label="__dev_xmit_skb()\nqdisc enqueue / optional bypass"];
+ enqueue [label="__dev_xmit_skb(): qdisc enqueue or bypass",shape=diamond];
+ bypass [label="TCQ_F_CAN_BYPASS + qdisc empty\n→ sch_direct_xmit(validate=true)\nthen qdisc run if needed",fillcolor="#fef9c3"];
+ enqueued [label="q->enqueue()\n→ qdisc_run() / __qdisc_run()",fillcolor="#eef2f6"];
  qrun [label="qdisc_run() → __qdisc_run()"];
  restart [label="qdisc_restart()\n→ dequeue_skb()"];
  direct [label="sch_direct_xmit(): validate?",shape=diamond];
@@ -207,13 +215,16 @@ digraph tcp {
  ipfinishout -> cgout [label="run cgroup program"]; cgout -> cgdrop [label="reject"]; cgout -> finishout [label="allow / congestion notification"]; finishout -> finishout2 [label="ordinary packet"]; finishout -> gso [label="oversized / GSO"]; gso -> finishout2;
  finishout2 -> gw -> neigh; neigh -> hh [label="cache usable"]; hh -> devqueue;
  neigh -> noutput [label="otherwise"]; noutput -> connected [label="neigh_connected_output"]; noutput -> resolve [label="neigh_resolve_output"]; noutput -> directneigh [label="neigh_direct_output"]; noutput -> blackhole [label="neigh_blackhole"]; directneigh -> devqueue; blackhole -> neighdrop;
- resolve -> event; event -> devqueue [label="0 and valid L2 header: immediate output"]; event -> waitarp [label="nonzero: queued / consumed"]; event -> neighdrop [style=dashed,label="0 but L2 header construction fails"]; connected -> neighdrop [style=dashed,label="L2 header construction fails"]; waitarp -> noutput [style=dashed,label="later resolution succeeds"]; waitarp -> neighdrop [style=dashed,label="failure / eviction"]; connected -> devqueue -> devqueue2 -> netegress -> tcegress -> pick -> enqueue -> qrun -> restart -> direct; direct -> validateout [label="validate=true"]; direct -> validskb [label="validate=false: already validated skb"];
+ resolve -> event; event -> devqueue [label="0 and valid L2 header: immediate output"]; event -> waitarp [label="nonzero: queued / consumed"]; event -> neighdrop [style=dashed,label="0 but L2 header construction fails"]; connected -> neighdrop [style=dashed,label="L2 header construction fails"]; waitarp -> noutput [style=dashed,label="later resolution succeeds"]; waitarp -> neighdrop [style=dashed,label="failure / eviction"]; connected -> devqueue -> devqueue2 -> netegress;
+ netegress -> nfegressdrop [label="drop/divert"]; netegress -> nfegressok [label="accept"];
+ nfegressok -> tcegress; tcegress -> tcredirect [label="REDIRECT"]; tcegress -> tcdrop [label="SHOT"]; tcegress -> tcconsume [label="STOLEN/QUEUED/TRAP/CONSUMED"]; tcegress -> tcpass [label="pass / UNSPEC"];
+ tcpass -> pick -> enqueue; enqueue -> bypass [label="bypass eligible"]; enqueue -> enqueued [label="normal enqueue"]; bypass -> direct [style=dashed,label="direct transmit"]; enqueued -> qrun -> restart -> direct; direct -> validateout [label="validate=true"]; direct -> validskb [label="validate=false: already validated skb"];
  validateout -> again; again -> requeueagain [label="yes: XFRM offload"]; requeueagain -> qrun [style=dashed,label="retry"]; again -> validskb [label="no / feature off"];
  validatesingle -> validskb; validskb -> txstate [label="yes"]; validskb -> done [label="no: no driver call"];
  txstate -> hard [label="no"]; txstate -> missed [label="yes"]; missed -> result [label="skb consumed / no driver call"];
  hard -> one -> ndo -> start -> result;
  result -> done [label="all skb consumed"]; result -> busy [label="incomplete / BUSY"]; busy -> qrun [style=dashed,label="retry returned skb"];
- pick -> validatesingle [style=dashed,label="noqueue path; skips list validator"];
+ pick -> validatesingle [style=dashed,label="device has no qdisc / noqueue path; skips list validator"];
  }
  subgraph cluster_hooks {
  label="Inside each IPv4 Netfilter hook: actual rule dispatch (not a sixth chain)";color="#f97316";
