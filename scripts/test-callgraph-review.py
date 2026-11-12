@@ -38,9 +38,12 @@ class EvidenceTests(unittest.TestCase):
             self.assertNotIn(wrong, tcp)
         self.assertNotIn('pick -> validateout ', tcp)
         self.assertIn('direct -> validateout [label="validate=true"]', tcp)
-        self.assertIn('direct -> hard [label="validate=false: already validated skb"]', tcp)
+        self.assertIn('direct -> validskb [label="validate=false: already validated skb"]', tcp)
+        self.assertIn('again -> requeueagain', tcp)
+        self.assertIn('txstate -> missed', tcp)
+        self.assertIn('result -> busy', tcp)
         self.assertNotIn('direct -> validateout ->', tcp)
-        for required in ('synackout -> localout', 'resetout -> localout', 'bpf_run_sk_reuseport()', 'pick -> validatesingle', 'validateout -> validatesingle'):
+        for required in ('synackout -> localout', 'resetout -> localout', 'bpf_run_sk_reuseport()', 'pick -> validatesingle', 'validateout -> again', 'validatesingle -> validskb', 'native -> xdp_run', 'generic -> genericrun', 'hard -> one', 'one -> ndo', 'ndo -> start', 'start -> result'):
             self.assertIn(required, tcp)
         for required in ('ip_list_rcv()', 'NF_HOOK_LIST(PREROUTING)', 'ip_sublist_rcv_finish()', 'subfinish -> dstin', 'ofodrain -> recvqueue', 'READ_ONCE(n->output)', 'event -> devqueue', 'event -> waitarp'):
             self.assertIn(required, tcp)

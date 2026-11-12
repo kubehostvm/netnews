@@ -11,31 +11,25 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "f71c37a89217f8500f6cbed5196915c4db56b71df176f3cb950d1700fa7083b2"
+      "fingerprint": "57d86783c5137fed454e4582670e09d3cbef0431c94fb8d90f07693d824173ae"
     },
     "poll -> driver": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "57e70ac13e26d42220cbbced201c098d94f0387a76822eab39a95413d2b85c6a"
+      "fingerprint": "a74ba77118edb8fbb603893568becdc3e9d0cc86b313826d3b2833be74b15e92"
     },
     "driver -> native": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "72cefaa02eab0ed8de7254793cfadd6e387b0eeb2e7731f1e53019ad2ef3bb77"
+      "fingerprint": "cec5b0684b280c4b94cbf98d2e6951e567905472965d7640792e5eb6bce5032a"
     },
     "driver -> ixpoll": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
       "fingerprint": "51b5bebdaf825a7cc5cfc330eac1b238c98613e339cb3914d3e3b5573a47d8c0"
-    },
-    "native -> gro": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "1fb176ea33682d49e7cdea872948fc0467b4c09223470afcacad2429f9c2708c"
     },
     "gro -> devgro": {
       "kind": "unclassified",
@@ -65,13 +59,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "1e6398b2e2e6ed5148f5fa4f69d6d48daffe89bcf344f2e19f98687cfea2d8c7"
-    },
-    "generic -> taps": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "d6fa417b86bc277f72b5b0990d6e35645721c7f35d4aed93d3f18f893b656117"
+      "fingerprint": "5f76d7f712741daa0e77c8fbe0e04786727c0828265103bb0787a93db0725684"
     },
     "taps -> tcin": {
       "kind": "unclassified",
@@ -657,29 +645,11 @@
       "reviewed": true,
       "fingerprint": "71f2f98e05d832bd85564e7c5ca8680102f1bea6a219eba6ae5b8df26a712638"
     },
-    "hard -> one": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "ab2c7dbf2ff2ec18a479ca186e78e9514797259242472a11037e7cb511babae8"
-    },
-    "one -> start": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "101e17523c85412b6c136486d301493a89cee18a734c3badcbfa322b9d83ab20"
-    },
-    "start -> ndo": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "47acd3a9623310d39feedea379a680e8c7a68b9cfc380ef424d278f7bfa2ce25"
-    },
     "ndo -> ixtx": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "493aea14faac2209676d718524f756b40cb53da0355e1279f85320d8740f90bb"
+      "fingerprint": "32bc47cef910cd8afbe9263cb4a4d044420bc71aa98fe04e0264e79df71652d4"
     },
     "hook -> legacy": {
       "kind": "unclassified",
@@ -1143,7 +1113,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "a58176f9060e958e0026f09d7a9337589bf61e05adce831e3fcaa3639879614e"
+      "fingerprint": "deea9a79bcc8aad24389858939624aab9764f96ab1fafc19551d088cecb66fd2"
     },
     "node:gro": {
       "kind": "unclassified",
@@ -1209,7 +1179,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "0ace322078c1f30c9fc9149073dd0b4e27b4bd43b17cebc16885eb3623067f35"
+      "fingerprint": "01b702318defe0c7ab4e2fe3b0262a80d5c028e937c1bfbe37d109952bba116d"
     },
     "node:taps": {
       "kind": "unclassified",
@@ -1761,25 +1731,25 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "08961469d60eaed4ca99a899cbcf48d564ff63052b54cfecd1e0aca62de7ff4f"
+      "fingerprint": "83c54526f419133f2b6df8e9a94180324ffd13ce6cd682cb2aa0a726042ba2b0"
     },
     "node:one": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "54607f9c0c11f7d61ee0dc2024709fef6e2fe45b3aa582a2f31ca06737b1d0ec"
+      "fingerprint": "729decb29b8d198e53f21efa0321b63f21507c6a746b32b1a60958cd2bbc7032"
     },
     "node:start": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "3056f45e046dd695e32b2f8f1105cee929b84cf3c9c7eb599ffe833c09e2fb15"
+      "fingerprint": "a686f77cc5a90c99f944fe4edc4839d81248cafca70f8db6ad8a0f21a46416ee"
     },
     "node:ndo": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "cf1a3a4aa9cbdac7bc4a8c3e775cae096c4306b984431ac09377145a97b9e0fa"
+      "fingerprint": "7d414e93cd23e5da560e5131aa6e3db3bbbb2004f4e50324d7bed6715cbade75"
     },
     "node:hook": {
       "kind": "unclassified",
@@ -2507,18 +2477,6 @@
       "reviewed": true,
       "fingerprint": "d90ae123637f05b9096d4e4af0e8eccb9fd9c2c99bf4cd809e058a8e4e8afe01"
     },
-    "validateout -> validatesingle": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "91df141656c4566a7de225e9e62b7edd5919047376831ad4f7d1e49f38116f7e"
-    },
-    "validatesingle -> hard": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "985bf83379a9291823bbcf1a575753e502519f418006cf6a32077239f433472f"
-    },
     "synackout -> localout": {
       "kind": "conditional",
       "evidence": [
@@ -2571,61 +2529,347 @@
       "reviewed": false,
       "fingerprint": "d73cbaddc9ccf23217e657c3e44a8e400044b94ac616c3f59b5327eb43872b8a"
     },
-    "direct -> hard": {
+    "direct -> validskb": {
       "kind": "conditional",
       "evidence": [
         {
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
           "file": "net/sched/sch_generic.c",
-          "start": 325,
+          "start": 320,
           "end": 342,
-          "explanation": "When validate=false skip list validator; a nonempty skb and running TX queue permit dev_hard_start_xmit."
+          "explanation": "After optional validation, sch_direct_xmit checks whether skb remains before locking and transmit."
         }
       ],
       "reviewed": true,
-      "fingerprint": "24fbbae5e2ad43db46cb3ab2495c30335193c9faf6d13d7dfd9fee36355f430d"
+      "fingerprint": "3540d9bb374d62245192e2b497601b13bd729b43c8d34fe115f8d5c5062fe25e"
+    },
+    "again -> requeueagain": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "77fa843d86f7021d623fc2e13dac7fe7198b04dfc870412eac99456bbc4ad85d"
+    },
+    "again -> validskb": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2c3260668dd7de45ad4a4141ec33a4112952bd58694df22dd3be4bc2104695c5"
+    },
+    "requeueagain -> qrun": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "a7d15a1bf76486cf32f7c86afbe660561540e2fe4a7f4031aee357427730f32e"
+    },
+    "validskb -> txstate": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 330,
+          "end": 342,
+          "explanation": "A remaining skb enters the frozen/stopped TX queue test."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "606faf3b43347a3158e89e7e142a23e4a6512e422655b007dd44e8d159ac7b40"
+    },
+    "validskb -> done": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "bfc0169c2a3f2286d19d6a4b4f38f5b9beb99cac0addde06bda0b6330be446ec"
+    },
+    "txstate -> missed": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 334,
+          "end": 342,
+          "explanation": "Stopped/frozen queue calls qdisc_maybe_clear_missed and skips driver xmit."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "ab3650203ce56195969d40ad52ac8c7780193f847c239dfd3daa5f0019292b5b"
+    },
+    "txstate -> hard": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8d38bac773b7ab258d8484bc728c417005de8154c29ce5e620fbe6dfd845f64c"
+    },
+    "missed -> result": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e3789bb3831957c3b7c242eb71878d06dfdfc26e078a14ed6b6cbc715303131d"
+    },
+    "result -> busy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8f2be30ff988ff19903dfd47dbfd51814598262a8e22d0ab9da828b54453a871"
+    },
+    "result -> done": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4b5d335d7a612ca8793ac0e4820276770d1b2e8b1f100b2ec29b3157ac7a2514"
+    },
+    "busy -> qrun": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f18cb3811a028aada76d3ba06af80af0464102d42fd24e66015a9a62e0c56b49"
+    },
+    "validateout -> again": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "acb073f8b565fd0b39c7db2a70c309d84181c2cac1fc1173ee2b48081cc107ea"
+    },
+    "validatesingle -> validskb": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f3bb75c858aa7f5b5a0eb308e77351a58eb9c39911a84aafe23bba2f4f6973fc"
+    },
+    "node:again": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8f8f6bd286907aea5257124ee9f3f4d2f7f468aefc070f2097edc0f9de7d1bad"
+    },
+    "node:requeueagain": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2327d48c8cca61a46f67fb249c1399bb1d1262b42c94cbdf61d345e23d41f80e"
+    },
+    "node:validskb": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "72391f46bf427133e75a2b6e22c7538a5d8d252639d26a6239138f82d94a043d"
+    },
+    "node:txstate": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f99bae7cc4f339f357fd2f6e56610b71f5795bd4c8708b2ecc126a853b788ec5"
+    },
+    "node:missed": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "96639e715e171e913c2b2dd8d34d138109063af330f8efe79b029bca2e44872f"
+    },
+    "node:result": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "73c5ecc9b4c319b1d56540813eb659932c291c52f113692b93a5aad72ae97a03"
+    },
+    "node:busy": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "70bfe0bde3178e3b783247b4abac6ed25d8753fb2af02d0e1b52f1c671bbcc11"
+    },
+    "node:done": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f9440aeb43a18ae477c24411b5d35218c23d52f01b60fa8d957c038ed845dd52"
+    },
+    "native -> xdp_run": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "47cca03c7a887cc06718d7060cb145c77089697dd0c26622f08c06a0ac26b331"
+    },
+    "native -> noxdp": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 2189,
+          "end": 2207,
+          "explanation": "The driver has an attached-program conditional before running XDP; otherwise it constructs skb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "3e70efd86db15572badecd112ae7ca1dc6f83921bcedb357d1d3f7747378a600"
+    },
+    "xdp_run -> gro": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c98014010d5b33c4085a4a6c7b4bdb4666c7af46d24477b4299cc18f374385c1"
+    },
+    "noxdp -> gro": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7d2f82ce3bedbb55144aad5370ab21314c6d869dd1b5cc0c0f0d9fe735832cd9"
+    },
+    "generic -> genericrun": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "eb45eafb2d74089f880e8ad7b8d2f27c1aa30575edd6c5a87a890aa66db1bfb2"
+    },
+    "generic -> nogeneric": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 5369,
+          "end": 5375,
+          "explanation": "Generic XDP runs only when the static key/program condition is present; otherwise receive core continues."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "c0aa92c2474940c3ab56f09443f3bae90829f904a1a72086702de46d4424022e"
+    },
+    "genericrun -> taps": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f083b9b054e32248510ef6c976df4bfaf9f518834d30dcafec0bcf2dc5651c6a"
+    },
+    "nogeneric -> taps": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "70a0656d594012b7557e5caef66b70eb656f2632b5a2a4b5f852b04fe4ac936c"
+    },
+    "one -> ndo": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3560,
+          "end": 3575,
+          "explanation": "xmit_one reaches netdev_start_xmit and ndo_start_xmit."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "f637e78cd99d88eabbfb9bbbf38b73bb325f7edb3259391a164b439bcd9374bf"
+    },
+    "start -> result": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 340,
+          "end": 366,
+          "explanation": "sch_direct_xmit interprets driver return through dev_xmit_complete and requeues incomplete packets."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "e4fd96f67d9841a757781fbc9acda184c1106b2118230c21916f9c3a55f3d3c7"
+    },
+    "ndo -> start": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3579,
+          "end": 3600,
+          "explanation": "dev_hard_start_xmit returns driver completion status after xmit_one."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "2bd8613a5a2c1e103b4a43a7d24ff406e24d21a2fa8e9e1e9ae713de14649263"
+    },
+    "node:xdp_run": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "84e19efb7d976083342719488a06727c91c41d60360a716a18ce3a780b2106f4"
+    },
+    "node:noxdp": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "13a64af70275c13929c93eaedce3172a61aac1b05269d23c73534cceec7034f1"
+    },
+    "node:genericrun": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1452f600884cc60968f66c74aa956c40e58cff573ab2e8dd8703eb49bd7839af"
+    },
+    "node:nogeneric": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8d15b28292a09056078eac2d0c3268b25d9c877f539363b25b809fe0823cbcd3"
+    },
+    "hard -> one": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3579,
+          "end": 3600,
+          "explanation": "dev_hard_start_xmit loops each skb and calls xmit_one."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "88fe1a5dc22a904adff09a9a7ec1f59a02534cfa8f34a5869372bcb0312fb029"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
+      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
+      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
+      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
+      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
+      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
+      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
+      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "a76970c7e3e1adc8f1caa7baa4c83b7098628466d49ca153166468eba1b5c620"
+      "fingerprint": "e05cf904badb1fd886b2e64284e1c7da1ac4244684969e032cc98234d2ee4e06"
     }
   },
   "obsolete": {
@@ -2710,6 +2954,74 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "fee6354c2cdd2a101d7b7b715826b80694ba11d42a9241118c99e16f66babfbc"
+    },
+    "direct -> hard": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 325,
+          "end": 342,
+          "explanation": "When validate=false skip list validator; a nonempty skb and running TX queue permit dev_hard_start_xmit."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "24fbbae5e2ad43db46cb3ab2495c30335193c9faf6d13d7dfd9fee36355f430d"
+    },
+    "hard -> one": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ab2c7dbf2ff2ec18a479ca186e78e9514797259242472a11037e7cb511babae8"
+    },
+    "validatesingle -> hard": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "985bf83379a9291823bbcf1a575753e502519f418006cf6a32077239f433472f"
+    },
+    "validateout -> validatesingle": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "91df141656c4566a7de225e9e62b7edd5919047376831ad4f7d1e49f38116f7e"
+    },
+    "native -> gro": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1fb176ea33682d49e7cdea872948fc0467b4c09223470afcacad2429f9c2708c"
+    },
+    "generic -> taps": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d6fa417b86bc277f72b5b0990d6e35645721c7f35d4aed93d3f18f893b656117"
+    },
+    "one -> start": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "101e17523c85412b6c136486d301493a89cee18a734c3badcbfa322b9d83ab20"
+    },
+    "start -> ndo": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "47acd3a9623310d39feedea379a680e8c7a68b9cfc380ef424d278f7bfa2ce25"
+    },
+    "hard -> result": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9d5f9c6e71a4d8ae01d6b750eba2602289ef5b9008300f70db523669ca22236b"
+    },
+    "done -> one": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c9715981731b31d098b794dcb62680e6acfb4f31b2369e6fca0c9506ad78a382"
     }
   }
 }
