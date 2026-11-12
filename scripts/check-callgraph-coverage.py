@@ -5,6 +5,7 @@ import hashlib
 import html
 import json
 from pathlib import Path
+import re
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -55,10 +56,23 @@ def main():
         key = source['name'] + ' -> ' + target['name']
         assert key not in units, key
         units[key] = {'source': source.get('label', source['name']), 'target': target.get('label', target['name']), 'style': edge.get('style'), 'label': edge.get('label')}
-    # Review labels too: multiple functions and arrows inside a node were previously invisible to the gate.
+    # Review labels too: arrows inside a node are separate claims from graph edges.
     for obj in graph['objects']:
-        if 'nodes' not in obj and 'label' in obj:
-            units['node:' + obj['name']] = {'label': obj['label']}
+        if 'nodes' in obj or 'label' not in obj:
+            continue
+        label = obj['label']
+        units['node:' + obj['name']] = {'label': label}
+        normalized = label.replace('\\\\n', ' ')
+        matches = list(re.finditer(r'([A-Za-z_][A-Za-z0-9]*)\(\)', normalized))
+        calls = []
+        for left, right in zip(matches, matches[1:]):
+            between = normalized[left.end():right.start()]
+            if '→' in between or '->' in between:
+                calls.append((left.group(1), right.group(1)))
+        for index, (source_name, target_name) in enumerate(calls):
+            units[f'node:{obj["name"]}:internal:{index}'] = {
+                'source': source_name + '()', 'target': target_name + '()', 'label': label,
+            }
     ledger = review.setdefault('edges', {})
     archive = review.setdefault('obsolete', {})
     for key in set(ledger) - set(units):

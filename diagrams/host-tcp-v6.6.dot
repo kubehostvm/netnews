@@ -9,7 +9,7 @@ digraph tcp {
  poll [label="napi_poll() → __napi_poll()"];
  driver [label="driver-specific napi poll()"];
  native [label="Native XDP attached?",shape=diamond,fillcolor="#dcfce7"];
- xdp_run [label="driver-specific run_xdp()\nbpf_prog_run_xdp()\nPASS continues; DROP/TX/REDIRECT diverts",fillcolor="#dcfce7"];
+ xdp_run [label="ixgbe_run_xdp()\nbpf_prog_run_xdp()\nPASS continues; DROP/TX/REDIRECT diverts",fillcolor="#dcfce7"];
  noxdp [label="No native XDP program\ncontinue to skb construction"];
  gro [label="napi_gro_receive()"];
  devgro [label="dev_gro_receive()"];
