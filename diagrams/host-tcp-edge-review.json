@@ -110,10 +110,18 @@
       "fingerprint": "58a75c34c01317136962a5192b99b17f22a6c51f9baaaf5fd138fbc6e59074a4"
     },
     "pre -> pr0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "1f9fe275aeed428a195bdfbadc927fe52c4c7c76ccd8e115462ffb120524e892"
+      "kind": "summary",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 560,
+          "end": 571,
+          "explanation": "ip_rcv enters PREROUTING; the diagram edge points to the expanded hook sequence."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "7ef9fbc4de73c86d92e739ef810fdb66c0278f3c0a6be739528223e05f9a38b0"
     },
     "ipfinish -> ipfinishcore": {
       "kind": "unclassified",
@@ -125,7 +133,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "b35784ae400947f8ccbded37ca2e2e0626df26caf7e6ac6c67f40c5aea397aa3"
+      "fingerprint": "91c917def86b31f4bb1f3cc5684f3f2a2c1863c27dc4442992d1b8ed6aa5b936"
     },
     "dstin -> local": {
       "kind": "unclassified",
@@ -152,10 +160,18 @@
       "fingerprint": "00911cff393aae8fd16075351997854763b31aa3cd5793314a50e7c0de0a5504"
     },
     "input -> in0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "78d4afc4499bc14dbb939ac60a2aa59e135a0d76098456237ff48d3a174b787b"
+      "kind": "summary",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_input.c",
+          "start": 242,
+          "end": 256,
+          "explanation": "ip_local_deliver enters LOCAL_IN; the sequence node expands the registered callbacks."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "638c4380e767dd5ab78f24e8b0cddc428ac9f2cad244b0844f32a290ee98849b"
     },
     "localfinish -> protocol": {
       "kind": "unclassified",
@@ -257,7 +273,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "26ae4eda2b85630f44604f62a343fcc43fcd38a6b374b35592d8d094cedfb124"
+      "fingerprint": "a25533a9b68b41d3f7c3530cb93d943b6b009803f6d20d0680e32a6480173c98"
     },
     "prediction -> fast": {
       "kind": "unclassified",
@@ -299,7 +315,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "86ffb9c78b4bd2ca74e23af634a0b0e0144047c0fe9c47b67e1e7fd6006fb4df"
+      "fingerprint": "db43def7b0e0b6cafb7a6b5033d5d840c9bc79d3625b2d713b4ca66a47f20f0b"
     },
     "ready -> recv": {
       "kind": "unclassified",
@@ -341,13 +357,13 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "8c74b20e915466b113651e51c03ff2d2137afcb908eecaa38f77c9a701fe4ced"
+      "fingerprint": "798a61659ab407b2d414ec3a8dcaa668f29cf864648263b8c2f9237656f65ab9"
     },
     "state -> synack": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "64f38398072842b56acb285c42b138ba58561f7a43c90f34efb2b138ac16908e"
+      "fingerprint": "7f9ace861881ad159927f96f6ce19760892654acf19292d4b6bf9363d7eb5f4f"
     },
     "req -> accept": {
       "kind": "conditional",
@@ -367,7 +383,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "e54badde47068a9c34341c70a2de17f3b6b1c4247d7507cb5efd679c0e6246dd"
+      "fingerprint": "f60b44bad6842ba4f3077b9a42c52e2da2fa67e885b8dabfe2a100de45a72c27"
     },
     "send -> socksend": {
       "kind": "unclassified",
@@ -476,10 +492,18 @@
       "fingerprint": "08759fc325280f80703ea4cd61c2c9084891f5ef80debd6a05b435aded8f9fc0"
     },
     "output -> ou0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "94bfa43716f72559517b9c4d4e7e135f9ceb464e60bea3d7a4e4aa5f1d267ebb"
+      "kind": "summary",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 100,
+          "end": 118,
+          "explanation": "__ip_local_out enters LOCAL_OUT; the sequence node expands its callbacks."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "0a8bff1c07789b9aa6a4f2b1525edfcefc89ccb9bd37649f5598fa8d661327ee"
     },
     "reroute -> dstout": {
       "kind": "unclassified",
@@ -488,10 +512,18 @@
       "fingerprint": "63c4aa29907a9b726581055182581207588e5b9ef8a6cfa8bbca1f670edf0eee"
     },
     "post -> po0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "0065b3f7e754da9f1c71d63299011c5ea83eb7231cec20b0eb4ae412ce2dd215"
+      "kind": "summary",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 424,
+          "end": 435,
+          "explanation": "ip_output enters POST_ROUTING; the sequence node expands its callbacks."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "e279d5ca82453090f49d2fbb127a85be81da02a5317eaddc6247ce95a473871a"
     },
     "ipfinishout -> cgout": {
       "kind": "conditional",
@@ -848,10 +880,18 @@
       "fingerprint": "0cf96f505bc6e3a37ccdf480f57bf170d05f9cb801ff60c55a6fb3c42bb29865"
     },
     "events -> tcpsend": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "b82a8271dfb2391c4d6a0e00d10dcc96cdfff1a0a92671e9ddb599833a69e324"
+      "kind": "summary",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/af_inet.c",
+          "start": 570,
+          "end": 680,
+          "explanation": "Connection event hooks are optional and occur around connect, not as every-packet TX calls."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "ec4ed05b6367720cfd66844f9f15ec2a4e1a86824517a51a2d9f4c76ccb5c6a6"
     },
     "ixirq -> ixpoll": {
       "kind": "unclassified",
@@ -878,9 +918,17 @@
       "fingerprint": "a1706593c35ae8b7707daadb8bf80add997f38dc2b8122522adb7a3b7dbaed98"
     },
     "ixskb -> gro": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "summary",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 1709,
+          "end": 1714,
+          "explanation": "ixgbe_rx_skb submits the constructed skb to napi_gro_receive."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "0d989a6e93ef2c03a0c0c5f72cb7563cdac2e35691342ecc017f433ba292eba4"
     },
     "conn -> conn2": {
@@ -3924,42 +3972,42 @@
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
+      "fingerprint": "707920539c947be681b26248ea87288324f13bc04f70365c2fd8d586e545fa23"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
+      "fingerprint": "707920539c947be681b26248ea87288324f13bc04f70365c2fd8d586e545fa23"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
+      "fingerprint": "707920539c947be681b26248ea87288324f13bc04f70365c2fd8d586e545fa23"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
+      "fingerprint": "707920539c947be681b26248ea87288324f13bc04f70365c2fd8d586e545fa23"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
+      "fingerprint": "707920539c947be681b26248ea87288324f13bc04f70365c2fd8d586e545fa23"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
+      "fingerprint": "707920539c947be681b26248ea87288324f13bc04f70365c2fd8d586e545fa23"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
+      "fingerprint": "707920539c947be681b26248ea87288324f13bc04f70365c2fd8d586e545fa23"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "ce31f05ff1d925708c39efcac17be5d5556ef892561a16b11d34bb33766a3641"
+      "fingerprint": "707920539c947be681b26248ea87288324f13bc04f70365c2fd8d586e545fa23"
     }
   },
   "obsolete": {

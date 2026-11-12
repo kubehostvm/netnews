@@ -102,7 +102,7 @@ digraph tcp {
  demux -> iprcv [label="single handler"]; iprcv -> ipcore -> pre -> ipfinish -> ipfinishcore;
  demux -> iplist [label="list handler"]; iplist -> sublist -> prelist -> listfinish -> ipfinishcore;
  prelist -> ipfinish [style=dashed,label="NFQUEUE reinjection continuation"];
- ipfinishcore -> early [style=dashed]; early -> validdst; ipfinishcore -> validdst [label="early demux skipped"]; validdst -> delivery [label="yes: cached route"]; validdst -> route [label="no"]; route -> delivery;
+ ipfinishcore -> early [style=dashed,label="early demux may run"]; early -> validdst; ipfinishcore -> validdst [label="early demux skipped"]; validdst -> delivery [label="yes: cached route"]; validdst -> route [label="no"]; route -> delivery;
  delivery -> dstin [label="single"]; delivery -> subfinish [label="batch"]; subfinish -> dstin; dstin -> local -> defrag -> input -> localfinish -> protocol -> tcprcv -> lookup -> stateclass;
  stateclass -> establishedpath [label="ESTABLISHED"]; stateclass -> requestpath [label="NEW_SYN_RECV / LISTEN"]; stateclass -> timepath [label="TIME_WAIT"]; stateclass -> nosocket [label="lookup miss"];
  establishedpath -> policy; requestpath -> requestfilter;
@@ -126,8 +126,8 @@ digraph tcp {
  reset [label="No socket / invalid segment:\ntcp_v4_send_reset() if allowed"];
  ack [label="tcp_ack_snd_check() / delayed ACK\n→ tcp_send_ack() [timer also possible]"];
  retrans [label="tcp_retransmit_timer()\n→ tcp_retransmit_skb()\n→ __tcp_retransmit_skb()"];
- dorcv -> state [label="non-ESTABLISHED state"]; state -> listen [style=dashed]; requestpath -> req [style=dashed,label="request socket"]; req -> accept [style=dashed,label="accept queue"]; accept -> requestcheck [style=dashed,label="child socket established"];
- established -> ack [style=dashed,label="ACK needed"];
+ dorcv -> state [label="non-ESTABLISHED state"]; state -> listen [style=dashed,label="state-dependent listener branch"]; requestpath -> req [style=dashed,label="request socket"]; req -> accept [style=dashed,label="accept queue"]; accept -> requestcheck [style=dashed,label="child socket established"];
+ established -> ack [style=dashed,label="ACK/control output needed"];
  }
  subgraph cluster_tx {
  label="EGRESS: application TCP send → IPv4 → L2 → NIC";color="#94a3b8";
@@ -242,7 +242,7 @@ digraph tcp {
  pre -> hook [style=dotted,label="same dispatch model",constraint=false];
  }
  acksend [label="__tcp_send_ack()\nconstruct pure ACK"];
- ack -> acksend [style=dashed]; acksend -> transmit2; retrans -> transmit2 [style=dashed];
+ ack -> acksend [style=dashed]; acksend -> transmit2; retrans -> transmit2 [style=dashed,label="timer/retransmit output"];
  subgraph cluster_hook_sequences {
  label="Per-hook expansion: iptables-legacy + conntrack callback order (when registered)";color="#f97316";
  node [fillcolor="#ffedd5"];
@@ -277,7 +277,7 @@ digraph tcp {
  po3 [label="INT_MAX nf_confirm()\n→ nf_conntrack_confirm()\n→ __nf_conntrack_confirm() if unconfirmed"];
  po4 [label="→ ip_finish_output()"];
  po0 -> po1 -> po2 -> po3 -> po4;
- pre -> pr0 [style=dotted,constraint=false]; input -> in0 [style=dotted,constraint=false]; output -> ou0 [style=dotted,constraint=false]; post -> po0 [style=dotted,constraint=false];
+ pre -> pr0 [style=dotted,label="hook sequence expansion",constraint=false]; input -> in0 [style=dotted,label="hook sequence expansion",constraint=false]; output -> ou0 [style=dotted,label="hook sequence expansion",constraint=false]; post -> po0 [style=dotted,label="hook sequence expansion",constraint=false];
  ct [label="nf_conntrack_in()\n→ resolve_normal_ct(): tuple/hash lookup or allocate\n→ nf_conntrack_handle_packet()\n→ nf_conntrack_tcp_packet()\nTCP conntrack state differs from socket TCP state",fillcolor="#fef9c3"];
  pr3 -> ct [style=dotted,constraint=false]; ou3 -> ct [style=dotted,constraint=false];
  xt [label="ipt_do_table(): walk chain entries\nip_packet_match() → extension match->match()\nstandard verdict/jump/RETURN OR target->target()\nExtension-dependent calls (LOG, MARK, DNAT, etc.)",fillcolor="#fef9c3"];
@@ -288,7 +288,7 @@ digraph tcp {
  po4 -> ordering [style=invis];
  }
  events [label="Optional socket-event BPF (not every packet):\ncgroup connect4 → tcp_v4_pre_connect() before tcp_v4_connect()\nsock_ops callbacks in TCP state/options processing\nsk_msg/sk_skb sockmap can intercept/redirect alternative data paths",shape=note,fillcolor="#dcfce7"];
- events -> tcpsend [style=dotted,constraint=false];
+ events -> tcpsend [style=dotted,label="optional event path",constraint=false];
  note [label="Arrows summarize selected calls/continuations; dotted/dashed edges are optional or asynchronous.\nGrouping wrappers / inline macros keeps this finite: no claim of every transitive helper on all states/drivers.\nIPv4 local TCP uses PREROUTING/INPUT or OUTPUT/POSTROUTING, never FORWARD (see overview for all five chains).\nNative/generic XDP are alternatives; BPF attachments/config/modules may be absent.\nAll hook / filter stages may drop, queue or redirect; not all branches return to this diagram.\nExcluded from detailed function expansion: bridge, IPv6, XFRM, tunnels, hardware offload, full TCP errors/states.",shape=note,fillcolor="#f8fafc"];
  copy -> note [style=invis]; ndo -> note [style=invis];
  subgraph cluster_ixgbe {
@@ -341,9 +341,9 @@ digraph tcp {
  finsend [label="tcp_send_fin()\n→ __tcp_push_pending_frames()\n→ tcp_write_xmit() → TCP/IP output"];
  finrecv [label="Incoming in-order FIN:\ntcp_data_queue() → tcp_fin()\nTCP_CLOSE_WAIT / CLOSING / TIME_WAIT transitions\nACK scheduling / reader EOF wakeup"];
  abort [label="Abortive close / unread data / reset conditions:\ntcp_send_active_reset() → tcp_transmit_skb()\nNot the same as tcp_v4_send_reset() reply path"];
- conn -> conn2 -> syn; syn -> transmit [style=dotted,constraint=false]; state -> synack [style=dashed,constraint=false];
+ conn -> conn2 -> syn; syn -> transmit [style=dotted,constraint=false]; state -> synack [style=dashed,label="SYN/ACK state branch",constraint=false];
  lsn -> listen [style=dotted,constraint=false]; fincall -> finsend -> pending [style=dotted,constraint=false];
- data -> finrecv [style=dashed,constraint=false]; fincall -> abort [style=dashed]; abort -> transmit [style=dotted,constraint=false];
+ data -> finrecv [style=dashed,label="FIN/data state branch",constraint=false]; fincall -> abort [style=dashed]; abort -> transmit [style=dotted,constraint=false];
  }
  synackout [label="tcp_v4_send_synack()\n→ tcp_make_synack()\n→ ip_build_and_send_pkt()"];
  resetout [label="tcp_v4_send_reset()\n→ ip_send_unicast_reply()\n→ ip_append_data()\n→ ip_push_pending_frames() → ip_send_skb()"];
