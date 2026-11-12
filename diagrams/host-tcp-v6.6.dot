@@ -197,7 +197,8 @@ digraph tcp {
  txstate [label="netif_xmit_frozen_or_stopped()?",shape=diamond];
  missed [label="qdisc_maybe_clear_missed()\nno driver call this round"];
  result [label="driver return: dev_xmit_complete(ret)?",shape=diamond];
- busy [label="NETDEV_TX_BUSY / abnormal incomplete\ndev_requeue_skb()\nreturn false; retry later"];
+ busy [label="NETDEV_TX_BUSY / incomplete skb chain\ndev_hard_start_xmit() returns unconsumed skb list\ndev_requeue_skb() → retry later",fillcolor="#fee2e2"];
+ sentchain [label="Some skb chain elements consumed\nreturned tail remains owned by qdisc",fillcolor="#fef9c3"];
  done [label="return true\ntransmit completed or skb consumed"];
  validateout [label="validate_xmit_skb_list()\niterate skb list"];
  validatesingle [label="validate_xmit_skb()\nsoftware GSO/checksum fallback if needed"];
@@ -223,7 +224,7 @@ digraph tcp {
  validatesingle -> validskb; validskb -> txstate [label="yes"]; validskb -> done [label="no: no driver call"];
  txstate -> hard [label="no"]; txstate -> missed [label="yes"]; missed -> result [label="skb consumed / no driver call"];
  hard -> one -> ndo -> start -> result;
- result -> done [label="all skb consumed"]; result -> busy [label="incomplete / BUSY"]; busy -> qrun [style=dashed,label="retry returned skb"];
+ result -> done [label="all skb consumed"]; result -> sentchain [label="partial chain / queue stopped"]; result -> busy [label="BUSY / incomplete"]; sentchain -> busy; busy -> qrun [style=dashed,label="retry returned skb chain"];
  pick -> validatesingle [style=dashed,label="device has no qdisc / noqueue path; skips list validator"];
  }
  subgraph cluster_hooks {
@@ -303,7 +304,7 @@ digraph tcp {
  ixdrop [label="setup or map failure\ndev_kfree_skb_any()\nreturn NETDEV_TX_OK: consumed, no qdisc retry",fillcolor="#fee2e2"];
  ixmap [label="ixgbe_tx_map()\nDMA mapping / descriptors / tail doorbell"];
  ixok [label="NETDEV_TX_OK\nNIC owns descriptors; completion later"];
- ixcomplete [label="Later ixgbe_poll() → ixgbe_clean_tx_irq()\nTX completion / reclaim skb & DMA mapping"];
+ ixcomplete [label="Later ixgbe_poll() → ixgbe_clean_tx_irq()\ncheck EOP/DD completion\n→ napi_consume_skb()\n→ DMA unmap head/pages\n→ next_to_clean / stats update\n→ wake/restart stopped TX queue"];
  ixirq -> ixpoll [style=dashed,label="NAPI scheduling"]; ixpoll -> ixrx -> ixxdp -> ixskb [label="PASS"];
  driver -> ixpoll [style=dotted,constraint=false,label="example callback"]; ixskb -> gro [style=dotted,constraint=false];
  ndo -> ixtx [style=dotted,constraint=false,label="ixgbe ndo_start_xmit"]; ixtx -> ixspace;

@@ -2005,7 +2005,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "f69de95819cb7e0cd8d6cbdf87d687dae9beaf5d51d30d16c971261b33cca2bf"
+      "fingerprint": "d237fbecdf70f829e29d048c882899030d18871946076315cbef8712a905b3c6"
     },
     "node:conn": {
       "kind": "unclassified",
@@ -2586,8 +2586,8 @@
           "explanation": "Incomplete driver return is requeued and causes qdisc backoff."
         }
       ],
-      "reviewed": true,
-      "fingerprint": "8f2be30ff988ff19903dfd47dbfd51814598262a8e22d0ab9da828b54453a871"
+      "reviewed": false,
+      "fingerprint": "7517e754455c222e6e16c191db2bc7e578f8bf342d1bf4cab1f3b922f4af07a0"
     },
     "result -> done": {
       "kind": "unclassified",
@@ -2603,11 +2603,11 @@
           "file": "net/sched/sch_generic.c",
           "start": 388,
           "end": 407,
-          "explanation": "qdisc restart returns false after requeue; later qdisc run retries."
+          "explanation": "qdisc restart returns false after requeue; a later qdisc run retries."
         }
       ],
       "reviewed": true,
-      "fingerprint": "f18cb3811a028aada76d3ba06af80af0464102d42fd24e66015a9a62e0c56b49"
+      "fingerprint": "668f66476518437583eabdb48ef806c303edaa19b6931ca18582c400c41b75c3"
     },
     "validateout -> again": {
       "kind": "conditional",
@@ -2669,7 +2669,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "70bfe0bde3178e3b783247b4abac6ed25d8753fb2af02d0e1b52f1c671bbcc11"
+      "fingerprint": "aa8e0ec7aa6057a7606093dd8ca86250b8224093a5b1158e21820512430cebc0"
     },
     "node:done": {
       "kind": "unclassified",
@@ -3171,7 +3171,7 @@
           "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
           "start": 8735,
           "end": 8742,
-          "explanation": "ixgbe_maybe_stop_tx returns NETDEV_TX_BUSY when the ring cannot fit the descriptor count."
+          "explanation": "Insufficient ring descriptors returns NETDEV_TX_BUSY without taking skb ownership."
         }
       ],
       "reviewed": true,
@@ -3195,7 +3195,7 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "c0045ac961513191dcb5afb4c2328e28cb5c3d49ced2ff122b0703e54aae4276"
+      "fingerprint": "07ada4b8213dd0f06e73b4f3bdec4fda25a213a39ab114e31cf96d9a9247e9a3"
     },
     "ixsetup -> ixdrop": {
       "kind": "conditional",
@@ -3252,12 +3252,12 @@
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
           "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
           "start": 1114,
-          "end": 1160,
-          "explanation": "TX completion is later reclaimed by ixgbe_clean_tx_irq."
+          "end": 1215,
+          "explanation": "Completion waits for EOP/DD, consumes skb, unmaps DMA buffers, updates next_to_clean and stats."
         }
       ],
       "reviewed": true,
-      "fingerprint": "13b0458692cd071fe32f5ba6118e265fdc1d8d0344900316fcd0d7d95fbce979"
+      "fingerprint": "c9ed5ab278ddcdf6f36d7490ad5b1418df1ba8e78d3ce1185114f5707782d992"
     },
     "node:ixspace": {
       "kind": "unclassified",
@@ -3658,48 +3658,82 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "ea96b960a2e0ecf7ae46f8c04b3691f00ab175dab008346343ee73cbc2a10d7b"
+    },
+    "result -> sentchain": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3579,
+          "end": 3605,
+          "explanation": "dev_hard_start_xmit returns the first unconsumed skb after partial completion or queue stop."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "92844bb0cdec375555b8d8730e133d5dbfdfff447746201ab51aa7a8d965872c"
+    },
+    "sentchain -> busy": {
+      "kind": "conditional",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 356,
+          "end": 364,
+          "explanation": "Incomplete driver return causes the returned skb chain to be requeued."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "c264afebd1349a84a608daceaa7b32a7048cc9f6fdd6a4a10f55035bea2ac136"
+    },
+    "node:sentchain": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3639456a329a3345a75a565b6744a51d6fb3337aa64f5d2d09f00f7cdeb17ac8"
     }
   },
   "closure": {
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
+      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
+      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
+      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
+      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
+      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
+      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
+      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "9866da10b9d106347d1c7568a2d134b7e66241a1a38606240422b5187b350a6a"
+      "fingerprint": "cfdbf0ccd960de290e2df6c9de7f21d5bd05773ef1b3cccff979f6c5b0d8412a"
     }
   },
   "obsolete": {
