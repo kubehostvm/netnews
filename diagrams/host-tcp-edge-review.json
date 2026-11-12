@@ -6900,9 +6900,17 @@
       }
     },
     "node:blackhole:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/neighbour.c",
+          "start": 92,
+          "end": 96,
+          "explanation": "neigh_blackhole frees the skb and returns ENETDOWN."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "95fee4dd855134a7a474ae9e47434f28fe0af55ce2d88d220a1f3d2a5ee40a35",
       "claim": {
         "source": "neigh_blackhole()",
@@ -6911,9 +6919,17 @@
       }
     },
     "node:connected:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/neighbour.c",
+          "start": 1571,
+          "end": 1590,
+          "explanation": "neigh_connected_output constructs the L2 header and calls dev_queue_xmit."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "6ade5b658ffb91617555205a0c8f369f475a16ea1f01fa3f636022a2b835efb4",
       "claim": {
         "source": "neigh_connected_output()",
@@ -6922,9 +6938,17 @@
       }
     },
     "node:resolve:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/neighbour.c",
+          "start": 1536,
+          "end": 1541,
+          "explanation": "neigh_resolve_output calls neigh_event_send before possible immediate output."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "48b6c48747b417cd7da7664d282c29072f86b7e30b6b4772eec438916ae59e5d",
       "claim": {
         "source": "neigh_resolve_output()",
@@ -6933,9 +6957,17 @@
       }
     },
     "node:enqueued:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3762,
+          "end": 3771,
+          "explanation": "The enqueue operation is followed by qdisc_run in the normal path."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "f86d5595c60f3367acc3f063bb7cc71da13b6e7067b6fa85d086ffb1a45d2c0f",
       "claim": {
         "source": "enqueue()",
@@ -6944,9 +6976,17 @@
       }
     },
     "node:qrun:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 410,
+          "end": 425,
+          "explanation": "__qdisc_run loops over qdisc_restart until backoff or quota exhaustion."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "af377280780e306b16e76cb8a751f56a8d70679d1348241fc1764dcc08f7dcc6",
       "claim": {
         "source": "qdisc_run()",
@@ -6955,9 +6995,17 @@
       }
     },
     "node:restart:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/sched/sch_generic.c",
+          "start": 388,
+          "end": 407,
+          "explanation": "qdisc_restart calls dequeue_skb and passes its validate flag to sch_direct_xmit."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "5621758123d64e74e955166b4a21ef17b74553f2224122310e6abe2b04564528",
       "claim": {
         "source": "qdisc_restart()",
@@ -6966,9 +7014,17 @@
       }
     },
     "node:hard:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3579,
+          "end": 3605,
+          "explanation": "dev_hard_start_xmit loops over skb and invokes xmit_one."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "133c8e7d24c58997a8a2cbeae074d2131654d12e7e470c2c1c55ccb3f09a6c4c",
       "claim": {
         "source": "dev_hard_start_xmit()",
@@ -7064,9 +7120,17 @@
       }
     },
     "node:nat:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/netfilter/nf_nat_core.c",
+          "start": 797,
+          "end": 869,
+          "explanation": "The IPv4 NAT wrapper enters the common nf_nat_inet_fn implementation."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "93e83235ee814f4a1d5ebe79b49dfe220013855501ddfadcc2392126420a74d3",
       "claim": {
         "source": "nf_nat_ipv4_fn()",
@@ -7200,9 +7264,17 @@
       }
     },
     "node:in1:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/netfilter/iptable_mangle.c",
+          "start": 70,
+          "end": 80,
+          "explanation": "The INPUT mangle hook calls ipt_do_table."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "5dbbc43436944b3d541f750c300e685dbff115ed918cc1f0ceecf3d78b100965",
       "claim": {
         "source": "iptable_mangle_hook()",
@@ -7211,9 +7283,17 @@
       }
     },
     "node:in4:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/netfilter/nf_nat_proto.c",
+          "start": 701,
+          "end": 710,
+          "explanation": "The IPv4 local-in NAT hook calls nf_nat_ipv4_fn."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "c73bad53a6aeb621033a4a9a40d46665f04f9233d786e9b670c84c89abd71d57",
       "claim": {
         "source": "nf_nat_ipv4_local_in()",
@@ -7255,9 +7335,17 @@
       }
     },
     "node:ou3:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/netfilter/nf_conntrack_proto.c",
+          "start": 208,
+          "end": 232,
+          "explanation": "The local-output conntrack hook invokes nf_conntrack_in."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "f00405600c40b86272e4ee879028193b8967dacf3a23299b853ea59eac2e3828",
       "claim": {
         "source": "ipv4_conntrack_local()",
@@ -7266,9 +7354,17 @@
       }
     },
     "node:ou4:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/netfilter/iptable_mangle.c",
+          "start": 37,
+          "end": 82,
+          "explanation": "The mangle output hook dispatches through ipt_mangle_out."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "34635d0c143ec0ff5b70b9023c593f5c4704dfa78ffe58168aac0ee4b00538a6",
       "claim": {
         "source": "iptable_mangle_hook()",
@@ -7277,9 +7373,17 @@
       }
     },
     "node:ou4:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/netfilter/iptable_mangle.c",
+          "start": 37,
+          "end": 82,
+          "explanation": "ipt_mangle_out calls ipt_do_table."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "aca4bfa1e14c8b661ca921c795c86380141e762f25239c050018dbbe110d78c3",
       "claim": {
         "source": "ipt_mangle_out()",
@@ -7310,9 +7414,17 @@
       }
     },
     "node:ou7:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/ip_output.c",
+          "start": 121,
+          "end": 129,
+          "explanation": "ip_local_out calls dst_output after the local-out hook returns ACCEPT."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "3a9bd76924c12e86755266349603f803aff8b51704f46ef1e20b8fa3c931f993",
       "claim": {
         "source": "ip_local_out()",
@@ -7321,9 +7433,17 @@
       }
     },
     "node:po1:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/netfilter/iptable_mangle.c",
+          "start": 70,
+          "end": 80,
+          "explanation": "POSTROUTING mangle registration uses ipt_do_table."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "5dbbc43436944b3d541f750c300e685dbff115ed918cc1f0ceecf3d78b100965",
       "claim": {
         "source": "iptable_mangle_hook()",
@@ -7332,9 +7452,17 @@
       }
     },
     "node:po2:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/netfilter/nf_nat_proto.c",
+          "start": 718,
+          "end": 730,
+          "explanation": "IPv4 POSTROUTING NAT wrapper invokes nf_nat_ipv4_fn."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "1673601d4c068c8316b680aa98d06f406b1da66aef4169fc78091dae61b9bbe4",
       "claim": {
         "source": "nf_nat_ipv4_out()",
@@ -7365,9 +7493,17 @@
       }
     },
     "node:ct:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/netfilter/nf_conntrack_core.c",
+          "start": 1960,
+          "end": 2005,
+          "explanation": "nf_conntrack_in resolves a normal conntrack entry."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "49a28a04212274c1403eaa2072c794719e6f0c3459f5ce5ffff63278fda74b70",
       "claim": {
         "source": "nf_conntrack_in()",
@@ -7433,9 +7569,17 @@
       }
     },
     "node:ixirq:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 3121,
+          "end": 3130,
+          "explanation": "The MSI-X clean handler schedules NAPI polling."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "1baad32f18e436d791d3cfb5eb078231313a51839086e5de83a3ec27d3dfdf86",
       "claim": {
         "source": "ixgbe_msix_clean_rings()",
@@ -7539,9 +7683,17 @@
       }
     },
     "node:ixhang:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 1218,
+          "end": 1245,
+          "explanation": "TX cleanup detects a hang through check_for_tx_hang and ixgbe_check_tx_hang."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "4930269a85d10bf75c8ceb54a62339fbbd066d2ce2bd23a4bfd0f74bb5250dcb",
       "claim": {
         "source": "check_for_tx_hang()",
@@ -7550,9 +7702,17 @@
       }
     },
     "node:ixhang:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 1236,
+          "end": 1245,
+          "explanation": "A non-XDP hang stops the subqueue and schedules timeout reset."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "5e7e5ce8704c05462d83c7aa2866aa4389091aabae1a9b75ed1033956b67b30d",
       "claim": {
         "source": "nnetif_stop_subqueue()",
@@ -7561,9 +7721,17 @@
       }
     },
     "node:ixwatch:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 7960,
+          "end": 7977,
+          "explanation": "Reset subtask invokes ixgbe_reinit_locked."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "42deadfe92acbdffb35f714ab1fcc02856666e76dc247b46344f437850d17f5a",
       "claim": {
         "source": "ixgbe_reset_subtask()",
@@ -7613,9 +7781,17 @@
       }
     },
     "node:conn2:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/af_inet.c",
+          "start": 570,
+          "end": 680,
+          "explanation": "inet_stream_connect invokes the protocol pre_connect callback."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "2fb3c0dd05f8344cbc0958dc518b8f39931c4a17f7d18e8549eba4294be16070",
       "claim": {
         "source": "inet_stream_connect()",
@@ -7673,9 +7849,17 @@
       }
     },
     "node:lsn:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/af_inet.c",
+          "start": 229,
+          "end": 245,
+          "explanation": "inet_listen invokes __inet_listen_sk."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "6028682279d1e6c04db54dcdfb04ddc1095a94f79ca20276a50e9b8177d3fcc6",
       "claim": {
         "source": "listen()",
@@ -7695,9 +7879,17 @@
       }
     },
     "node:fincall:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/af_inet.c",
+          "start": 820,
+          "end": 850,
+          "explanation": "inet shutdown dispatches to the protocol shutdown operation."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "41cbcc25f1f9b67aa5b7ad0061d55610d063dbab58242e02cee7b199866a8d7a",
       "claim": {
         "source": "inet_shutdown()",
@@ -7706,9 +7898,17 @@
       }
     },
     "node:fincall:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/socket.c",
+          "start": 1480,
+          "end": 1530,
+          "explanation": "close path enters sock_close."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "f9e349e01dd2770041a4fe0bb36b56bf70fa2fb83d7fa2c6569ea8dadeca8d46",
       "claim": {
         "source": "close()",
@@ -7739,9 +7939,17 @@
       }
     },
     "node:finsend:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_output.c",
+          "start": 3501,
+          "end": 3543,
+          "explanation": "tcp_send_fin calls __tcp_push_pending_frames."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "d81eb7d4266f908b6eec061892304b75ec53fd088637076a115a840bc6988f2e",
       "claim": {
         "source": "tcp_send_fin()",
@@ -7761,9 +7969,17 @@
       }
     },
     "node:abort:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_output.c",
+          "start": 3600,
+          "end": 3620,
+          "explanation": "Active reset sends through tcp_transmit_skb."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "19c1bfbeabc261e5cded7ad90d2d6dd5d45075c03195e5aeec9a004e6ae134c5",
       "claim": {
         "source": "ntcp_send_active_reset()",
@@ -7772,9 +7988,17 @@
       }
     },
     "node:synackout:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_ipv4.c",
+          "start": 1022,
+          "end": 1041,
+          "explanation": "tcp_v4_send_synack creates the SYN/ACK with tcp_make_synack."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "d388e946385751289f2d440b4e91de71fa3dab675007a74aebbc1df4a2bc93a9",
       "claim": {
         "source": "tcp_v4_send_synack()",
@@ -7821,9 +8045,17 @@
       }
     },
     "node:reuse:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/inet_hashtables.c",
+          "start": 357,
+          "end": 373,
+          "explanation": "Listener reuseport lookup invokes reuseport_select_sock."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "30b8aebd015cebabff707cfb27502187714e35b8b2fb919a164f787121d45b06",
       "claim": {
         "source": "ninet_lookup_reuseport()",
@@ -7832,9 +8064,17 @@
       }
     },
     "node:reuse:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/sock_reuseport.c",
+          "start": 498,
+          "end": 517,
+          "explanation": "The compatible reuseport filter path invokes bpf_prog_run_save_cb."
+        }
+      ],
+      "reviewed": true,
       "fingerprint": "3dfe6518dd29740d87011806f345013de9604e90d121a7a435ea6c6b518d23ce",
       "claim": {
         "source": "run_bpf_filter()",
