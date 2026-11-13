@@ -127,6 +127,7 @@ code { background:#eef2f6; padding:.1em .3em; border-radius:4px; overflow-wrap:a
 </section>
 <section id="sources">
 <h2>源码依据、编辑和复现</h2>
+<p><strong>审查工具修正：</strong>内部箭头解析已保留前导下划线并正确处理 DOT 换行，不再跨 OR/说明文字合并关系。旧解析结果的内部证据已失效并清除，需要重新核验；此前下降的待核验数不能作为正确性进展依据。执行顺序和直接调用也已明确区分，尤其是 conntrack、connect 回调和 TX tap/trace。</p>
 <div class="notice"><strong>全量调用关系仍未验证。</strong><a href="./kernel-callgraph-review.html">人工审查记录</a>同时纳入节点间边和节点内部关系，另有 8 类路径闭包检查。<code>python3 scripts/check-callgraph-coverage.py --strict</code> 校验人工证据记录：固定 commit、文件、行范围和说明，图修改后记录失效。它不是语义分析器，即使记录检查通过，也不能证明全量函数图完备。</div>
 <p>已修复源码审查发现的桥接本机发送顺序、纯 ACK 发送入口、early demux 缓存路由分支、GRO 暂存/合并/完成分支，以及 TCX 返回 UNSPEC 后继续传统 TC 的路径。修复项与检查器的回归测试为 <code>python3 scripts/test-callgraph-review.py</code>。</p>
 <p><strong>本地源码核验：</strong>已使用 <code>/root/g/linux</code> 内的 <code>v6.6</code> tag（commit <code>5260836abb7056beed3f3f0d0e4262c11f36f0d0</code>）生成 <a href="./kernel-symbol-index.html">218 个图中命名符号的源码交叉索引</a>，均找到文本命中，链接固定到 commit 和行号。本地工作区 HEAD 为 v7.4-rc1 开发版本，未与 v6.6 混用，未切换或修改内核工作区。</p>

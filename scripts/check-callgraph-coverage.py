@@ -37,6 +37,17 @@ def fingerprint(value):
     return hashlib.sha256(json.dumps(value, sort_keys=True).encode()).hexdigest()
 
 
+def internal_arrows(label):
+    """Extract adjacent displayed steps; these are not necessarily caller/callee pairs."""
+    normalized = label.replace(r'\n', '\n')
+    matches = list(re.finditer(r'(?<![A-Za-z0-9_])([A-Za-z_][A-Za-z0-9_]*)\(\)', normalized))
+    return [
+        (left.group(1), right.group(1))
+        for left, right in zip(matches, matches[1:])
+        if re.fullmatch(r'\s*(?:→|->)\s*', normalized[left.end():right.start()])
+    ]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--strict', action='store_true', help='Fail if manual evidence review is incomplete; never certifies completeness')
@@ -62,16 +73,10 @@ def main():
             continue
         label = obj['label']
         units['node:' + obj['name']] = {'label': label}
-        normalized = label.replace('\\\\n', ' ')
-        matches = list(re.finditer(r'([A-Za-z][A-Za-z0-9_]*)\(\)', normalized))
-        calls = []
-        for left, right in zip(matches, matches[1:]):
-            between = normalized[left.end():right.start()]
-            if '→' in between or '->' in between:
-                calls.append((left.group(1), right.group(1)))
-        for index, (source_name, target_name) in enumerate(calls):
+        for index, (source_name, target_name) in enumerate(internal_arrows(label)):
             units[f'node:{obj["name"]}:internal:{index}'] = {
                 'source': source_name + '()', 'target': target_name + '()', 'label': label,
+                'relation': 'parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution',
             }
     ledger = review.setdefault('edges', {})
     archive = review.setdefault('obsolete', {})
@@ -83,6 +88,10 @@ def main():
         item['claim'] = value
         if item.get('fingerprint') != digest:
             item['reviewed'] = False
+            # The previous parser truncated identifiers and joined unrelated branches.
+            if ':internal:' in key:
+                item['kind'] = 'unclassified'
+                item['evidence'] = []
         item['fingerprint'] = digest
         valid = item.get('reviewed') is True and item.get('kind') in KINDS and evidence_valid(item.get('evidence'), args.kernel)
         if not valid:

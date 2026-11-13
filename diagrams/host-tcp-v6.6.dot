@@ -205,7 +205,7 @@ digraph tcp {
  validateout [label="validate_xmit_skb_list()\niterate skb list"];
  validatesingle [label="validate_xmit_skb()\nsoftware GSO/checksum fallback if needed"];
  hard [label="dev_hard_start_xmit()\nloops skb list → xmit_one()"];
- one [label="xmit_one()\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\n→ trace_net_dev_start_xmit()\n→ netdev_start_xmit()\n→ __netdev_start_xmit()\n→ ndo_start_xmit()\n→ trace_net_dev_xmit()"];
+ one [label="xmit_one() calls in order:\noptional dev_queue_xmit_nit() [AF_PACKET TX tap]\ntrace_net_dev_start_xmit()\nnetdev_start_xmit() → __netdev_start_xmit()\ntrace_net_dev_xmit() after driver return\nThese sibling calls are NOT a nested call chain."];
  start [label="TX completion / driver return\nconsumed or incomplete skb returned",shape=note];
  ndo [label="driver-specific TX DMA ring / completion\nixgbe_xmit_frame() → ixgbe_tx_map()\ncompletion later reclaims skb"];
  send -> socksend -> inet -> tcpsend -> locked -> push -> pending -> write -> transmit -> transmit2 -> ipqueue -> ipqueue2 -> outroute;
@@ -278,7 +278,7 @@ digraph tcp {
  po4 [label="→ ip_finish_output()"];
  po0 -> po1 -> po2 -> po3 -> po4;
  pre -> pr0 [style=dotted,label="hook sequence expansion",constraint=false]; input -> in0 [style=dotted,label="hook sequence expansion",constraint=false]; output -> ou0 [style=dotted,label="hook sequence expansion",constraint=false]; post -> po0 [style=dotted,label="hook sequence expansion",constraint=false];
- ct [label="nf_conntrack_in()\n→ resolve_normal_ct(): tuple/hash lookup or allocate\n→ nf_conntrack_handle_packet()\n→ nf_conntrack_tcp_packet()\nTCP conntrack state differs from socket TCP state",fillcolor="#fef9c3"];
+ ct [label="nf_conntrack_in() calls in order:\nresolve_normal_ct(): tuple/hash lookup or allocate\nnf_conntrack_handle_packet() → nf_conntrack_tcp_packet() [TCP]\nThe resolver does NOT call the packet handler.\nTCP conntrack state differs from socket TCP state",fillcolor="#fef9c3"];
  pr3 -> ct [style=dotted,constraint=false]; ou3 -> ct [style=dotted,constraint=false];
  xt [label="ipt_do_table(): walk chain entries\nip_packet_match() → extension match->match()\nstandard verdict/jump/RETURN OR target->target()\nExtension-dependent calls (LOG, MARK, DNAT, etc.)",fillcolor="#fef9c3"];
  legacy -> xt [style=dotted];
@@ -332,7 +332,7 @@ digraph tcp {
  label="TCP lifecycle: active/passive open and normal FIN close (separate syscalls/events)";color="#ca8a04";
  node [fillcolor="#fef9c3"];
  conn [label="connect() → __sys_connect()\n→ __sys_connect_file() → inet_stream_connect()"];
- conn2 [label="__inet_stream_connect()\n→ tcp_v4_pre_connect() [cgroup connect4]\n→ tcp_v4_connect() → tcp_connect()"];
+ conn2 [label="__inet_stream_connect():\noptional sk_prot->pre_connect = tcp_v4_pre_connect\nthen sk_prot->connect = tcp_v4_connect\ntcp_v4_connect() → tcp_connect()\npre_connect does NOT call connect."];
  syn [label="tcp_connect() builds SYN\n→ tcp_transmit_skb() → normal IP OUTPUT"];
  synack [label="Incoming SYN/ACK:\ntcp_rcv_state_process()\n→ tcp_rcv_synsent_state_process()\n→ tcp_finish_connect() / ACK"];
  lsn [label="listen() → inet_listen()\n→ __inet_listen_sk() → inet_csk_listen_start()"];

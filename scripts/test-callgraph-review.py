@@ -26,6 +26,16 @@ class EvidenceTests(unittest.TestCase):
             self.assertFalse(review.evidence_valid(['arbitrary string'], root, commit))
             self.assertFalse(review.evidence_valid([], root, commit))
 
+    def test_internal_arrows(self):
+        self.assertEqual(review.internal_arrows(r'qdisc_run() → __qdisc_run()'), [('qdisc_run', '__qdisc_run')])
+        self.assertEqual(review.internal_arrows(r'__a()\n→ _b() → c()'), [('__a', '_b'), ('_b', 'c')])
+        self.assertEqual(review.internal_arrows('a()\n→ b()'), [('a', 'b')])
+        for label in (r'__sys_sendto()\nsendmsg → ___sys_sendmsg()', 'a() OR b()', 'a() [callback] → b()', 'a() / b() → c()'):
+            pairs = review.internal_arrows(label)
+            self.assertNotIn(('__sys_sendto', '___sys_sendmsg'), pairs)
+            self.assertNotIn(('a', 'b'), pairs)
+        self.assertEqual(review.internal_arrows('a() → trace_event()'), [('a', 'trace_event')])
+
     def test_diagram_regressions(self):
         root = Path(__file__).resolve().parents[1]
         tcp = (root / 'diagrams/host-tcp-v6.6.dot').read_text()

@@ -1393,10 +1393,10 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "e7fc48f0cb9667ae30585821eb85cab713256bf13f2b0a1a5834eb09b7b3d0f9",
+      "fingerprint": "d53013326a0de5c3cd26b79b6e28ae456a949c07da828ba1f3e6525e233a6f98",
       "claim": {
         "source": "-200 ipv4_conntrack_in()\\n→ nf_conntrack_in()",
-        "target": "nf_conntrack_in()\\n→ resolve_normal_ct(): tuple/hash lookup or allocate\\n→ nf_conntrack_handle_packet()\\n→ nf_conntrack_tcp_packet()\\nTCP conntrack state differs from socket TCP state",
+        "target": "nf_conntrack_in() calls in order:\\nresolve_normal_ct(): tuple/hash lookup or allocate\\nnf_conntrack_handle_packet() → nf_conntrack_tcp_packet() [TCP]\\nThe resolver does NOT call the packet handler.\\nTCP conntrack state differs from socket TCP state",
         "style": "dotted",
         "label": ""
       }
@@ -1549,10 +1549,10 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "80e4fcda9035bbf844083313fa03838a4881e805d306009bca7f08399475e32b",
+      "fingerprint": "e8a1b9ea74281472f1ee06c2924bc9591587aad64058fd5be10157defa5c4578",
       "claim": {
         "source": "-200 ipv4_conntrack_local()\\n→ nf_conntrack_in()",
-        "target": "nf_conntrack_in()\\n→ resolve_normal_ct(): tuple/hash lookup or allocate\\n→ nf_conntrack_handle_packet()\\n→ nf_conntrack_tcp_packet()\\nTCP conntrack state differs from socket TCP state",
+        "target": "nf_conntrack_in() calls in order:\\nresolve_normal_ct(): tuple/hash lookup or allocate\\nnf_conntrack_handle_packet() → nf_conntrack_tcp_packet() [TCP]\\nThe resolver does NOT call the packet handler.\\nTCP conntrack state differs from socket TCP state",
         "style": "dotted",
         "label": ""
       }
@@ -1745,10 +1745,10 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "f9614827ec8611d0977a95f3a63b552393b3e9bf40ca3f101a01cdcca6da16c7",
+      "fingerprint": "ac2edcd42a4179d8a02375307e8f09ba752fc593cdea7f35d026dd39e2abf1f3",
       "claim": {
         "source": "connect() → __sys_connect()\\n→ __sys_connect_file() → inet_stream_connect()",
-        "target": "__inet_stream_connect()\\n→ tcp_v4_pre_connect() [cgroup connect4]\\n→ tcp_v4_connect() → tcp_connect()",
+        "target": "__inet_stream_connect():\\noptional sk_prot->pre_connect = tcp_v4_pre_connect\\nthen sk_prot->connect = tcp_v4_connect\\ntcp_v4_connect() → tcp_connect()\\npre_connect does NOT call connect.",
         "style": null,
         "label": ""
       }
@@ -1757,9 +1757,9 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "afb603a9981f2336c7544a46e0cf74dba92be66e272d3779093141c0355828d5",
+      "fingerprint": "0341215f83bfd887e5ab989eeb157d5a7e97047a689e8b7d07bc683737e0627a",
       "claim": {
-        "source": "__inet_stream_connect()\\n→ tcp_v4_pre_connect() [cgroup connect4]\\n→ tcp_v4_connect() → tcp_connect()",
+        "source": "__inet_stream_connect():\\noptional sk_prot->pre_connect = tcp_v4_pre_connect\\nthen sk_prot->connect = tcp_v4_connect\\ntcp_v4_connect() → tcp_connect()\\npre_connect does NOT call connect.",
         "target": "tcp_connect() builds SYN\\n→ tcp_transmit_skb() → normal IP OUTPUT",
         "style": null,
         "label": ""
@@ -3001,9 +3001,9 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "3ab2af1fd801a3ab4afbb370e73e43d26c97bf3f2b4594e7676507846ec71dd5",
+      "fingerprint": "c7f8e2812ee0efbcc1f622f84a24c3a5c201dd37604d80d59ca5f1998b2f434e",
       "claim": {
-        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()"
+        "label": "xmit_one() calls in order:\\noptional dev_queue_xmit_nit() [AF_PACKET TX tap]\\ntrace_net_dev_start_xmit()\\nnetdev_start_xmit() → __netdev_start_xmit()\\ntrace_net_dev_xmit() after driver return\\nThese sibling calls are NOT a nested call chain."
       }
     },
     "node:start": {
@@ -3334,9 +3334,9 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "3d0c457349ccd52a4204c4510a4ac5042ed3a09fec293514feb5e032b1a6c033",
+      "fingerprint": "8621910a260aead55edc6c8ff82abe20d009e4f16f9c4ffaff846fdea4da132c",
       "claim": {
-        "label": "nf_conntrack_in()\\n→ resolve_normal_ct(): tuple/hash lookup or allocate\\n→ nf_conntrack_handle_packet()\\n→ nf_conntrack_tcp_packet()\\nTCP conntrack state differs from socket TCP state"
+        "label": "nf_conntrack_in() calls in order:\\nresolve_normal_ct(): tuple/hash lookup or allocate\\nnf_conntrack_handle_packet() → nf_conntrack_tcp_packet() [TCP]\\nThe resolver does NOT call the packet handler.\\nTCP conntrack state differs from socket TCP state"
       }
     },
     "node:xt": {
@@ -3469,9 +3469,9 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "462618ac16900e74d0d490a58f7604ffe246ded1c14a41e3308137c9e390a6e3",
+      "fingerprint": "dfb75842ab7652001297bee2b731423c43f5a05fda2fcd0b00d7bd85a17e43b8",
       "claim": {
-        "label": "__inet_stream_connect()\\n→ tcp_v4_pre_connect() [cgroup connect4]\\n→ tcp_v4_connect() → tcp_connect()"
+        "label": "__inet_stream_connect():\\noptional sk_prot->pre_connect = tcp_v4_pre_connect\\nthen sk_prot->connect = tcp_v4_connect\\ntcp_v4_connect() → tcp_connect()\\npre_connect does NOT call connect."
       }
     },
     "node:syn": {
@@ -4656,10 +4656,10 @@
           "explanation": "xmit_one emits TX tap before netdev_start_xmit and device ndo callback."
         }
       ],
-      "reviewed": true,
-      "fingerprint": "5a3f324847a1f379a7e9d26bf322c3e8dcef5761ec6be6d5141232e73810d9fd",
+      "reviewed": false,
+      "fingerprint": "5b58ce35887fa40cc0e4814d9fafef800d6e043461d6ced78e9f23c8c5ef2f27",
       "claim": {
-        "source": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()",
+        "source": "xmit_one() calls in order:\\noptional dev_queue_xmit_nit() [AF_PACKET TX tap]\\ntrace_net_dev_start_xmit()\\nnetdev_start_xmit() → __netdev_start_xmit()\\ntrace_net_dev_xmit() after driver return\\nThese sibling calls are NOT a nested call chain.",
         "target": "driver-specific TX DMA ring / completion\\nixgbe_xmit_frame() → ixgbe_tx_map()\\ncompletion later reclaims skb",
         "style": null,
         "label": ""
@@ -4753,10 +4753,10 @@
         }
       ],
       "reviewed": false,
-      "fingerprint": "fd454959dacc826e1f421652b98fbfc600a154cbc4316ee7daa7fe8df9732fc7",
+      "fingerprint": "52b7537ef5bb1f37173208bce7ebb6742e55b28872e67052379b3e1def766a0f",
       "claim": {
         "source": "dev_hard_start_xmit()\\nloops skb list → xmit_one()",
-        "target": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()",
+        "target": "xmit_one() calls in order:\\noptional dev_queue_xmit_nit() [AF_PACKET TX tap]\\ntrace_net_dev_start_xmit()\\nnetdev_start_xmit() → __netdev_start_xmit()\\ntrace_net_dev_xmit() after driver return\\nThese sibling calls are NOT a nested call chain.",
         "style": null,
         "label": ""
       }
@@ -6416,2275 +6416,1388 @@
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "18844d1d560fd0c5fadb300ff4bdc311cb81887723f7be9e134efdc6da16bcf6",
+      "fingerprint": "8e1b3c770b116d76db0f96ea46d3eb076cf803890757b28cd46a713142db86e4",
       "claim": {
         "source": "napi_poll()",
-        "target": "napi_poll()",
-        "label": "napi_poll() → __napi_poll()"
+        "target": "__napi_poll()",
+        "label": "napi_poll() → __napi_poll()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:normal:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "7c425c116cba1a8a542510c992913b95a9216f91c9eacc03acf9f3ea2f88060b",
+      "fingerprint": "3436bf762616696dd9068d21545ea03e410a4ec7fb73f0b09fc7d07f1d317bed",
       "claim": {
         "source": "gro_normal_one()",
         "target": "gro_normal_list()",
-        "label": "GRO_NORMAL → gro_normal_one()\\n→ gro_normal_list() when NAPI flushes"
+        "label": "GRO_NORMAL → gro_normal_one()\\n→ gro_normal_list() when NAPI flushes",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:flush:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "c2535d6daad57b5aa354c2e190c055b47ee3063b64649864029e059bbb894c39",
+      "fingerprint": "942f3ba66812826ebdfd0b087ab942a18a2fd0637f36ec5a754658deab3a4321",
       "claim": {
-        "source": "napi_complete_done()",
-        "target": "napi_gro_flush()",
-        "label": "napi_complete_done() / poll completion\\n→ napi_gro_flush() → gro_normal_list()"
+        "source": "napi_gro_flush()",
+        "target": "gro_normal_list()",
+        "label": "napi_complete_done() / poll completion\\n→ napi_gro_flush() → gro_normal_list()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:complete:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "ddc242e2a654d372d3fe5a0583c7ff9270c9382d99c46d0ea3336d29ece119d0",
+      "fingerprint": "62ea6cae62d2ad94ebb51e91b95738beb67f18051f47feb0bf7e382a34408c01",
       "claim": {
-        "source": "nnapi_gro_complete()",
+        "source": "napi_gro_complete()",
         "target": "gro_normal_one()",
-        "label": "Later flush / completion of aggregate\\nnapi_gro_complete() → gro_normal_one()"
+        "label": "Later flush / completion of aggregate\\nnapi_gro_complete() → gro_normal_one()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:genericrun:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 4941,
-          "end": 4974,
-          "explanation": "Generic XDP calls netif_receive_generic_xdp, which runs the generic program."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "28be17dcf8e21d72fc5e66c0109edbc7029aaafe2012991a3d7a33fdf470717c",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "c14e02f0ab2a71466faafbf6dc397dcf5ce3c0fb59d2e44840541d4768ab83ea",
       "claim": {
         "source": "do_xdp_generic()",
         "target": "netif_receive_generic_xdp()",
-        "label": "do_xdp_generic() → netif_receive_generic_xdp()\\n→ bpf_prog_run_generic_xdp()\\nPASS continues; other actions divert"
+        "label": "do_xdp_generic() → netif_receive_generic_xdp()\\n→ bpf_prog_run_generic_xdp()\\nPASS continues; other actions divert",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:taps:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "01c2f3e525199cc2cb9fedb9a31fcc31c86e39c99c0f123974324b56bfb9bff3",
+      "fingerprint": "d9c909ccb67cb369eedae77234d7e60e12782d7ddc994992abe2cbc2b0e4dabb",
       "claim": {
-        "source": "ndeliver_skb()",
+        "source": "deliver_skb()",
         "target": "packet_rcv()",
-        "label": "ptype_all / device taps\\ndeliver_skb() → packet_rcv() / tpacket_rcv()"
+        "label": "ptype_all / device taps\\ndeliver_skb() → packet_rcv() / tpacket_rcv()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:tcxin:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 3983,
-          "end": 4001,
-          "explanation": "tcx_run iterates BPF programs and invokes bpf_prog_run."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "757505ec3993c5910bdc4e690e10527da584078448229e7b1cc115b95657f150",
-      "claim": {
-        "source": "tcx_run()",
-        "target": "tc_run()",
-        "label": "tcx_run() [if TCX enabled]\\nnon-UNSPEC → ingress verdict\\nUNSPEC / no TCX → tc_run() → tcf_classify()\\n→ cls_bpf_classify() → bpf_prog_run()"
-      }
-    },
-    "node:tcxin:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 4004,
-          "end": 4027,
-          "explanation": "Ingress TCX UNSPEC falls through to tc_run/tcf_classify."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "2b9e05ba51c6185532db11bcb7d50c4361585c207d0582ab3a5f587eb67fa210",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e61bf66431d70a07f4b71105a7418097bb178f79c18ac371e56f64050f47de06",
       "claim": {
         "source": "tc_run()",
         "target": "tcf_classify()",
-        "label": "tcx_run() [if TCX enabled]\\nnon-UNSPEC → ingress verdict\\nUNSPEC / no TCX → tc_run() → tcf_classify()\\n→ cls_bpf_classify() → bpf_prog_run()"
+        "label": "tcx_run() [if TCX enabled]\\nnon-UNSPEC → ingress verdict\\nUNSPEC / no TCX → tc_run() → tcf_classify()\\n→ cls_bpf_classify() → bpf_prog_run()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:tcxin:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4f2d9fdedafb3eb21ff2b0a7358c9ea76eef96c1392ba68410ec5ea06d2785bd",
+      "claim": {
+        "source": "tcf_classify()",
+        "target": "cls_bpf_classify()",
+        "label": "tcx_run() [if TCX enabled]\\nnon-UNSPEC → ingress verdict\\nUNSPEC / no TCX → tc_run() → tcf_classify()\\n→ cls_bpf_classify() → bpf_prog_run()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:nfin:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "9b4b1fb94f32b116ab2358af7fc8fe8c9de74d53965a77043d7c3a3f85085ebf",
+      "fingerprint": "bd8ae610873c40dd4755540c312f9adca2b639eed86a74220134c8dc20e17451",
       "claim": {
         "source": "nf_ingress()",
         "target": "nf_hook_ingress()",
-        "label": "nf_ingress() → nf_hook_ingress()\\nNETDEV ingress / nft netdev or inet"
+        "label": "nf_ingress() → nf_hook_ingress()\\nNETDEV ingress / nft netdev or inet",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:iplist:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/ip_input.c",
-          "start": 643,
-          "end": 657,
-          "explanation": "ip_list_rcv calls ip_rcv_core for each skb."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "53f2d5b059b56e01705bc1a304ac9be2454a225c9211abb9430c7201e68fc644",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "63a9959e573fc49a794e51201c24b8aac69820474ba5c9d22c7d86d1dd4f7111",
       "claim": {
         "source": "ip_list_rcv()",
         "target": "ip_rcv_core()",
-        "label": "Batch handler: ip_list_rcv()\\n→ ip_rcv_core() for each skb\\ngroup by device / netns"
+        "label": "Batch handler: ip_list_rcv()\\n→ ip_rcv_core() for each skb\\ngroup by device / netns",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:listfinish:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/ip_input.c",
-          "start": 594,
-          "end": 614,
-          "explanation": "ip_list_rcv_finish calls ip_rcv_finish_core."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "6d991bc4b4ad863a72014240243875e5e5d2613cc4957d6d673545712f5a3a80",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1b40b32142f7eee9c86bac24531b6f3af36745865a99ec9449b878ee617d869d",
       "claim": {
         "source": "ip_list_rcv_finish()",
         "target": "l3mdev_ip_rcv()",
-        "label": "ip_list_rcv_finish()\\n→ l3mdev_ip_rcv() per remaining skb\\n→ ip_rcv_finish_core()"
+        "label": "ip_list_rcv_finish()\\n→ l3mdev_ip_rcv() per remaining skb\\n→ ip_rcv_finish_core()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:subfinish:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/ip_input.c",
-          "start": 574,
-          "end": 582,
-          "explanation": "ip_sublist_rcv_finish calls dst_input."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "b8e802ea0253b83ad716fa2df10eebfb29ab08d1720ab08d646ee9958f6c7c14",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8c48945d6a5843f7f289b4cd470b733eec9841786c529d5b86115608af627cca",
       "claim": {
         "source": "ip_sublist_rcv_finish()",
         "target": "dst_input()",
-        "label": "ip_sublist_rcv_finish()\\n→ dst_input() for each grouped skb"
+        "label": "ip_sublist_rcv_finish()\\n→ dst_input() for each grouped skb",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:delivery:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "c57577d78d1371aad320cae96032bc551288f5b47344e7d20de52273797bb3cd",
+      "fingerprint": "0857b2f1f92086d08dcf10ddde9aafd3387f598ea0aad554f715a2a6f2f410a1",
       "claim": {
         "source": "ip_rcv_finish()",
         "target": "dst_input()",
-        "label": "Successful core return to caller\\nsingle skb: ip_rcv_finish() → dst_input()\\nbatch: group by dst → ip_sublist_rcv_finish()"
+        "label": "Successful core return to caller\\nsingle skb: ip_rcv_finish() → dst_input()\\nbatch: group by dst → ip_sublist_rcv_finish()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:release:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/sock.c",
-          "start": 1010,
-          "end": 1040,
-          "explanation": "release_sock enters __release_sock when backlog work exists."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "925ab15c506ce7c26d7cef23ac7cb93858d26d8eaa45a47c8e16b055c751a158",
-      "claim": {
-        "source": "release_sock()",
-        "target": "release_sock()",
-        "label": "release_sock() → __release_sock()\\n→ sk_backlog_rcv()"
-      }
-    },
-    "node:validate:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_input.c",
-          "start": 5880,
-          "end": 6058,
-          "explanation": "Established TCP processing validates incoming data and invokes ACK handling."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "087292ad5b2d92e6e19ec6ed8ca9e620cb38ebb13bed87d645dd4e96e523e958",
-      "claim": {
-        "source": "tcp_validate_incoming()",
-        "target": "tcp_ack()",
-        "label": "slow path: tcp_validate_incoming()\\n→ tcp_ack() / tcp_urg() as needed"
-      }
-    },
-    "node:ofodrain:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_input.c",
-          "start": 4750,
-          "end": 4795,
-          "explanation": "tcp_ofo_queue calls tcp_try_coalesce while draining out-of-order data."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "5c7b59625e39c30fafdadc1ee7217e70ae0d8579550690abcb98ce39154c1d83",
-      "claim": {
-        "source": "tcp_ofo_queue()",
-        "target": "tcp_try_coalesce()",
-        "label": "Later in-order data: tcp_ofo_queue()\\n→ tcp_try_coalesce() / tcp_rcv_nxt_update()\\n→ __skb_queue_tail() OR kfree_skb_partial()\\nFIN may call tcp_fin(); duplicates may drop"
-      }
-    },
-    "node:ofodrain:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_input.c",
-          "start": 4750,
-          "end": 4795,
-          "explanation": "tcp_ofo_queue updates rcv_nxt before queuing recovered data."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "c3815661456b37f2afc0f7d4b273ec03f7d8156cdd17aef130d94ec913df3f9e",
-      "claim": {
-        "source": "tcp_rcv_nxt_update()",
-        "target": "skb_queue_tail()",
-        "label": "Later in-order data: tcp_ofo_queue()\\n→ tcp_try_coalesce() / tcp_rcv_nxt_update()\\n→ __skb_queue_tail() OR kfree_skb_partial()\\nFIN may call tcp_fin(); duplicates may drop"
-      }
-    },
-    "node:ready:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "14110552f88b7fd4e63a429dc9f4c64e1f6c731e098570e279e649e426b7e9a3",
+      "fingerprint": "1784e38af01d88bfa9cdcd6dec5fba31bb5bc4595ceb978e0a3170476c8b4256",
       "claim": {
-        "source": "tcp_data_ready()",
-        "target": "sk_data_ready()",
-        "label": "tcp_data_ready() → sk->sk_data_ready()\\nusually sock_def_readable()\\nwake readers when conditions met"
+        "source": "release_sock()",
+        "target": "__release_sock()",
+        "label": "release_sock() → __release_sock()\\n→ sk_backlog_rcv()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:validate:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "513da245683a7a5ac42a07668ec905dd1b4dd312204f2f3de8d83e618454d151",
+      "claim": {
+        "source": "tcp_validate_incoming()",
+        "target": "tcp_ack()",
+        "label": "slow path: tcp_validate_incoming()\\n→ tcp_ack() / tcp_urg() as needed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ofodrain:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b8e0a6dab0ebb56080727a52e360c19e2517c6eb564bdbe5713a26044efaeb96",
+      "claim": {
+        "source": "tcp_ofo_queue()",
+        "target": "tcp_try_coalesce()",
+        "label": "Later in-order data: tcp_ofo_queue()\\n→ tcp_try_coalesce() / tcp_rcv_nxt_update()\\n→ __skb_queue_tail() OR kfree_skb_partial()\\nFIN may call tcp_fin(); duplicates may drop",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ofodrain:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "4b077329f8e8784e769f395f53450164d92c91dfd3f792c1d45e13ddb9bc1d13",
+      "claim": {
+        "source": "tcp_rcv_nxt_update()",
+        "target": "__skb_queue_tail()",
+        "label": "Later in-order data: tcp_ofo_queue()\\n→ tcp_try_coalesce() / tcp_rcv_nxt_update()\\n→ __skb_queue_tail() OR kfree_skb_partial()\\nFIN may call tcp_fin(); duplicates may drop",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:copy:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp.c",
-          "start": 2280,
-          "end": 2500,
-          "explanation": "TCP receive copies skb data through the datagram message iterator."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "e45fab40c0a8de6db177877dcc9022851505ddd026e9bb4ab772c849f6ddb0e4",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5e3c604d43b5ee42261c7a5701605b74fc0db9c1eee633d751af41cd88307075",
       "claim": {
         "source": "skb_copy_datagram_msg()",
         "target": "skb_copy_datagram_iter()",
-        "label": "skb_copy_datagram_msg()\\n→ skb_copy_datagram_iter()\\ncopy data to user / consume queue"
+        "label": "skb_copy_datagram_msg()\\n→ skb_copy_datagram_iter()\\ncopy data to user / consume queue",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:req:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_input.c",
-          "start": 6970,
-          "end": 7005,
-          "explanation": "tcp_check_req uses tcp_v4_syn_recv_sock to create the child socket on successful request completion."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "343536cd16972581256753cf804592ba4a883122fdac228128d9f75a5e7752e4",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "16eba71e543454a31b636e4c4681550592df2327a9c2855ba44a150e423a0150",
       "claim": {
         "source": "tcp_check_req()",
         "target": "tcp_v4_syn_recv_sock()",
-        "label": "TCP_NEW_SYN_RECV: tcp_check_req()\\n→ tcp_v4_syn_recv_sock() / tcp_child_process()"
+        "label": "TCP_NEW_SYN_RECV: tcp_check_req()\\n→ tcp_v4_syn_recv_sock() / tcp_child_process()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:listen:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_ipv4.c",
-          "start": 1538,
-          "end": 1545,
-          "explanation": "tcp_v4_conn_request delegates to tcp_conn_request."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "62404f925e5b4dc589852c7e4ccce4391c4c696ed02f64c3cc0ed824e20bb6a4",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "523aa2f30c4fab47838b2df4a377ebdb2319bb57992ab3044f33a36ebfd1d4bc",
       "claim": {
         "source": "tcp_v4_conn_request()",
         "target": "tcp_conn_request()",
-        "label": "LISTEN: tcp_v4_conn_request()\\n→ tcp_conn_request()\\n→ tcp_v4_send_synack()"
-      }
-    },
-    "node:ack:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_input.c",
-          "start": 6050,
-          "end": 6070,
-          "explanation": "TCP receive processing conditionally sends delayed/immediate ACK through tcp_send_ack."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "c10a1051de6dce2de6ff9f3d5ff000a6e37ce2bf2713e6a861105b0b5b312c91",
-      "claim": {
-        "source": "tcp_ack_snd_check()",
-        "target": "tcp_send_ack()",
-        "label": "tcp_ack_snd_check() / delayed ACK\\n→ tcp_send_ack() [timer also possible]"
+        "label": "LISTEN: tcp_v4_conn_request()\\n→ tcp_conn_request()\\n→ tcp_v4_send_synack()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:retrans:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_timer.c",
-          "start": 560,
-          "end": 590,
-          "explanation": "Retransmission timer invokes tcp_retransmit_skb for the retransmission path."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "f149be2c7aa9bc952e638c96375c92d1f68298aaf7c4a6710e27e74a93909789",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3c92c0daf1e0916b72b1ae9ba441c167b9f60af47e348c43dd3ffa60dde89265",
       "claim": {
         "source": "tcp_retransmit_timer()",
         "target": "tcp_retransmit_skb()",
-        "label": "tcp_retransmit_timer()\\n→ tcp_retransmit_skb()\\n→ __tcp_retransmit_skb()"
+        "label": "tcp_retransmit_timer()\\n→ tcp_retransmit_skb()\\n→ __tcp_retransmit_skb()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:accept:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/socket.c",
-          "start": 1660,
-          "end": 1690,
-          "explanation": "accept4 enters the socket accept syscall path."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "fee98c53c8b213c784836864462dd773b9c93aa6a015f84dbbeb6696201d22e6",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "39dd751a5a4c8cf8e5c8cd6074493e9782c1a9467b76b37d0d6bf775a831e7f5",
       "claim": {
         "source": "accept4()",
         "target": "inet_accept()",
-        "label": "accept()/accept4() → inet_accept()\\n→ inet_csk_accept() → __inet_accept()\\nchild established by request-socket path"
+        "label": "accept()/accept4() → inet_accept()\\n→ inet_csk_accept() → __inet_accept()\\nchild established by request-socket path",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:accept:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/af_inet.c",
-          "start": 770,
-          "end": 784,
-          "explanation": "inet_accept delegates protocol accept to inet_csk_accept and initializes the new socket."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "33387589235f22234b24427913f72961011bc8dfbb5eacb47926a6757659f9eb",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "a367969ec8ec146b7d95b981c1ddbedee2192c6605ee056f22d097a88e86d08b",
       "claim": {
         "source": "inet_accept()",
         "target": "inet_csk_accept()",
-        "label": "accept()/accept4() → inet_accept()\\n→ inet_csk_accept() → __inet_accept()\\nchild established by request-socket path"
-      }
-    },
-    "node:send:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/socket.c",
-          "start": 2500,
-          "end": 2560,
-          "explanation": "sendto/sendmsg syscall path dispatches to socket send handling."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "805ef4011ba1de9fa713f9fe9b5d297b7c4695609685670b7f5eecf79eb9b743",
-      "claim": {
-        "source": "sys_sendto()",
-        "target": "sys_sendmsg()",
-        "label": "send/sendto → __sys_sendto()\\nsendmsg → ___sys_sendmsg()\\nwrite → sock_write_iter()"
+        "label": "accept()/accept4() → inet_accept()\\n→ inet_csk_accept() → __inet_accept()\\nchild established by request-socket path",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:socksend:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/socket.c",
-          "start": 724,
-          "end": 747,
-          "explanation": "sock_sendmsg invokes security_socket_sendmsg before sock_sendmsg_nosec."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "64460a972c96a5dc9f98726df4a41bf06d2d08216492e620e4f2750ce3339971",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "df5fa49aaefd3eaa6fc9143783844728d9789d18d5e02071906860489bcd6a10",
       "claim": {
         "source": "sock_sendmsg()",
         "target": "security_socket_sendmsg()",
-        "label": "sock_sendmsg()\\n→ security_socket_sendmsg()\\n→ sock_sendmsg_nosec()"
-      }
-    },
-    "node:hh:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "include/net/neighbour.h",
-          "start": 529,
-          "end": 542,
-          "explanation": "Cached neighbour output dispatches to the cached header output path."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "9496dc02a0c3552d68060e5f9f4955bca03d8ca204924bff54145c8a52c25589",
-      "claim": {
-        "source": "neigh_hh_output()",
-        "target": "dev_queue_xmit()",
-        "label": "neigh_hh_output()\\ncached L2 header → dev_queue_xmit()"
+        "label": "sock_sendmsg()\\n→ security_socket_sendmsg()\\n→ sock_sendmsg_nosec()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:directneigh:internal:0": {
-      "kind": "direct",
+      "kind": "conditional",
       "evidence": [
         {
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
           "file": "net/core/neighbour.c",
           "start": 1594,
           "end": 1598,
-          "explanation": "Direct neighbour output calls dev_queue_xmit."
+          "explanation": "neigh_direct_output directly returns dev_queue_xmit(skb)."
         }
       ],
       "reviewed": true,
-      "fingerprint": "41bead0fcdd4a632d279b41bcc957cfcb5688cc7a0a706d0cbf315ff59f72769",
+      "fingerprint": "e7858bd35db42860f5daff38a08926f491a01a7b757174469a258f53bdd6f340",
       "claim": {
         "source": "neigh_direct_output()",
         "target": "dev_queue_xmit()",
-        "label": "neigh_direct_output()\\n→ dev_queue_xmit()"
+        "label": "neigh_direct_output()\\n→ dev_queue_xmit()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:blackhole:internal:0": {
-      "kind": "direct",
+      "kind": "conditional",
       "evidence": [
         {
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
           "file": "net/core/neighbour.c",
           "start": 92,
           "end": 96,
-          "explanation": "neigh_blackhole frees the skb and returns ENETDOWN."
+          "explanation": "neigh_blackhole frees skb before returning -ENETDOWN."
         }
       ],
       "reviewed": true,
-      "fingerprint": "95fee4dd855134a7a474ae9e47434f28fe0af55ce2d88d220a1f3d2a5ee40a35",
+      "fingerprint": "13677cc7c33cc515084e21cb07505627b3e622bab334adae37fa269117111ece",
       "claim": {
         "source": "neigh_blackhole()",
         "target": "kfree_skb()",
-        "label": "neigh_blackhole()\\n→ kfree_skb() / -ENETDOWN"
-      }
-    },
-    "node:connected:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/neighbour.c",
-          "start": 1571,
-          "end": 1590,
-          "explanation": "neigh_connected_output constructs the L2 header and calls dev_queue_xmit."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "6ade5b658ffb91617555205a0c8f369f475a16ea1f01fa3f636022a2b835efb4",
-      "claim": {
-        "source": "neigh_connected_output()",
-        "target": "dev_queue_xmit()",
-        "label": "neigh_connected_output()\\nconstruct L2 header → dev_queue_xmit()"
+        "label": "neigh_blackhole()\\n→ kfree_skb() / -ENETDOWN",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:resolve:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/neighbour.c",
-          "start": 1536,
-          "end": 1541,
-          "explanation": "neigh_resolve_output calls neigh_event_send before possible immediate output."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "48b6c48747b417cd7da7664d282c29072f86b7e30b6b4772eec438916ae59e5d",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8f5965a16723729f9d8eb11af45e7903d08b734854af0cf5c7c855882069fd30",
       "claim": {
         "source": "neigh_resolve_output()",
         "target": "neigh_event_send()",
-        "label": "neigh_resolve_output()\\n→ neigh_event_send()\\nmay transmit immediately, not always unresolved"
+        "label": "neigh_resolve_output()\\n→ neigh_event_send()\\nmay transmit immediately, not always unresolved",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:enqueued:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 3762,
-          "end": 3771,
-          "explanation": "The enqueue operation is followed by qdisc_run in the normal path."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "f86d5595c60f3367acc3f063bb7cc71da13b6e7067b6fa85d086ffb1a45d2c0f",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6cc762d8b51127349dc7e0fa99ece550cca566d200d1fbaa1231e1576bccd065",
       "claim": {
         "source": "enqueue()",
         "target": "qdisc_run()",
-        "label": "q->enqueue()\\n→ qdisc_run() / __qdisc_run()"
+        "label": "q->enqueue()\\n→ qdisc_run() / __qdisc_run()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:qrun:internal:0": {
-      "kind": "direct",
+      "kind": "conditional",
       "evidence": [
         {
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/sched/sch_generic.c",
-          "start": 410,
-          "end": 425,
-          "explanation": "__qdisc_run loops over qdisc_restart until backoff or quota exhaustion."
+          "file": "include/net/pkt_sched.h",
+          "start": 122,
+          "end": 129,
+          "explanation": "qdisc_run directly calls __qdisc_run only when qdisc_run_begin succeeds."
         }
       ],
       "reviewed": true,
-      "fingerprint": "af377280780e306b16e76cb8a751f56a8d70679d1348241fc1764dcc08f7dcc6",
+      "fingerprint": "bfe1cf25b11aa4df7d9b5940bcf4f57b41bccb944dfd1b29b1f3a49bb63b26c4",
       "claim": {
         "source": "qdisc_run()",
-        "target": "qdisc_run()",
-        "label": "qdisc_run() → __qdisc_run()"
+        "target": "__qdisc_run()",
+        "label": "qdisc_run() → __qdisc_run()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:restart:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/sched/sch_generic.c",
-          "start": 388,
-          "end": 407,
-          "explanation": "qdisc_restart calls dequeue_skb and passes its validate flag to sch_direct_xmit."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "5621758123d64e74e955166b4a21ef17b74553f2224122310e6abe2b04564528",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "a9df5673fb6b887f168861d7444d39426b2be079234d0f511937ea1af7afc816",
       "claim": {
         "source": "qdisc_restart()",
         "target": "dequeue_skb()",
-        "label": "qdisc_restart()\\n→ dequeue_skb()"
-      }
-    },
-    "node:hard:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 3579,
-          "end": 3605,
-          "explanation": "dev_hard_start_xmit loops over skb and invokes xmit_one."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "133c8e7d24c58997a8a2cbeae074d2131654d12e7e470c2c1c55ccb3f09a6c4c",
-      "claim": {
-        "source": "dev_hard_start_xmit()",
-        "target": "xmit_one()",
-        "label": "dev_hard_start_xmit()\\nloops skb list → xmit_one()"
+        "label": "qdisc_restart()\\n→ dequeue_skb()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:one:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 3562,
-          "end": 3570,
-          "explanation": "xmit_one calls dev_queue_xmit_nit when packet taps are active."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "b3ba13e3e2d0d4d9637ce00c22025cfb33651459048509c66c60ff8bfcd0850a",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "27c77c28dd71b55af379f220dc9b648e03936fb9154fe587bfb0f30754a3ac04",
       "claim": {
-        "source": "xmit_one()",
-        "target": "dev_queue_xmit_nit()",
-        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()"
-      }
-    },
-    "node:one:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 3571,
-          "end": 3574,
-          "explanation": "xmit_one then calls netdev_start_xmit after the start trace."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "70cdb49ebf9ff755306c5e70bc030afc85a81a6425b5b542f68de66a3150553e",
-      "claim": {
-        "source": "dev_queue_xmit_nit()",
-        "target": "trace_net_dev_start_xmit()",
-        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()"
-      }
-    },
-    "node:one:internal:2": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 3571,
-          "end": 3574,
-          "explanation": "netdev_start_xmit dispatches to the device transmit operation and the completion trace follows."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "a2e35b5c47006d29978a7aed2cd5f291236afe4cd1a25050514fba5b0590a3a7",
-      "claim": {
-        "source": "trace_net_dev_start_xmit()",
-        "target": "netdev_start_xmit()",
-        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()"
+        "source": "netdev_start_xmit()",
+        "target": "__netdev_start_xmit()",
+        "label": "xmit_one() calls in order:\\noptional dev_queue_xmit_nit() [AF_PACKET TX tap]\\ntrace_net_dev_start_xmit()\\nnetdev_start_xmit() → __netdev_start_xmit()\\ntrace_net_dev_xmit() after driver return\\nThese sibling calls are NOT a nested call chain.",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ndo:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "5561380260f1a409af4a56cc13230a50b37f99cf7389075de235e74bf68f8c99",
+      "fingerprint": "d8c6328062e079f19a68ed97bcd43d96ae7b43ef04c9c64f88f4a1068eb3d616",
       "claim": {
-        "source": "nixgbe_xmit_frame()",
+        "source": "ixgbe_xmit_frame()",
         "target": "ixgbe_tx_map()",
-        "label": "driver-specific TX DMA ring / completion\\nixgbe_xmit_frame() → ixgbe_tx_map()\\ncompletion later reclaims skb"
+        "label": "driver-specific TX DMA ring / completion\\nixgbe_xmit_frame() → ixgbe_tx_map()\\ncompletion later reclaims skb",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:hook:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "include/linux/netfilter.h",
-          "start": 230,
-          "end": 270,
-          "explanation": "NF_HOOK enters nf_hook_slow when registered hooks require the slow path."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "fb4e266456bdd690c9c360da4ba1c6455acf06c4f72662919c1fe86fd9d1177d",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "dc694bbc141eeed0002ef1d5fb6ff42dfa4321b0a29ccafe0c99550478d8d37d",
       "claim": {
         "source": "nf_hook()",
         "target": "nf_hook_slow()",
-        "label": "NF_HOOK / nf_hook()\\n→ nf_hook_slow(): iterate by priority"
+        "label": "NF_HOOK / nf_hook()\\n→ nf_hook_slow(): iterate by priority",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:nat:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/netfilter/nf_nat_core.c",
-          "start": 797,
-          "end": 869,
-          "explanation": "The IPv4 NAT wrapper enters the common nf_nat_inet_fn implementation."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "93e83235ee814f4a1d5ebe79b49dfe220013855501ddfadcc2392126420a74d3",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6d64c48b404340d170ba85e227acde306761250c921b422ac2cc56aff1fca92b",
       "claim": {
         "source": "nf_nat_ipv4_fn()",
         "target": "nf_nat_inet_fn()",
-        "label": "nf_nat_ipv4_pre_routing / local_in / local_fn / out\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nNEW mapping: lookup hook → ipt_do_table()\\n→ nf_nat_packet() applies mapping"
+        "label": "nf_nat_ipv4_pre_routing / local_in / local_fn / out\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nNEW mapping: lookup hook → ipt_do_table()\\n→ nf_nat_packet() applies mapping",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:nat:internal:1": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "c247b1598435b8c20904c87abb5c58fa984525d4f30dc10f837e9a097ce79921",
+      "fingerprint": "91113240ad2a07927132f0f62f13c85f5012420b385016d1aeb645c2720bbfa0",
       "claim": {
-        "source": "nf_nat_inet_fn()",
-        "target": "ipt_do_table()",
-        "label": "nf_nat_ipv4_pre_routing / local_in / local_fn / out\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nNEW mapping: lookup hook → ipt_do_table()\\n→ nf_nat_packet() applies mapping"
+        "source": "ipt_do_table()",
+        "target": "nf_nat_packet()",
+        "label": "nf_nat_ipv4_pre_routing / local_in / local_fn / out\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nNEW mapping: lookup hook → ipt_do_table()\\n→ nf_nat_packet() applies mapping",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:nfbpf:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/netfilter/nf_bpf_link.c",
-          "start": 11,
-          "end": 21,
-          "explanation": "The Netfilter BPF hook callback invokes bpf_prog_run."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "5c6da5c275f7db0afd2de3de30ecc8e560b58ce93336d9372fb8422c657848de",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6298a6dbe90d2626e056793cef50dc39b3fa61b610d56ea67e123df3d9c9b9a9",
       "claim": {
-        "source": "nnf_hook_run_bpf()",
+        "source": "nf_hook_run_bpf()",
         "target": "bpf_prog_run()",
-        "label": "Netfilter BPF link (since 6.4)\\nnf_hook_run_bpf() → bpf_prog_run()\\nuser-selected hook / allowed priority"
+        "label": "Netfilter BPF link (since 6.4)\\nnf_hook_run_bpf() → bpf_prog_run()\\nuser-selected hook / allowed priority",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:pr1:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/nf_defrag_ipv4.c",
-          "start": 26,
-          "end": 95,
-          "explanation": "IPv4 conntrack defrag gathers fragments through nf_ct_ipv4_gather_frags."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "455bffe0960699b0c9c5cf810f60c3125e1eb1f32fb9588e679ee2745449446d",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1c83248bcd3c608bcc0efbb82879bda8b5c8018b31f370990b61a1dd91596ff7",
       "claim": {
         "source": "ipv4_conntrack_defrag()",
         "target": "nf_ct_ipv4_gather_frags()",
-        "label": "-400 ipv4_conntrack_defrag()\\n→ nf_ct_ipv4_gather_frags() → ip_defrag()"
+        "label": "-400 ipv4_conntrack_defrag()\\n→ nf_ct_ipv4_gather_frags() → ip_defrag()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:pr3:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/nf_conntrack_proto.c",
-          "start": 203,
-          "end": 210,
-          "explanation": "The IPv4 conntrack hook invokes nf_conntrack_in."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "66a49a75980edbc4bc1ed915c4686c9bdad04486decdecd7b66ca8ec8aa8eab2",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ae59e4168996a9d286e17d4456b248e76db47383068a25f9d64c7bf95b2f3447",
       "claim": {
         "source": "ipv4_conntrack_in()",
         "target": "nf_conntrack_in()",
-        "label": "-200 ipv4_conntrack_in()\\n→ nf_conntrack_in()"
+        "label": "-200 ipv4_conntrack_in()\\n→ nf_conntrack_in()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:pr4:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/iptable_mangle.c",
-          "start": 70,
-          "end": 80,
-          "explanation": "The mangle hook invokes ipt_do_table."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "593f14e43953885da2361158c5df1bfea716be36b33548920e2e78bb94f00d66",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "634a7f7eb6af5806dcb2ed84e7f19196d77a228aad2744945afef380ad75d706",
       "claim": {
         "source": "iptable_mangle_hook()",
         "target": "ipt_do_table()",
-        "label": "-150 iptable_mangle_hook()\\n→ ipt_do_table()"
+        "label": "-150 iptable_mangle_hook()\\n→ ipt_do_table()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:pr5:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/nf_nat_proto.c",
-          "start": 649,
-          "end": 660,
-          "explanation": "IPv4 pre-routing NAT wrapper invokes nf_nat_ipv4_fn."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "84a4932849e53f3ba24f864ebe0cd3ec51c9d1473f4f44a5fa680e32f110c1e1",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b5c3b23565ee773a212e14b73ddf73ce939069178599808dd86be42357f90c6a",
       "claim": {
         "source": "nf_nat_ipv4_pre_routing()",
         "target": "nf_nat_ipv4_fn()",
-        "label": "-100 nf_nat_ipv4_pre_routing()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nlookup hooks on new mapping → nf_nat_packet()"
+        "label": "-100 nf_nat_ipv4_pre_routing()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nlookup hooks on new mapping → nf_nat_packet()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:pr5:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/netfilter/nf_nat_core.c",
-          "start": 797,
-          "end": 869,
-          "explanation": "nf_nat_ipv4_fn reaches the common nf_nat_inet_fn implementation."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "e19efd39ca6ecd0863b0240fd4fac889cd0e6deb7a9eb96cdbee943ba390762f",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9be2cd8e50c9d5c7d80d37adeca3f4bf4b5b050dbfd525c8c0c3c42f2dacda1b",
       "claim": {
         "source": "nf_nat_ipv4_fn()",
         "target": "nf_nat_inet_fn()",
-        "label": "-100 nf_nat_ipv4_pre_routing()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nlookup hooks on new mapping → nf_nat_packet()"
+        "label": "-100 nf_nat_ipv4_pre_routing()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nlookup hooks on new mapping → nf_nat_packet()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:in1:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/iptable_mangle.c",
-          "start": 70,
-          "end": 80,
-          "explanation": "The INPUT mangle hook calls ipt_do_table."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "5dbbc43436944b3d541f750c300e685dbff115ed918cc1f0ceecf3d78b100965",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6b5a2e8ebb20081448e35f5380f8581c66cf9ad0578279a0107234e64de6d48d",
       "claim": {
         "source": "iptable_mangle_hook()",
         "target": "ipt_do_table()",
-        "label": "-150 iptable_mangle_hook() → ipt_do_table()"
+        "label": "-150 iptable_mangle_hook() → ipt_do_table()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:in4:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/nf_nat_proto.c",
-          "start": 701,
-          "end": 710,
-          "explanation": "The IPv4 local-in NAT hook calls nf_nat_ipv4_fn."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "c73bad53a6aeb621033a4a9a40d46665f04f9233d786e9b670c84c89abd71d57",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "707a04f224905d9400982ded878a20c8c3a7d3c98f069b3f0c5414dffb931f04",
       "claim": {
         "source": "nf_nat_ipv4_local_in()",
         "target": "nf_nat_ipv4_fn()",
-        "label": "+100 nf_nat_ipv4_local_in()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()"
+        "label": "+100 nf_nat_ipv4_local_in()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:in4:internal:1": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "938a65f44d10c1c320c311518ac3f460ad234c98e0727d83281f20e64ffef14e",
+      "fingerprint": "436acecc9fd3f1224ec6ab42c6bfc19bde1ad80729cd98023ea843bb3567fa6b",
       "claim": {
         "source": "nf_nat_ipv4_fn()",
         "target": "nf_nat_inet_fn()",
-        "label": "+100 nf_nat_ipv4_local_in()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()"
+        "label": "+100 nf_nat_ipv4_local_in()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:in5:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "3dbee405371b255cb027aa57a78080690b3c688b85feae49c3c650b8df7b51fe",
+      "fingerprint": "b0a9e2540fea4855f090d7f26999330bfb893c9d4a3e021b10bfe9742feb919a",
       "claim": {
         "source": "nf_confirm()",
         "target": "nf_conntrack_confirm()",
-        "label": "INT_MAX nf_confirm()\\n→ nf_conntrack_confirm()\\n→ __nf_conntrack_confirm() if unconfirmed"
+        "label": "INT_MAX nf_confirm()\\n→ nf_conntrack_confirm()\\n→ __nf_conntrack_confirm() if unconfirmed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ou1:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "455bffe0960699b0c9c5cf810f60c3125e1eb1f32fb9588e679ee2745449446d",
+      "fingerprint": "1c83248bcd3c608bcc0efbb82879bda8b5c8018b31f370990b61a1dd91596ff7",
       "claim": {
         "source": "ipv4_conntrack_defrag()",
         "target": "nf_ct_ipv4_gather_frags()",
-        "label": "-400 ipv4_conntrack_defrag()\\n→ nf_ct_ipv4_gather_frags() → ip_defrag()"
+        "label": "-400 ipv4_conntrack_defrag()\\n→ nf_ct_ipv4_gather_frags() → ip_defrag()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ou3:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/nf_conntrack_proto.c",
-          "start": 208,
-          "end": 232,
-          "explanation": "The local-output conntrack hook invokes nf_conntrack_in."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "f00405600c40b86272e4ee879028193b8967dacf3a23299b853ea59eac2e3828",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "134b0658d078cd468fc514fac245f26585bb6bb22b4b341230276531e4d2ee53",
       "claim": {
         "source": "ipv4_conntrack_local()",
         "target": "nf_conntrack_in()",
-        "label": "-200 ipv4_conntrack_local()\\n→ nf_conntrack_in()"
+        "label": "-200 ipv4_conntrack_local()\\n→ nf_conntrack_in()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ou4:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/iptable_mangle.c",
-          "start": 37,
-          "end": 82,
-          "explanation": "The mangle output hook dispatches through ipt_mangle_out."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "34635d0c143ec0ff5b70b9023c593f5c4704dfa78ffe58168aac0ee4b00538a6",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "182d8040afefff30149bfb9cea241d29bbf86e201f1514805751e473e15af4db",
       "claim": {
         "source": "iptable_mangle_hook()",
         "target": "ipt_mangle_out()",
-        "label": "-150 iptable_mangle_hook()\\n→ ipt_mangle_out() → ipt_do_table()\\n→ ip_route_me_harder() if needed"
+        "label": "-150 iptable_mangle_hook()\\n→ ipt_mangle_out() → ipt_do_table()\\n→ ip_route_me_harder() if needed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ou4:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/iptable_mangle.c",
-          "start": 37,
-          "end": 82,
-          "explanation": "ipt_mangle_out calls ipt_do_table."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "aca4bfa1e14c8b661ca921c795c86380141e762f25239c050018dbbe110d78c3",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "72b49be72614edbd656c6659d37fa0cac78ea4ecb03c95e03eef1c6d75bf4944",
       "claim": {
         "source": "ipt_mangle_out()",
         "target": "ipt_do_table()",
-        "label": "-150 iptable_mangle_hook()\\n→ ipt_mangle_out() → ipt_do_table()\\n→ ip_route_me_harder() if needed"
+        "label": "-150 iptable_mangle_hook()\\n→ ipt_mangle_out() → ipt_do_table()\\n→ ip_route_me_harder() if needed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ou5:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "04f82ea33857aca03f7a9705a6f859e4673a4da5b8061e9f5f926466d941a994",
+      "fingerprint": "0eebbd8661f8e26c2908ea598f17f54b907e47ff5b1eb94f8e67e2884d7e640f",
       "claim": {
         "source": "nf_nat_ipv4_local_fn()",
         "target": "nf_nat_ipv4_fn()",
-        "label": "-100 nf_nat_ipv4_local_fn()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()\\n→ ip_route_me_harder() if needed"
+        "label": "-100 nf_nat_ipv4_local_fn()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()\\n→ ip_route_me_harder() if needed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ou5:internal:1": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "aaf26382422ba8fe6fac888b6327b43be34d84a085d45ac670ea200011db8b7a",
+      "fingerprint": "9cca3db8a5eb89e93b05d407674788861a0a663f36897eab13eb8023e38496e5",
       "claim": {
         "source": "nf_nat_ipv4_fn()",
         "target": "nf_nat_inet_fn()",
-        "label": "-100 nf_nat_ipv4_local_fn()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()\\n→ ip_route_me_harder() if needed"
+        "label": "-100 nf_nat_ipv4_local_fn()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()\\n→ ip_route_me_harder() if needed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ou7:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/ip_output.c",
-          "start": 121,
-          "end": 129,
-          "explanation": "ip_local_out calls dst_output after the local-out hook returns ACCEPT."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "3a9bd76924c12e86755266349603f803aff8b51704f46ef1e20b8fa3c931f993",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "994b26b4bfe3db71e871ba4f555f3cfe3fd172efc7e36c3a9abd295c20d3d8c1",
       "claim": {
         "source": "ip_local_out()",
         "target": "dst_output()",
-        "label": "return 1 → ip_local_out()\\n→ dst_output()"
+        "label": "return 1 → ip_local_out()\\n→ dst_output()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:po1:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/iptable_mangle.c",
-          "start": 70,
-          "end": 80,
-          "explanation": "POSTROUTING mangle registration uses ipt_do_table."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "5dbbc43436944b3d541f750c300e685dbff115ed918cc1f0ceecf3d78b100965",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6b5a2e8ebb20081448e35f5380f8581c66cf9ad0578279a0107234e64de6d48d",
       "claim": {
         "source": "iptable_mangle_hook()",
         "target": "ipt_do_table()",
-        "label": "-150 iptable_mangle_hook() → ipt_do_table()"
+        "label": "-150 iptable_mangle_hook() → ipt_do_table()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:po2:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/nf_nat_proto.c",
-          "start": 718,
-          "end": 730,
-          "explanation": "IPv4 POSTROUTING NAT wrapper invokes nf_nat_ipv4_fn."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "1673601d4c068c8316b680aa98d06f406b1da66aef4169fc78091dae61b9bbe4",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "a18ec6bd1557a9b29c914904aed3e613aaefa3efff4215f611d47d38728785d9",
       "claim": {
         "source": "nf_nat_ipv4_out()",
         "target": "nf_nat_ipv4_fn()",
-        "label": "+100 nf_nat_ipv4_out()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()"
+        "label": "+100 nf_nat_ipv4_out()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:po2:internal:1": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "f83625ca672d6b7f92dc5838fd955c6c2e7020ac7927af46120c371fd76594ad",
+      "fingerprint": "1de912ccaa34f1229e8683e32bdfd18c2fe4454f7d83663893cf1ac9f3c5bc77",
       "claim": {
         "source": "nf_nat_ipv4_fn()",
         "target": "nf_nat_inet_fn()",
-        "label": "+100 nf_nat_ipv4_out()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()"
+        "label": "+100 nf_nat_ipv4_out()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:po3:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "3dbee405371b255cb027aa57a78080690b3c688b85feae49c3c650b8df7b51fe",
+      "fingerprint": "b0a9e2540fea4855f090d7f26999330bfb893c9d4a3e021b10bfe9742feb919a",
       "claim": {
         "source": "nf_confirm()",
         "target": "nf_conntrack_confirm()",
-        "label": "INT_MAX nf_confirm()\\n→ nf_conntrack_confirm()\\n→ __nf_conntrack_confirm() if unconfirmed"
+        "label": "INT_MAX nf_confirm()\\n→ nf_conntrack_confirm()\\n→ __nf_conntrack_confirm() if unconfirmed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ct:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/netfilter/nf_conntrack_core.c",
-          "start": 1960,
-          "end": 2005,
-          "explanation": "nf_conntrack_in resolves a normal conntrack entry."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "49a28a04212274c1403eaa2072c794719e6f0c3459f5ce5ffff63278fda74b70",
-      "claim": {
-        "source": "nf_conntrack_in()",
-        "target": "resolve_normal_ct()",
-        "label": "nf_conntrack_in()\\n→ resolve_normal_ct(): tuple/hash lookup or allocate\\n→ nf_conntrack_handle_packet()\\n→ nf_conntrack_tcp_packet()\\nTCP conntrack state differs from socket TCP state"
-      }
-    },
-    "node:ct:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/netfilter/nf_conntrack_core.c",
-          "start": 1960,
-          "end": 2013,
-          "explanation": "nf_conntrack_in resolves/creates a conntrack and invokes nf_conntrack_handle_packet."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "f638486198a28b66843f83afc97962c25b141939c702bafe3b1c9996d75ad37d",
-      "claim": {
-        "source": "resolve_normal_ct()",
-        "target": "nf_conntrack_handle_packet()",
-        "label": "nf_conntrack_in()\\n→ resolve_normal_ct(): tuple/hash lookup or allocate\\n→ nf_conntrack_handle_packet()\\n→ nf_conntrack_tcp_packet()\\nTCP conntrack state differs from socket TCP state"
-      }
-    },
-    "node:xt:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/netfilter/ip_tables.c",
-          "start": 223,
-          "end": 350,
-          "explanation": "ipt_do_table evaluates packet matches including extension match callbacks."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "f6f58d3969f47ee90edca68c6eb483cbcdf311f4e64fdba15ffad827abaf1ae5",
-      "claim": {
-        "source": "nip_packet_match()",
-        "target": "match()",
-        "label": "ipt_do_table(): walk chain entries\\nip_packet_match() → extension match->match()\\nstandard verdict/jump/RETURN OR target->target()\\nExtension-dependent calls (LOG, MARK, DNAT, etc.)"
-      }
-    },
-    "node:nftexec:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/netfilter/nf_tables_core.c",
-          "start": 253,
-          "end": 289,
-          "explanation": "nft_do_chain invokes expression evaluation through expr_call_ops_eval."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "f726b835f790c9726490c4de397d14ad42d0fa2113e52838ede9b85ca77887fc",
-      "claim": {
-        "source": "nft_do_chain()",
-        "target": "expr_call_ops_eval()",
-        "label": "nft_do_chain() → expr_call_ops_eval()\\n→ expression ops->eval() or optimized fast evaluator\\nregisters / verdict / jump stack\\nExpression list determined by installed rules"
-      }
-    },
-    "node:ixirq:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 3121,
-          "end": 3130,
-          "explanation": "The MSI-X clean handler schedules NAPI polling."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "1baad32f18e436d791d3cfb5eb078231313a51839086e5de83a3ec27d3dfdf86",
-      "claim": {
-        "source": "ixgbe_msix_clean_rings()",
-        "target": "napi_schedule_irqoff()",
-        "label": "ixgbe_msix_clean_rings()\\n→ napi_schedule_irqoff()"
-      }
-    },
-    "node:ixxdp:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 2199,
-          "end": 2207,
-          "explanation": "ixgbe_run_xdp invokes bpf_prog_run_xdp for the attached XDP program."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "7665b7e732320e3870a5f731bdc2a58ad6b1084df42886a0dddde5b4d135fd7c",
-      "claim": {
-        "source": "ixgbe_run_xdp()",
-        "target": "bpf_prog_run_xdp()",
-        "label": "ixgbe_run_xdp()\\n→ bpf_prog_run_xdp()"
-      }
-    },
-    "node:ixredirflush:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 2423,
-          "end": 2429,
-          "explanation": "RX cleanup invokes xdp_do_flush_map for redirect results."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "e1e2f13eafac02b42896143ea2d7c453ef068a7172dfa7484793e55120c8507f",
-      "claim": {
-        "source": "ixgbe_clean_rx_irq()",
-        "target": "xdp_do_flush_map()",
-        "label": "ixgbe_clean_rx_irq() end\\nXDP_REDIRECT → xdp_do_flush_map()\\nredirect map flush, not ixgbe TX completion"
-      }
-    },
-    "node:ixskb:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 1709,
-          "end": 1714,
-          "explanation": "ixgbe_rx_skb calls napi_gro_receive."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "3dc4bed104347d392491668d24bbe4dfb18a6be360f021e5197a62fd5fcbea57",
-      "claim": {
-        "source": "ixgbe_construct_skb()",
-        "target": "ixgbe_rx_skb()",
-        "label": "ixgbe_build_skb() OR ixgbe_construct_skb()\\n→ ixgbe_rx_skb() → napi_gro_receive()"
-      }
-    },
-    "node:ixtx:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 8888,
-          "end": 8892,
-          "explanation": "ixgbe_xmit_frame calls __ixgbe_xmit_frame."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "80e4f7ad94a592b3bf26237f42c9195feb975bebb2f3a20c0638006aca30bc2d",
-      "claim": {
-        "source": "ixgbe_xmit_frame()",
-        "target": "ixgbe_xmit_frame()",
-        "label": "ixgbe_xmit_frame()\\n→ __ixgbe_xmit_frame()\\n→ ixgbe_xmit_frame_ring()"
-      }
-    },
-    "node:ixcomplete:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 3150,
-          "end": 3158,
-          "explanation": "ixgbe_poll invokes ixgbe_clean_tx_irq for TX rings."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "afeb8692e2f837ca5b37d384ad6ffcda30b99b32f550cc7c4fcd1a3633657f00",
-      "claim": {
-        "source": "ixgbe_poll()",
-        "target": "ixgbe_clean_tx_irq()",
-        "label": "Later ixgbe_poll() → ixgbe_clean_tx_irq()\\ncheck EOP/DD completion\\n→ napi_consume_skb()\\n→ DMA unmap head/pages\\n→ next_to_clean / stats update"
-      }
-    },
-    "node:ixhang:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 1218,
-          "end": 1245,
-          "explanation": "TX cleanup detects a hang through check_for_tx_hang and ixgbe_check_tx_hang."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "4930269a85d10bf75c8ceb54a62339fbbd066d2ce2bd23a4bfd0f74bb5250dcb",
-      "claim": {
-        "source": "check_for_tx_hang()",
-        "target": "ixgbe_check_tx_hang()",
-        "label": "check_for_tx_hang() → ixgbe_check_tx_hang()\\nnetif_stop_subqueue() → ixgbe_tx_timeout_reset()"
-      }
-    },
-    "node:ixhang:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 1236,
-          "end": 1245,
-          "explanation": "A non-XDP hang stops the subqueue and schedules timeout reset."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "5e7e5ce8704c05462d83c7aa2866aa4389091aabae1a9b75ed1033956b67b30d",
-      "claim": {
-        "source": "nnetif_stop_subqueue()",
-        "target": "ixgbe_tx_timeout_reset()",
-        "label": "check_for_tx_hang() → ixgbe_check_tx_hang()\\nnetif_stop_subqueue() → ixgbe_tx_timeout_reset()"
-      }
-    },
-    "node:ixwatch:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 7960,
-          "end": 7977,
-          "explanation": "Reset subtask invokes ixgbe_reinit_locked."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "42deadfe92acbdffb35f714ab1fcc02856666e76dc247b46344f437850d17f5a",
-      "claim": {
-        "source": "ixgbe_reset_subtask()",
-        "target": "ixgbe_reinit_locked()",
-        "label": "ixgbe_tx_timeout() / ixgbe_reset_subtask()\\n→ ixgbe_reinit_locked()\\nreset/reinitialize adapter"
-      }
-    },
-    "node:ixxdpcomplete:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 3150,
-          "end": 3158,
-          "explanation": "The XDP TX ring cleanup path invokes ixgbe_clean_xdp_tx_irq, which returns frames."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "0e3c3e728592f8ce44100f278585dc7ce653a405ab2e04cb855efd84744e9f91",
-      "claim": {
-        "source": "ixgbe_clean_xdp_tx_irq()",
-        "target": "xdp_return_frame()",
-        "label": "ixgbe_clean_xdp_tx_irq()\\n→ xdp_return_frame() / DMA unmap\\nseparate XDP TX completion"
-      }
-    },
-    "node:conn:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "75e561c9ba57c72e8366df4e92e2c7e9657660859acd77e47254a8453a7ffedc",
-      "claim": {
-        "source": "connect()",
-        "target": "sys_connect()",
-        "label": "connect() → __sys_connect()\\n→ __sys_connect_file() → inet_stream_connect()"
-      }
-    },
-    "node:conn:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "8b4408d60c519e4f2a04317c255613c67a1d8b08f874aaa9469db81bd8a4b957",
-      "claim": {
-        "source": "sys_connect()",
-        "target": "sys_connect_file()",
-        "label": "connect() → __sys_connect()\\n→ __sys_connect_file() → inet_stream_connect()"
-      }
-    },
-    "node:conn2:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/af_inet.c",
-          "start": 570,
-          "end": 680,
-          "explanation": "inet_stream_connect invokes the protocol pre_connect callback."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "2fb3c0dd05f8344cbc0958dc518b8f39931c4a17f7d18e8549eba4294be16070",
-      "claim": {
-        "source": "inet_stream_connect()",
-        "target": "tcp_v4_pre_connect()",
-        "label": "__inet_stream_connect()\\n→ tcp_v4_pre_connect() [cgroup connect4]\\n→ tcp_v4_connect() → tcp_connect()"
-      }
-    },
-    "node:conn2:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_ipv4.c",
-          "start": 201,
-          "end": 342,
-          "explanation": "tcp_v4_pre_connect proceeds to tcp_v4_connect when pre-connect checks pass."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "e956c86ab0dd7bc786a897f04b1340ddaa6a6ab2436472434f9aca83fba7aa80",
-      "claim": {
-        "source": "tcp_v4_pre_connect()",
-        "target": "tcp_v4_connect()",
-        "label": "__inet_stream_connect()\\n→ tcp_v4_pre_connect() [cgroup connect4]\\n→ tcp_v4_connect() → tcp_connect()"
-      }
-    },
-    "node:syn:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_output.c",
-          "start": 3930,
-          "end": 3940,
-          "explanation": "tcp_connect transmits SYN through tcp_transmit_skb."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "2e8f16fce1464b90d837751024aa41dd3c58b82709a1792105aeb58113565e07",
-      "claim": {
-        "source": "tcp_connect()",
-        "target": "tcp_transmit_skb()",
-        "label": "tcp_connect() builds SYN\\n→ tcp_transmit_skb() → normal IP OUTPUT"
-      }
-    },
-    "node:synack:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "2aed4203b10f59a3746833aed08379b4568f08253fa51e2263e5d75c49c60d09",
-      "claim": {
-        "source": "ntcp_rcv_state_process()",
-        "target": "tcp_rcv_synsent_state_process()",
-        "label": "Incoming SYN/ACK:\\ntcp_rcv_state_process()\\n→ tcp_rcv_synsent_state_process()\\n→ tcp_finish_connect() / ACK"
-      }
-    },
-    "node:lsn:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/af_inet.c",
-          "start": 229,
-          "end": 245,
-          "explanation": "inet_listen invokes __inet_listen_sk."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "6028682279d1e6c04db54dcdfb04ddc1095a94f79ca20276a50e9b8177d3fcc6",
-      "claim": {
-        "source": "listen()",
-        "target": "inet_listen()",
-        "label": "listen() → inet_listen()\\n→ __inet_listen_sk() → inet_csk_listen_start()"
-      }
-    },
-    "node:lsn:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "be1fc0f94d3cba1b8c2c2144c46e47c6654e24f124d7716bf2995e004dccd746",
-      "claim": {
-        "source": "inet_listen()",
-        "target": "inet_listen_sk()",
-        "label": "listen() → inet_listen()\\n→ __inet_listen_sk() → inet_csk_listen_start()"
-      }
-    },
-    "node:fincall:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/af_inet.c",
-          "start": 820,
-          "end": 850,
-          "explanation": "inet shutdown dispatches to the protocol shutdown operation."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "41cbcc25f1f9b67aa5b7ad0061d55610d063dbab58242e02cee7b199866a8d7a",
-      "claim": {
-        "source": "inet_shutdown()",
-        "target": "tcp_shutdown()",
-        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()"
-      }
-    },
-    "node:fincall:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/socket.c",
-          "start": 1480,
-          "end": 1530,
-          "explanation": "close path enters sock_close."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "f9e349e01dd2770041a4fe0bb36b56bf70fa2fb83d7fa2c6569ea8dadeca8d46",
-      "claim": {
-        "source": "close()",
-        "target": "sock_close()",
-        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()"
-      }
-    },
-    "node:fincall:internal:2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "c618fc75a22d7f933e34cf8766f8f68ac9a7690ca7a8fb58ab973a9506d5f444",
-      "claim": {
-        "source": "sock_close()",
-        "target": "sock_release()",
-        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()"
-      }
-    },
-    "node:fincall:internal:3": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "7551ab56843143181016d0c92e0827e5ea41f07b05e8fe7363b8bbe4f6844565",
-      "claim": {
-        "source": "sock_release()",
-        "target": "inet_release()",
-        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()"
-      }
-    },
-    "node:finsend:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_output.c",
-          "start": 3501,
-          "end": 3543,
-          "explanation": "tcp_send_fin calls __tcp_push_pending_frames."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "d81eb7d4266f908b6eec061892304b75ec53fd088637076a115a840bc6988f2e",
-      "claim": {
-        "source": "tcp_send_fin()",
-        "target": "tcp_push_pending_frames()",
-        "label": "tcp_send_fin()\\n→ __tcp_push_pending_frames()\\n→ tcp_write_xmit() → TCP/IP output"
-      }
-    },
-    "node:finrecv:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "7bc2b8eeb8c2bec51d535e5c075f9f915c015d847f59b87ec27b478c0e816198",
-      "claim": {
-        "source": "ntcp_data_queue()",
-        "target": "tcp_fin()",
-        "label": "Incoming in-order FIN:\\ntcp_data_queue() → tcp_fin()\\nTCP_CLOSE_WAIT / CLOSING / TIME_WAIT transitions\\nACK scheduling / reader EOF wakeup"
-      }
-    },
-    "node:abort:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_output.c",
-          "start": 3600,
-          "end": 3620,
-          "explanation": "Active reset sends through tcp_transmit_skb."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "19c1bfbeabc261e5cded7ad90d2d6dd5d45075c03195e5aeec9a004e6ae134c5",
-      "claim": {
-        "source": "ntcp_send_active_reset()",
-        "target": "tcp_transmit_skb()",
-        "label": "Abortive close / unread data / reset conditions:\\ntcp_send_active_reset() → tcp_transmit_skb()\\nNot the same as tcp_v4_send_reset() reply path"
-      }
-    },
-    "node:synackout:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_ipv4.c",
-          "start": 1022,
-          "end": 1041,
-          "explanation": "tcp_v4_send_synack creates the SYN/ACK with tcp_make_synack."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "d388e946385751289f2d440b4e91de71fa3dab675007a74aebbc1df4a2bc93a9",
-      "claim": {
-        "source": "tcp_v4_send_synack()",
-        "target": "tcp_make_synack()",
-        "label": "tcp_v4_send_synack()\\n→ tcp_make_synack()\\n→ ip_build_and_send_pkt()"
-      }
-    },
-    "node:resetout:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_ipv4.c",
-          "start": 830,
-          "end": 845,
-          "explanation": "tcp_v4_send_reset invokes ip_send_unicast_reply."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "7393827624a298949c847c6e0efc64a363758c76a4c2d63e5ecd3b7cb172e7c6",
-      "claim": {
-        "source": "tcp_v4_send_reset()",
-        "target": "ip_send_unicast_reply()",
-        "label": "tcp_v4_send_reset()\\n→ ip_send_unicast_reply()\\n→ ip_append_data()\\n→ ip_push_pending_frames() → ip_send_skb()"
-      }
-    },
-    "node:resetout:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/ip_output.c",
-          "start": 1600,
-          "end": 1649,
-          "explanation": "ip_send_unicast_reply appends data before pushing pending IP frames."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "c9bffdbc66d6986ae4efe8f0454236a16227de770c4c13f3cc9fce08288e2d7e",
-      "claim": {
-        "source": "ip_send_unicast_reply()",
-        "target": "ip_append_data()",
-        "label": "tcp_v4_send_reset()\\n→ ip_send_unicast_reply()\\n→ ip_append_data()\\n→ ip_push_pending_frames() → ip_send_skb()"
-      }
-    },
-    "node:reuse:internal:0": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/inet_hashtables.c",
-          "start": 357,
-          "end": 373,
-          "explanation": "Listener reuseport lookup invokes reuseport_select_sock."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "30b8aebd015cebabff707cfb27502187714e35b8b2fb919a164f787121d45b06",
-      "claim": {
-        "source": "ninet_lookup_reuseport()",
-        "target": "reuseport_select_sock()",
-        "label": "Listener SO_REUSEPORT selection\\ninet_lookup_reuseport() → reuseport_select_sock()\\nSK_REUSEPORT: bpf_run_sk_reuseport()\\ncompat filter: run_bpf_filter() → bpf_prog_run_save_cb()\\nMay fall back to hash selection"
-      }
-    },
-    "node:reuse:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/sock_reuseport.c",
-          "start": 498,
-          "end": 517,
-          "explanation": "The compatible reuseport filter path invokes bpf_prog_run_save_cb."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "3dfe6518dd29740d87011806f345013de9604e90d121a7a435ea6c6b518d23ce",
-      "claim": {
-        "source": "run_bpf_filter()",
-        "target": "bpf_prog_run_save_cb()",
-        "label": "Listener SO_REUSEPORT selection\\ninet_lookup_reuseport() → reuseport_select_sock()\\nSK_REUSEPORT: bpf_run_sk_reuseport()\\ncompat filter: run_bpf_filter() → bpf_prog_run_save_cb()\\nMay fall back to hash selection"
-      }
-    },
-    "node:sklookup:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "3211c4d44bbc701eb1d22a475ad6e669be46c26feae23789967dd1b46e70107f",
-      "claim": {
-        "source": "n__inet_lookup_listener()",
-        "target": "inet_lookup_run_sk_lookup()",
-        "label": "Listener lookup only (not established hash hit):\\n__inet_lookup_listener() → inet_lookup_run_sk_lookup()\\n→ bpf_sk_lookup_run_v4() [BPF_PROG_TYPE_SK_LOOKUP]\\nMay select socket / reject; netns attachment"
-      }
-    },
-    "node:xtbpf:internal:0": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "38418e15b7b5e5f028d128e62a550319c1b6b8c126c0c0d920d147308e70a331",
-      "claim": {
-        "source": "nipt_do_table()",
-        "target": "match()",
-        "label": "iptables -m bpf: optional rule match\\nipt_do_table() → match->match()\\n→ bpf_mt() / bpf_mt_v1()\\n→ bpf_prog_run() / bpf_prog_run_save_cb()\\nSOCKET_FILTER program returns match boolean, not NF verdict"
-      }
-    },
-    "node:xtbpf:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/netfilter/xt_bpf.c",
-          "start": 89,
-          "end": 100,
-          "explanation": "xt_bpf match invokes the configured BPF program."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "4e491472d6345bdda9ebe81d53003f50fe68488fd186cb299576dee08c015135",
-      "claim": {
-        "source": "match()",
-        "target": "bpf_mt()",
-        "label": "iptables -m bpf: optional rule match\\nipt_do_table() → match->match()\\n→ bpf_mt() / bpf_mt_v1()\\n→ bpf_prog_run() / bpf_prog_run_save_cb()\\nSOCKET_FILTER program returns match boolean, not NF verdict"
-      }
-    },
-    "node:flush:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "bcf97464eb084523c9f5fd632b559f7074eb31728a0a635b2bc7ce10cde1b824",
-      "claim": {
-        "source": "napi_gro_flush()",
-        "target": "gro_normal_list()",
-        "label": "napi_complete_done() / poll completion\\n→ napi_gro_flush() → gro_normal_list()"
-      }
-    },
-    "node:genericrun:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "bb154690649fe3be8cc2b55753fd1bc1cc72e4ddaab6559d831c4387023ed99c",
-      "claim": {
-        "source": "netif_receive_generic_xdp()",
-        "target": "bpf_prog_run_generic_xdp()",
-        "label": "do_xdp_generic() → netif_receive_generic_xdp()\\n→ bpf_prog_run_generic_xdp()\\nPASS continues; other actions divert"
-      }
-    },
-    "node:tcxin:internal:2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "273cbb62e92f067da948796760b05a8a5bc718aa3bbae4212163576900dd94db",
-      "claim": {
-        "source": "tcf_classify()",
-        "target": "cls_bpf_classify()",
-        "label": "tcx_run() [if TCX enabled]\\nnon-UNSPEC → ingress verdict\\nUNSPEC / no TCX → tc_run() → tcf_classify()\\n→ cls_bpf_classify() → bpf_prog_run()"
-      }
-    },
-    "node:tcxin:internal:3": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "20cf9baf67266dd81f4958cc0624f54a5fa9fd8a77a4ba7d362baaa3f8ba63d2",
-      "claim": {
-        "source": "cls_bpf_classify()",
-        "target": "bpf_prog_run()",
-        "label": "tcx_run() [if TCX enabled]\\nnon-UNSPEC → ingress verdict\\nUNSPEC / no TCX → tc_run() → tcf_classify()\\n→ cls_bpf_classify() → bpf_prog_run()"
-      }
-    },
-    "node:listfinish:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "ad31a276ab86bdbcf9237063e5876777f8943bb8e3b43ede7797a68906f85258",
-      "claim": {
-        "source": "l3mdev_ip_rcv()",
-        "target": "ip_rcv_finish_core()",
-        "label": "ip_list_rcv_finish()\\n→ l3mdev_ip_rcv() per remaining skb\\n→ ip_rcv_finish_core()"
-      }
-    },
-    "node:delivery:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "22d713218483a648a618bfbd93b283069a6edc3650f682d03beda7620f97a824",
-      "claim": {
-        "source": "dst_input()",
-        "target": "ip_sublist_rcv_finish()",
-        "label": "Successful core return to caller\\nsingle skb: ip_rcv_finish() → dst_input()\\nbatch: group by dst → ip_sublist_rcv_finish()"
-      }
-    },
-    "node:release:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "a2c875226a00b2384d810d5a29c2a09fbe05543d926fc118f65287bbb3bb4058",
-      "claim": {
-        "source": "release_sock()",
-        "target": "sk_backlog_rcv()",
-        "label": "release_sock() → __release_sock()\\n→ sk_backlog_rcv()"
-      }
-    },
-    "node:listen:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/inet_connection_sock.c",
-          "start": 190,
-          "end": 220,
-          "explanation": "inet_listen calls __inet_listen_sk, which starts the listening socket."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "efff49fef78dfc6e0c56cf483b793498db78eef1be384caf4eec998656a1942c",
-      "claim": {
-        "source": "tcp_conn_request()",
-        "target": "tcp_v4_send_synack()",
-        "label": "LISTEN: tcp_v4_conn_request()\\n→ tcp_conn_request()\\n→ tcp_v4_send_synack()"
-      }
-    },
-    "node:retrans:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "77f9382a1c95ad4212f2aeb3e9d64f39c2b6e6ec3a27b98ecdfc64652c5cafa5",
-      "claim": {
-        "source": "tcp_retransmit_skb()",
-        "target": "tcp_retransmit_skb()",
-        "label": "tcp_retransmit_timer()\\n→ tcp_retransmit_skb()\\n→ __tcp_retransmit_skb()"
-      }
-    },
-    "node:accept:internal:2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "a0540c7032b2d21f34815ad498818b00b058160019e9a0619d04efbf667ff3ac",
-      "claim": {
-        "source": "inet_csk_accept()",
-        "target": "inet_accept()",
-        "label": "accept()/accept4() → inet_accept()\\n→ inet_csk_accept() → __inet_accept()\\nchild established by request-socket path"
-      }
-    },
-    "node:send:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "f456cc6d177c47acac4307bedda64a901874d684b6cfd752bd5bbc41ace55744",
-      "claim": {
-        "source": "sys_sendmsg()",
-        "target": "sock_write_iter()",
-        "label": "send/sendto → __sys_sendto()\\nsendmsg → ___sys_sendmsg()\\nwrite → sock_write_iter()"
-      }
-    },
-    "node:socksend:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "6738c3304f1dbc539d3f88a1380e8fd3e4ba27dabb00f43c65abfa972d1c746f",
-      "claim": {
-        "source": "security_socket_sendmsg()",
-        "target": "sock_sendmsg_nosec()",
-        "label": "sock_sendmsg()\\n→ security_socket_sendmsg()\\n→ sock_sendmsg_nosec()"
-      }
-    },
-    "node:one:internal:3": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 3571,
-          "end": 3574,
-          "explanation": "netdev_start_xmit emits the start and completion trace around the driver operation."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "7fbba09b5fa1c5e50d029adfe4474baf2101a470cc11be31049afa4fde397942",
-      "claim": {
-        "source": "netdev_start_xmit()",
-        "target": "netdev_start_xmit()",
-        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()"
-      }
-    },
-    "node:one:internal:4": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/core/dev.c",
-          "start": 3571,
-          "end": 3574,
-          "explanation": "netdev_start_xmit dispatches to the net_device transmit operation."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "1aaf773e83f984a8dbce421c7d46b0a73aedd24d347c93cbd9b5211527613536",
-      "claim": {
-        "source": "netdev_start_xmit()",
-        "target": "ndo_start_xmit()",
-        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()"
-      }
-    },
-    "node:one:internal:5": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "0d31bcc5757ccd6c891b5dacb5ef08d003b44d6a81b5e024087a9860f39932be",
-      "claim": {
-        "source": "ndo_start_xmit()",
-        "target": "trace_net_dev_xmit()",
-        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()"
-      }
-    },
-    "node:nat:internal:2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "8acaab54fc9e61f31525b725db7d63dc8db1150d2bf3ae05558ddf47b506baaf",
-      "claim": {
-        "source": "ipt_do_table()",
-        "target": "nf_nat_packet()",
-        "label": "nf_nat_ipv4_pre_routing / local_in / local_fn / out\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nNEW mapping: lookup hook → ipt_do_table()\\n→ nf_nat_packet() applies mapping"
-      }
-    },
-    "node:pr1:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "f6dc97ec4264a0933f68485e73cf516cf7399b790723260381a8e96beed80639",
-      "claim": {
-        "source": "nf_ct_ipv4_gather_frags()",
-        "target": "ip_defrag()",
-        "label": "-400 ipv4_conntrack_defrag()\\n→ nf_ct_ipv4_gather_frags() → ip_defrag()"
-      }
-    },
-    "node:pr5:internal:2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "51612004bb9dc4e5bef2e4a54a0446f9108e730e9580ae99568cd859d2822fa4",
-      "claim": {
-        "source": "nf_nat_inet_fn()",
-        "target": "nf_nat_packet()",
-        "label": "-100 nf_nat_ipv4_pre_routing()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nlookup hooks on new mapping → nf_nat_packet()"
-      }
-    },
-    "node:in4:internal:2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "5b055fdec2af315459b356f915b59df12371639e2b5625e30d8b773b25c43acc",
-      "claim": {
-        "source": "nf_nat_inet_fn()",
-        "target": "nf_nat_packet()",
-        "label": "+100 nf_nat_ipv4_local_in()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()"
-      }
-    },
-    "node:in5:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "f621a7eb8a3ab4dbf6866a72de29cca47aa266facef82b6bf3ea84c820064b5b",
-      "claim": {
-        "source": "nf_conntrack_confirm()",
-        "target": "nf_conntrack_confirm()",
-        "label": "INT_MAX nf_confirm()\\n→ nf_conntrack_confirm()\\n→ __nf_conntrack_confirm() if unconfirmed"
-      }
-    },
-    "node:ou1:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "f6dc97ec4264a0933f68485e73cf516cf7399b790723260381a8e96beed80639",
-      "claim": {
-        "source": "nf_ct_ipv4_gather_frags()",
-        "target": "ip_defrag()",
-        "label": "-400 ipv4_conntrack_defrag()\\n→ nf_ct_ipv4_gather_frags() → ip_defrag()"
-      }
-    },
-    "node:ou4:internal:2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "4a00118e5d753baafd5d5bbd473b95fdb6aa6bd9a8c3efbe4a4cd4e4f1861e34",
-      "claim": {
-        "source": "ipt_do_table()",
-        "target": "ip_route_me_harder()",
-        "label": "-150 iptable_mangle_hook()\\n→ ipt_mangle_out() → ipt_do_table()\\n→ ip_route_me_harder() if needed"
-      }
-    },
-    "node:ou5:internal:2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "4793576097d84a9786f426540b7ceca27fc6071f6bda8104dd0c18db3592de94",
-      "claim": {
-        "source": "nf_nat_inet_fn()",
-        "target": "nf_nat_packet()",
-        "label": "-100 nf_nat_ipv4_local_fn()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()\\n→ ip_route_me_harder() if needed"
-      }
-    },
-    "node:ou5:internal:3": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "b3c6b2c44ed6a8676e8aebe913beb418e90b1af6e2870e0424052072440c27eb",
-      "claim": {
-        "source": "nf_nat_packet()",
-        "target": "ip_route_me_harder()",
-        "label": "-100 nf_nat_ipv4_local_fn()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()\\n→ ip_route_me_harder() if needed"
-      }
-    },
-    "node:po2:internal:2": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "dd22e7afa0858b7eb8dc29a13bd80b796efcaffd67beae698ceddce8639ce000",
-      "claim": {
-        "source": "nf_nat_inet_fn()",
-        "target": "nf_nat_packet()",
-        "label": "+100 nf_nat_ipv4_out()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()"
-      }
-    },
-    "node:po3:internal:1": {
-      "kind": "unclassified",
-      "evidence": [],
-      "reviewed": false,
-      "fingerprint": "f621a7eb8a3ab4dbf6866a72de29cca47aa266facef82b6bf3ea84c820064b5b",
-      "claim": {
-        "source": "nf_conntrack_confirm()",
-        "target": "nf_conntrack_confirm()",
-        "label": "INT_MAX nf_confirm()\\n→ nf_conntrack_confirm()\\n→ __nf_conntrack_confirm() if unconfirmed"
-      }
-    },
-    "node:ct:internal:2": {
-      "kind": "direct",
+      "kind": "conditional",
       "evidence": [
         {
           "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
           "file": "net/netfilter/nf_conntrack_core.c",
           "start": 1915,
           "end": 1925,
-          "explanation": "nf_conntrack_handle_packet dispatches TCP state handling to nf_conntrack_tcp_packet."
+          "explanation": "TCP switch arm in nf_conntrack_handle_packet directly returns nf_conntrack_tcp_packet."
         }
       ],
       "reviewed": true,
-      "fingerprint": "281c36edc1266c9226b8ba07925432f24efb6ecad7dd477282589b809a842369",
+      "fingerprint": "7d6494564ff99eff8855fbdb63f4a703c28ed298db9c89b31d0250519f51a1da",
       "claim": {
         "source": "nf_conntrack_handle_packet()",
         "target": "nf_conntrack_tcp_packet()",
-        "label": "nf_conntrack_in()\\n→ resolve_normal_ct(): tuple/hash lookup or allocate\\n→ nf_conntrack_handle_packet()\\n→ nf_conntrack_tcp_packet()\\nTCP conntrack state differs from socket TCP state"
+        "label": "nf_conntrack_in() calls in order:\\nresolve_normal_ct(): tuple/hash lookup or allocate\\nnf_conntrack_handle_packet() → nf_conntrack_tcp_packet() [TCP]\\nThe resolver does NOT call the packet handler.\\nTCP conntrack state differs from socket TCP state",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
-    "node:xt:internal:1": {
+    "node:nftexec:internal:0": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "34c551e30064133da2e60e77f68323fde67beb00e67dace53b14f6907673754d",
+      "fingerprint": "c46097db7c75b42ebf14275e13384c7b22a593972344be095d7b4f5359da1fae",
+      "claim": {
+        "source": "nft_do_chain()",
+        "target": "expr_call_ops_eval()",
+        "label": "nft_do_chain() → expr_call_ops_eval()\\n→ expression ops->eval() or optimized fast evaluator\\nregisters / verdict / jump stack\\nExpression list determined by installed rules",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ixirq:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "757123f346012b6b9281800502114b5079388d2f04daac8e4861e4ed12fd4d23",
+      "claim": {
+        "source": "ixgbe_msix_clean_rings()",
+        "target": "napi_schedule_irqoff()",
+        "label": "ixgbe_msix_clean_rings()\\n→ napi_schedule_irqoff()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ixxdp:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "07e7347b1c1398ebeecfdbc0b2b970671cc39a6118a0afaa750e5d9bd9b538a7",
+      "claim": {
+        "source": "ixgbe_run_xdp()",
+        "target": "bpf_prog_run_xdp()",
+        "label": "ixgbe_run_xdp()\\n→ bpf_prog_run_xdp()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ixskb:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "12829cae564413f81a1c03d671f9d2cb21ef319acf5d88a445e98a810043c17b",
+      "claim": {
+        "source": "ixgbe_construct_skb()",
+        "target": "ixgbe_rx_skb()",
+        "label": "ixgbe_build_skb() OR ixgbe_construct_skb()\\n→ ixgbe_rx_skb() → napi_gro_receive()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ixtx:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0856ceb650b8325e05f31cac702e89c2cca7e7825226ce441d2d68bf49759c33",
+      "claim": {
+        "source": "ixgbe_xmit_frame()",
+        "target": "__ixgbe_xmit_frame()",
+        "label": "ixgbe_xmit_frame()\\n→ __ixgbe_xmit_frame()\\n→ ixgbe_xmit_frame_ring()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ixcomplete:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e03ddbbb1016ff9c41b31d01086033b822014ff21c1ac750d8f799a6ce2b64fc",
+      "claim": {
+        "source": "ixgbe_poll()",
+        "target": "ixgbe_clean_tx_irq()",
+        "label": "Later ixgbe_poll() → ixgbe_clean_tx_irq()\\ncheck EOP/DD completion\\n→ napi_consume_skb()\\n→ DMA unmap head/pages\\n→ next_to_clean / stats update",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ixhang:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "48f1a937188ed2857362905d1f6c54bf37a912445c68c96a82b7374782110c85",
+      "claim": {
+        "source": "check_for_tx_hang()",
+        "target": "ixgbe_check_tx_hang()",
+        "label": "check_for_tx_hang() → ixgbe_check_tx_hang()\\nnetif_stop_subqueue() → ixgbe_tx_timeout_reset()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ixhang:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7412abcb8b40b63c40a98dd0c27ff7bfe5e05d772a92aac30a7a2f497628195a",
+      "claim": {
+        "source": "netif_stop_subqueue()",
+        "target": "ixgbe_tx_timeout_reset()",
+        "label": "check_for_tx_hang() → ixgbe_check_tx_hang()\\nnetif_stop_subqueue() → ixgbe_tx_timeout_reset()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ixwatch:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "11634ad03c848739b6b5d9856208806991b06f3f8209fd54af9544ba7000c20f",
+      "claim": {
+        "source": "ixgbe_reset_subtask()",
+        "target": "ixgbe_reinit_locked()",
+        "label": "ixgbe_tx_timeout() / ixgbe_reset_subtask()\\n→ ixgbe_reinit_locked()\\nreset/reinitialize adapter",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ixxdpcomplete:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "dc2f2fe51cb80ceb00f168787370b2582d7e716138599aab9041e946123fdb31",
+      "claim": {
+        "source": "ixgbe_clean_xdp_tx_irq()",
+        "target": "xdp_return_frame()",
+        "label": "ixgbe_clean_xdp_tx_irq()\\n→ xdp_return_frame() / DMA unmap\\nseparate XDP TX completion",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:conn:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8ab2ab1ff35f9af5d6665e091ab8918ddd3b2cf925ff8f2ae16e01ce6abd1c25",
+      "claim": {
+        "source": "connect()",
+        "target": "__sys_connect()",
+        "label": "connect() → __sys_connect()\\n→ __sys_connect_file() → inet_stream_connect()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:conn:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2c3aa5543d6cc97452599de456f44056b7434e4a3743bc6853207960562282bf",
+      "claim": {
+        "source": "__sys_connect()",
+        "target": "__sys_connect_file()",
+        "label": "connect() → __sys_connect()\\n→ __sys_connect_file() → inet_stream_connect()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:conn2:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "55c7403a1230eaaae89d43f811cced35f8441ddd65a52c1678247c9b2b5f9906",
+      "claim": {
+        "source": "tcp_v4_connect()",
+        "target": "tcp_connect()",
+        "label": "__inet_stream_connect():\\noptional sk_prot->pre_connect = tcp_v4_pre_connect\\nthen sk_prot->connect = tcp_v4_connect\\ntcp_v4_connect() → tcp_connect()\\npre_connect does NOT call connect.",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:synack:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "eb38fa2ba30045b5b5b167a57a3291e743c4bd5c5e13ea8d89dd23f53a27da9c",
+      "claim": {
+        "source": "tcp_rcv_state_process()",
+        "target": "tcp_rcv_synsent_state_process()",
+        "label": "Incoming SYN/ACK:\\ntcp_rcv_state_process()\\n→ tcp_rcv_synsent_state_process()\\n→ tcp_finish_connect() / ACK",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:lsn:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f2f9a7f25dfbf44f21591057d546f200e4ccdf5e7c39c51c82361d7ac7eb690c",
+      "claim": {
+        "source": "listen()",
+        "target": "inet_listen()",
+        "label": "listen() → inet_listen()\\n→ __inet_listen_sk() → inet_csk_listen_start()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:lsn:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6b62f2a1981232be934476106772d6d483cbb37e53534728851cc9ec6d229798",
+      "claim": {
+        "source": "inet_listen()",
+        "target": "__inet_listen_sk()",
+        "label": "listen() → inet_listen()\\n→ __inet_listen_sk() → inet_csk_listen_start()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:fincall:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "6f1a4dfd6c34f80cd48be08204af5fdf586c40a5b3723e1dc36867df0afa68ac",
+      "claim": {
+        "source": "inet_shutdown()",
+        "target": "tcp_shutdown()",
+        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:fincall:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "95d9311f72062dce2c035917820c5c280224b3cb5d7e42b83fe232be6324aa70",
+      "claim": {
+        "source": "close()",
+        "target": "sock_close()",
+        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:fincall:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2ed30447f75a235489739c87d728b1fce697271058f2060dbcab4f7ab72b0e19",
+      "claim": {
+        "source": "sock_close()",
+        "target": "__sock_release()",
+        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:fincall:internal:3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b66ab878b415ff14a7c5fe51e2fc46353a77b3cba483086a254f59e0a9ddc85d",
+      "claim": {
+        "source": "__sock_release()",
+        "target": "inet_release()",
+        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:finsend:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e822165f668427a9c80394cbf7782b71ab2a057cdb2d2d6882cd20e8d62a2d19",
+      "claim": {
+        "source": "tcp_send_fin()",
+        "target": "__tcp_push_pending_frames()",
+        "label": "tcp_send_fin()\\n→ __tcp_push_pending_frames()\\n→ tcp_write_xmit() → TCP/IP output",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:finrecv:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3f0f3f11bae09e5137eea3cbce397e26715aa5c2ea61dd709521a843d63e43e8",
+      "claim": {
+        "source": "tcp_data_queue()",
+        "target": "tcp_fin()",
+        "label": "Incoming in-order FIN:\\ntcp_data_queue() → tcp_fin()\\nTCP_CLOSE_WAIT / CLOSING / TIME_WAIT transitions\\nACK scheduling / reader EOF wakeup",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:abort:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "d2a373df09af92c4b55d3e795d9028b6c8c50656807fb607890c27c749da8439",
+      "claim": {
+        "source": "tcp_send_active_reset()",
+        "target": "tcp_transmit_skb()",
+        "label": "Abortive close / unread data / reset conditions:\\ntcp_send_active_reset() → tcp_transmit_skb()\\nNot the same as tcp_v4_send_reset() reply path",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:synackout:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "df829ec4cb4e16db933c095d5eac953f824a135a28affeb86061c2ec49724bc4",
+      "claim": {
+        "source": "tcp_v4_send_synack()",
+        "target": "tcp_make_synack()",
+        "label": "tcp_v4_send_synack()\\n→ tcp_make_synack()\\n→ ip_build_and_send_pkt()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:resetout:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "62f3132217b82fcc235035a49537b891c7b7c21026e81c0016a25ef089663b10",
+      "claim": {
+        "source": "tcp_v4_send_reset()",
+        "target": "ip_send_unicast_reply()",
+        "label": "tcp_v4_send_reset()\\n→ ip_send_unicast_reply()\\n→ ip_append_data()\\n→ ip_push_pending_frames() → ip_send_skb()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:resetout:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f00eed38c840337cb157bf844b01acaead3fe6d4fbd96b0133734d8325cd7c71",
+      "claim": {
+        "source": "ip_send_unicast_reply()",
+        "target": "ip_append_data()",
+        "label": "tcp_v4_send_reset()\\n→ ip_send_unicast_reply()\\n→ ip_append_data()\\n→ ip_push_pending_frames() → ip_send_skb()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:reuse:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "57584f2a697de8f18c42f18f292347a883bd030c31298b633aa02c9eefefd9fc",
+      "claim": {
+        "source": "inet_lookup_reuseport()",
+        "target": "reuseport_select_sock()",
+        "label": "Listener SO_REUSEPORT selection\\ninet_lookup_reuseport() → reuseport_select_sock()\\nSK_REUSEPORT: bpf_run_sk_reuseport()\\ncompat filter: run_bpf_filter() → bpf_prog_run_save_cb()\\nMay fall back to hash selection",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:reuse:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "55234b4be3a70b5821c366cfee5f4b4091ab164cfa157f0ec72da2b3e33304d8",
+      "claim": {
+        "source": "run_bpf_filter()",
+        "target": "bpf_prog_run_save_cb()",
+        "label": "Listener SO_REUSEPORT selection\\ninet_lookup_reuseport() → reuseport_select_sock()\\nSK_REUSEPORT: bpf_run_sk_reuseport()\\ncompat filter: run_bpf_filter() → bpf_prog_run_save_cb()\\nMay fall back to hash selection",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:sklookup:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "36fe118b73edb4b8e8dc37632984e46bcbeadcd8a35e39a81500232ff85925f0",
+      "claim": {
+        "source": "__inet_lookup_listener()",
+        "target": "inet_lookup_run_sk_lookup()",
+        "label": "Listener lookup only (not established hash hit):\\n__inet_lookup_listener() → inet_lookup_run_sk_lookup()\\n→ bpf_sk_lookup_run_v4() [BPF_PROG_TYPE_SK_LOOKUP]\\nMay select socket / reject; netns attachment",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:xtbpf:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5b9695eecd4a4179ac1da48ab9fbff23cf4812c9c2de4002e7474714bb2a5d4e",
       "claim": {
         "source": "match()",
-        "target": "target()",
-        "label": "ipt_do_table(): walk chain entries\\nip_packet_match() → extension match->match()\\nstandard verdict/jump/RETURN OR target->target()\\nExtension-dependent calls (LOG, MARK, DNAT, etc.)"
+        "target": "bpf_mt()",
+        "label": "iptables -m bpf: optional rule match\\nipt_do_table() → match->match()\\n→ bpf_mt() / bpf_mt_v1()\\n→ bpf_prog_run() / bpf_prog_run_save_cb()\\nSOCKET_FILTER program returns match boolean, not NF verdict",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
-    "node:nftexec:internal:1": {
+    "node:xtbpf:internal:1": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "2c10bbb08212d01102c4a88cb486ed3ee6ea59ebde92feb3600f94135a8499d3",
+      "fingerprint": "bee58d6c64347204d1447ffc1dce5d3f63cfe851a54a3ba860c6fa8a86e615ab",
       "claim": {
-        "source": "expr_call_ops_eval()",
-        "target": "eval()",
-        "label": "nft_do_chain() → expr_call_ops_eval()\\n→ expression ops->eval() or optimized fast evaluator\\nregisters / verdict / jump stack\\nExpression list determined by installed rules"
+        "source": "bpf_mt_v1()",
+        "target": "bpf_prog_run()",
+        "label": "iptables -m bpf: optional rule match\\nipt_do_table() → match->match()\\n→ bpf_mt() / bpf_mt_v1()\\n→ bpf_prog_run() / bpf_prog_run_save_cb()\\nSOCKET_FILTER program returns match boolean, not NF verdict",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:genericrun:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7300272be3f21b41f561965389f6b1e150774bc167bfb912afb2635a467b367e",
+      "claim": {
+        "source": "netif_receive_generic_xdp()",
+        "target": "bpf_prog_run_generic_xdp()",
+        "label": "do_xdp_generic() → netif_receive_generic_xdp()\\n→ bpf_prog_run_generic_xdp()\\nPASS continues; other actions divert",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:tcxin:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "de9249550d5b61aca507f5b799341ca8481b2a293d3a83b11b763a827c61673b",
+      "claim": {
+        "source": "cls_bpf_classify()",
+        "target": "bpf_prog_run()",
+        "label": "tcx_run() [if TCX enabled]\\nnon-UNSPEC → ingress verdict\\nUNSPEC / no TCX → tc_run() → tcf_classify()\\n→ cls_bpf_classify() → bpf_prog_run()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:release:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1bf916b0fff44d05fdb7551e75cee32d1cce0297372e258188bbc3d639c191c3",
+      "claim": {
+        "source": "__release_sock()",
+        "target": "sk_backlog_rcv()",
+        "label": "release_sock() → __release_sock()\\n→ sk_backlog_rcv()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:listen:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "7023d3bf5c89b49f6cdb4721157ca41ee7424e2370ff688453708bc8142480c4",
+      "claim": {
+        "source": "tcp_conn_request()",
+        "target": "tcp_v4_send_synack()",
+        "label": "LISTEN: tcp_v4_conn_request()\\n→ tcp_conn_request()\\n→ tcp_v4_send_synack()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:retrans:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "92d111fc826b8787d7cead450972376574c24e09b26d44f17baff98325900a81",
+      "claim": {
+        "source": "tcp_retransmit_skb()",
+        "target": "__tcp_retransmit_skb()",
+        "label": "tcp_retransmit_timer()\\n→ tcp_retransmit_skb()\\n→ __tcp_retransmit_skb()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:accept:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f686996859aa2776f64ab62d4dc6625535ebb6594f23f07470aaa00083e651ca",
+      "claim": {
+        "source": "inet_csk_accept()",
+        "target": "__inet_accept()",
+        "label": "accept()/accept4() → inet_accept()\\n→ inet_csk_accept() → __inet_accept()\\nchild established by request-socket path",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:socksend:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "1d3724b06a7736c6ee592e3004324da15ae4bfd075da7fcac15b6a0d0812cde7",
+      "claim": {
+        "source": "security_socket_sendmsg()",
+        "target": "sock_sendmsg_nosec()",
+        "label": "sock_sendmsg()\\n→ security_socket_sendmsg()\\n→ sock_sendmsg_nosec()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:pr1:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b0aa9d59add11a304dfb9c336186cf1864fe0ffd7fe0b9f4156100209ed3ab4b",
+      "claim": {
+        "source": "nf_ct_ipv4_gather_frags()",
+        "target": "ip_defrag()",
+        "label": "-400 ipv4_conntrack_defrag()\\n→ nf_ct_ipv4_gather_frags() → ip_defrag()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:in5:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "870b5494a72008ff7f6d6c6c4a39fdaa08ac5a7f8842a634b22182714ae30a43",
+      "claim": {
+        "source": "nf_conntrack_confirm()",
+        "target": "__nf_conntrack_confirm()",
+        "label": "INT_MAX nf_confirm()\\n→ nf_conntrack_confirm()\\n→ __nf_conntrack_confirm() if unconfirmed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ou1:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b0aa9d59add11a304dfb9c336186cf1864fe0ffd7fe0b9f4156100209ed3ab4b",
+      "claim": {
+        "source": "nf_ct_ipv4_gather_frags()",
+        "target": "ip_defrag()",
+        "label": "-400 ipv4_conntrack_defrag()\\n→ nf_ct_ipv4_gather_frags() → ip_defrag()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ou4:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "37e9a7ef6d7d841849a6be6ffc530da8109032bc9976ea61042b4dbb00bc344d",
+      "claim": {
+        "source": "ipt_do_table()",
+        "target": "ip_route_me_harder()",
+        "label": "-150 iptable_mangle_hook()\\n→ ipt_mangle_out() → ipt_do_table()\\n→ ip_route_me_harder() if needed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:ou5:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "398614354292268c8048be1932fc3b648d59fcff37c5f83d59c1fdabee116c02",
+      "claim": {
+        "source": "nf_nat_packet()",
+        "target": "ip_route_me_harder()",
+        "label": "-100 nf_nat_ipv4_local_fn()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()\\n→ ip_route_me_harder() if needed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
+      }
+    },
+    "node:po3:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "870b5494a72008ff7f6d6c6c4a39fdaa08ac5a7f8842a634b22182714ae30a43",
+      "claim": {
+        "source": "nf_conntrack_confirm()",
+        "target": "__nf_conntrack_confirm()",
+        "label": "INT_MAX nf_confirm()\\n→ nf_conntrack_confirm()\\n→ __nf_conntrack_confirm() if unconfirmed",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ixskb:internal:1": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "4ba7a412e186148b2231b4f6f7a55b41cd8c6f88b2c6c660375ccf80bde2c8cf",
+      "fingerprint": "0dc16bc94d11c787a1ac7d71b69883d74b52208779fdf61c5c60e6823df561b5",
       "claim": {
         "source": "ixgbe_rx_skb()",
         "target": "napi_gro_receive()",
-        "label": "ixgbe_build_skb() OR ixgbe_construct_skb()\\n→ ixgbe_rx_skb() → napi_gro_receive()"
+        "label": "ixgbe_build_skb() OR ixgbe_construct_skb()\\n→ ixgbe_rx_skb() → napi_gro_receive()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:ixtx:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 8867,
-          "end": 8885,
-          "explanation": "__ixgbe_xmit_frame calls ixgbe_xmit_frame_ring when the ring is usable."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "d0ec66340f7bd2fe7ef16378867ce5dad023829f94310ff74e83a180ae9e7b5d",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "10243c0f602bd8d79caf91fc668424326dedc7318448402ed3c6a9088571ea19",
       "claim": {
-        "source": "ixgbe_xmit_frame()",
+        "source": "__ixgbe_xmit_frame()",
         "target": "ixgbe_xmit_frame_ring()",
-        "label": "ixgbe_xmit_frame()\\n→ __ixgbe_xmit_frame()\\n→ ixgbe_xmit_frame_ring()"
-      }
-    },
-    "node:ixcomplete:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
-          "start": 1155,
-          "end": 1165,
-          "explanation": "TX cleanup consumes skb and unmaps the header DMA buffer."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "4b6e90d159848fd575c139e72bfa3dd25761cc4a86b86abb688948257b015ab9",
-      "claim": {
-        "source": "ixgbe_clean_tx_irq()",
-        "target": "napi_consume_skb()",
-        "label": "Later ixgbe_poll() → ixgbe_clean_tx_irq()\\ncheck EOP/DD completion\\n→ napi_consume_skb()\\n→ DMA unmap head/pages\\n→ next_to_clean / stats update"
+        "label": "ixgbe_xmit_frame()\\n→ __ixgbe_xmit_frame()\\n→ ixgbe_xmit_frame_ring()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:conn:internal:2": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "e973b710eb3169b401bec8b5cb643c958a3120c606114ec8631744383811c95d",
+      "fingerprint": "20de1cda1d797cd8daa379515cde0a12e6485509cf3bff926ce8246328159609",
       "claim": {
-        "source": "sys_connect_file()",
+        "source": "__sys_connect_file()",
         "target": "inet_stream_connect()",
-        "label": "connect() → __sys_connect()\\n→ __sys_connect_file() → inet_stream_connect()"
-      }
-    },
-    "node:conn2:internal:2": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_ipv4.c",
-          "start": 300,
-          "end": 330,
-          "explanation": "tcp_v4_connect invokes tcp_connect after route/socket setup."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "f791ee474bad0483c4abd109d0e242e72a3b981e5f767d2d1a36634b9ec4e36d",
-      "claim": {
-        "source": "tcp_v4_connect()",
-        "target": "tcp_connect()",
-        "label": "__inet_stream_connect()\\n→ tcp_v4_pre_connect() [cgroup connect4]\\n→ tcp_v4_connect() → tcp_connect()"
+        "label": "connect() → __sys_connect()\\n→ __sys_connect_file() → inet_stream_connect()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:synack:internal:1": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "81d44f0cae555236b0f80b5c49fb19ad863c91d0de745d834c874d4008502b58",
+      "fingerprint": "431bea8319c0b31f0c5a4ef79f98b4c443179ab68e00fe09b7c233eea3fb87f6",
       "claim": {
         "source": "tcp_rcv_synsent_state_process()",
         "target": "tcp_finish_connect()",
-        "label": "Incoming SYN/ACK:\\ntcp_rcv_state_process()\\n→ tcp_rcv_synsent_state_process()\\n→ tcp_finish_connect() / ACK"
+        "label": "Incoming SYN/ACK:\\ntcp_rcv_state_process()\\n→ tcp_rcv_synsent_state_process()\\n→ tcp_finish_connect() / ACK",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:lsn:internal:2": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "4c1e8feb1cd8a900cbd3984141fa7e793b400cc15784d162d69d311883a1f480",
+      "fingerprint": "ab591b9719c981ff034f730485b2182c89db856c73cdf151462abff3ea2c7cdf",
       "claim": {
-        "source": "inet_listen_sk()",
+        "source": "__inet_listen_sk()",
         "target": "inet_csk_listen_start()",
-        "label": "listen() → inet_listen()\\n→ __inet_listen_sk() → inet_csk_listen_start()"
+        "label": "listen() → inet_listen()\\n→ __inet_listen_sk() → inet_csk_listen_start()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:fincall:internal:4": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "601458034c1a80ba4d7426bcbf18fb1f0cddbe4904b888835ba93157539d293d",
+      "fingerprint": "c1fccf3d104fce5c98f5084530defee87d7d5bb5e0e130bef6a29ebbbd988e79",
       "claim": {
         "source": "inet_release()",
         "target": "tcp_close()",
-        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()"
+        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:fincall:internal:5": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "d794a8054a7c82d068cda34a03c7f0405bfbb13ef0002dbf8ced1d3197f9b19a",
+      "fingerprint": "3cf7a48bd4a5c481bd1fe45abe9123db1119fe5c37f37182a28a0393a59899e2",
       "claim": {
         "source": "tcp_close()",
-        "target": "tcp_close()",
-        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()"
+        "target": "__tcp_close()",
+        "label": "shutdown(SHUT_WR) → inet_shutdown() → tcp_shutdown()\\nOR close() → sock_close() → __sock_release()\\n→ inet_release() → tcp_close() → __tcp_close()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:finsend:internal:1": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "b11e0793de90b5943e73dda4803ad73df516f9a36d8026185ad32e41c2785f6d",
+      "fingerprint": "6780913052c46a8e49790a7c579cce72e9a2861f6e8a17f14427ca8b3c5590e5",
       "claim": {
-        "source": "tcp_push_pending_frames()",
+        "source": "__tcp_push_pending_frames()",
         "target": "tcp_write_xmit()",
-        "label": "tcp_send_fin()\\n→ __tcp_push_pending_frames()\\n→ tcp_write_xmit() → TCP/IP output"
+        "label": "tcp_send_fin()\\n→ __tcp_push_pending_frames()\\n→ tcp_write_xmit() → TCP/IP output",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:synackout:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/tcp_ipv4.c",
-          "start": 1037,
-          "end": 1041,
-          "explanation": "tcp_v4_send_synack sends through ip_build_and_send_pkt."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "391b38c726486051a0b3bcdfd30e69e8b32f69aac165c33327eb975eae01f4d8",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3dbd10ceb4861f4a025691b97af8d3e2c2139650b8d9209238aa62c96c068295",
       "claim": {
         "source": "tcp_make_synack()",
         "target": "ip_build_and_send_pkt()",
-        "label": "tcp_v4_send_synack()\\n→ tcp_make_synack()\\n→ ip_build_and_send_pkt()"
+        "label": "tcp_v4_send_synack()\\n→ tcp_make_synack()\\n→ ip_build_and_send_pkt()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:resetout:internal:2": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "8b3420056644af95919fdb624c1853c00620b96b7e39385b04d8c1325476f9c6",
+      "fingerprint": "c36986cb99dddd1be40c6632dc4ba0ca9f98fef5d00ca80b55ddfa6479953a20",
       "claim": {
         "source": "ip_append_data()",
         "target": "ip_push_pending_frames()",
-        "label": "tcp_v4_send_reset()\\n→ ip_send_unicast_reply()\\n→ ip_append_data()\\n→ ip_push_pending_frames() → ip_send_skb()"
+        "label": "tcp_v4_send_reset()\\n→ ip_send_unicast_reply()\\n→ ip_append_data()\\n→ ip_push_pending_frames() → ip_send_skb()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:resetout:internal:3": {
       "kind": "unclassified",
       "evidence": [],
       "reviewed": false,
-      "fingerprint": "6b083107ba0ab35dfbc27e1e03b590bc3bf9e6023bed39b8948f13aedec5a7f1",
+      "fingerprint": "cfefec75b9b5c295a7c1ba484be5e2fc3146935961b307d839e5c97ee170e71b",
       "claim": {
         "source": "ip_push_pending_frames()",
         "target": "ip_send_skb()",
-        "label": "tcp_v4_send_reset()\\n→ ip_send_unicast_reply()\\n→ ip_append_data()\\n→ ip_push_pending_frames() → ip_send_skb()"
+        "label": "tcp_v4_send_reset()\\n→ ip_send_unicast_reply()\\n→ ip_append_data()\\n→ ip_push_pending_frames() → ip_send_skb()",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     },
     "node:sklookup:internal:1": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/ipv4/inet_hashtables.c",
-          "start": 410,
-          "end": 425,
-          "explanation": "inet_lookup_run_sk_lookup invokes bpf_sk_lookup_run_v4."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "ebcb6690c3eff7313fb99340af6dbd294d24dfb5705ee5ca79f4562c84ce81c6",
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ec1985a446e91cc1114b51f5e05478a390b3ab2f7409a7ae154b8a59a538be38",
       "claim": {
         "source": "inet_lookup_run_sk_lookup()",
         "target": "bpf_sk_lookup_run_v4()",
-        "label": "Listener lookup only (not established hash hit):\\n__inet_lookup_listener() → inet_lookup_run_sk_lookup()\\n→ bpf_sk_lookup_run_v4() [BPF_PROG_TYPE_SK_LOOKUP]\\nMay select socket / reject; netns attachment"
-      }
-    },
-    "node:xtbpf:internal:2": {
-      "kind": "direct",
-      "evidence": [
-        {
-          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
-          "file": "net/netfilter/xt_bpf.c",
-          "start": 96,
-          "end": 101,
-          "explanation": "The v1 xt_bpf match invokes bpf_prog_run_save_cb."
-        }
-      ],
-      "reviewed": true,
-      "fingerprint": "7377810b1850f3618603725dede6f84e58ee8d5ad9416e4bf5aa467012b2ea2e",
-      "claim": {
-        "source": "bpf_mt_v1()",
-        "target": "bpf_prog_run()",
-        "label": "iptables -m bpf: optional rule match\\nipt_do_table() → match->match()\\n→ bpf_mt() / bpf_mt_v1()\\n→ bpf_prog_run() / bpf_prog_run_save_cb()\\nSOCKET_FILTER program returns match boolean, not NF verdict"
+        "label": "Listener lookup only (not established hash hit):\\n__inet_lookup_listener() → inet_lookup_run_sk_lookup()\\n→ bpf_sk_lookup_run_v4() [BPF_PROG_TYPE_SK_LOOKUP]\\nMay select socket / reject; netns attachment",
+        "relation": "parser v2: adjacent explicit arrow; manual review must distinguish calls from sibling execution"
       }
     }
   },
@@ -8692,42 +7805,42 @@
     "rx_and_gro": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "41ace80edb74b6b804d803e87857e6304b1a0ac5ede262f05228be06e0ceede1"
+      "fingerprint": "bc005fe9f173c20dcb3411483a53a04535c5b522834a618235e0575d31520c52"
     },
     "tx_and_qdisc": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "41ace80edb74b6b804d803e87857e6304b1a0ac5ede262f05228be06e0ceede1"
+      "fingerprint": "bc005fe9f173c20dcb3411483a53a04535c5b522834a618235e0575d31520c52"
     },
     "tcp_states_and_timers": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "41ace80edb74b6b804d803e87857e6304b1a0ac5ede262f05228be06e0ceede1"
+      "fingerprint": "bc005fe9f173c20dcb3411483a53a04535c5b522834a618235e0575d31520c52"
     },
     "netfilter_tables_and_nat": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "41ace80edb74b6b804d803e87857e6304b1a0ac5ede262f05228be06e0ceede1"
+      "fingerprint": "bc005fe9f173c20dcb3411483a53a04535c5b522834a618235e0575d31520c52"
     },
     "bpf_attachment_and_redirect": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "41ace80edb74b6b804d803e87857e6304b1a0ac5ede262f05228be06e0ceede1"
+      "fingerprint": "bc005fe9f173c20dcb3411483a53a04535c5b522834a618235e0575d31520c52"
     },
     "driver_and_offloads": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "41ace80edb74b6b804d803e87857e6304b1a0ac5ede262f05228be06e0ceede1"
+      "fingerprint": "bc005fe9f173c20dcb3411483a53a04535c5b522834a618235e0575d31520c52"
     },
     "errors_and_drop_paths": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "41ace80edb74b6b804d803e87857e6304b1a0ac5ede262f05228be06e0ceede1"
+      "fingerprint": "bc005fe9f173c20dcb3411483a53a04535c5b522834a618235e0575d31520c52"
     },
     "config_and_scope": {
       "reviewed": false,
       "evidence": [],
-      "fingerprint": "41ace80edb74b6b804d803e87857e6304b1a0ac5ede262f05228be06e0ceede1"
+      "fingerprint": "bc005fe9f173c20dcb3411483a53a04535c5b522834a618235e0575d31520c52"
     }
   },
   "obsolete": {
@@ -9012,6 +8125,460 @@
       "evidence": [],
       "reviewed": false,
       "fingerprint": "f5465c5bffe4d0c74d950d3b8087a5ca102d6386b7d091b02570a45f0aa64cdd"
+    },
+    "node:hh:internal:0": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "include/net/neighbour.h",
+          "start": 529,
+          "end": 542,
+          "explanation": "Cached neighbour output dispatches to the cached header output path."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "9496dc02a0c3552d68060e5f9f4955bca03d8ca204924bff54145c8a52c25589",
+      "claim": {
+        "source": "neigh_hh_output()",
+        "target": "dev_queue_xmit()",
+        "label": "neigh_hh_output()\\ncached L2 header → dev_queue_xmit()"
+      }
+    },
+    "node:po2:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "dd22e7afa0858b7eb8dc29a13bd80b796efcaffd67beae698ceddce8639ce000",
+      "claim": {
+        "source": "nf_nat_inet_fn()",
+        "target": "nf_nat_packet()",
+        "label": "+100 nf_nat_ipv4_out()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()"
+      }
+    },
+    "node:delivery:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "22d713218483a648a618bfbd93b283069a6edc3650f682d03beda7620f97a824",
+      "claim": {
+        "source": "dst_input()",
+        "target": "ip_sublist_rcv_finish()",
+        "label": "Successful core return to caller\\nsingle skb: ip_rcv_finish() → dst_input()\\nbatch: group by dst → ip_sublist_rcv_finish()"
+      }
+    },
+    "node:send:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "f456cc6d177c47acac4307bedda64a901874d684b6cfd752bd5bbc41ace55744",
+      "claim": {
+        "source": "sys_sendmsg()",
+        "target": "sock_write_iter()",
+        "label": "send/sendto → __sys_sendto()\\nsendmsg → ___sys_sendmsg()\\nwrite → sock_write_iter()"
+      }
+    },
+    "node:xt:internal:0": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/netfilter/ip_tables.c",
+          "start": 223,
+          "end": 350,
+          "explanation": "ipt_do_table evaluates packet matches including extension match callbacks."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "f6f58d3969f47ee90edca68c6eb483cbcdf311f4e64fdba15ffad827abaf1ae5",
+      "claim": {
+        "source": "nip_packet_match()",
+        "target": "match()",
+        "label": "ipt_do_table(): walk chain entries\\nip_packet_match() → extension match->match()\\nstandard verdict/jump/RETURN OR target->target()\\nExtension-dependent calls (LOG, MARK, DNAT, etc.)"
+      }
+    },
+    "node:listfinish:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "ad31a276ab86bdbcf9237063e5876777f8943bb8e3b43ede7797a68906f85258",
+      "claim": {
+        "source": "l3mdev_ip_rcv()",
+        "target": "ip_rcv_finish_core()",
+        "label": "ip_list_rcv_finish()\\n→ l3mdev_ip_rcv() per remaining skb\\n→ ip_rcv_finish_core()"
+      }
+    },
+    "node:ixredirflush:internal:0": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 2423,
+          "end": 2429,
+          "explanation": "RX cleanup invokes xdp_do_flush_map for redirect results."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "e1e2f13eafac02b42896143ea2d7c453ef068a7172dfa7484793e55120c8507f",
+      "claim": {
+        "source": "ixgbe_clean_rx_irq()",
+        "target": "xdp_do_flush_map()",
+        "label": "ixgbe_clean_rx_irq() end\\nXDP_REDIRECT → xdp_do_flush_map()\\nredirect map flush, not ixgbe TX completion"
+      }
+    },
+    "node:nftexec:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "2c10bbb08212d01102c4a88cb486ed3ee6ea59ebde92feb3600f94135a8499d3",
+      "claim": {
+        "source": "expr_call_ops_eval()",
+        "target": "eval()",
+        "label": "nft_do_chain() → expr_call_ops_eval()\\n→ expression ops->eval() or optimized fast evaluator\\nregisters / verdict / jump stack\\nExpression list determined by installed rules"
+      }
+    },
+    "node:one:internal:5": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "0d31bcc5757ccd6c891b5dacb5ef08d003b44d6a81b5e024087a9860f39932be",
+      "claim": {
+        "source": "ndo_start_xmit()",
+        "target": "trace_net_dev_xmit()",
+        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()"
+      }
+    },
+    "node:send:internal:0": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/socket.c",
+          "start": 2500,
+          "end": 2560,
+          "explanation": "sendto/sendmsg syscall path dispatches to socket send handling."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "805ef4011ba1de9fa713f9fe9b5d297b7c4695609685670b7f5eecf79eb9b743",
+      "claim": {
+        "source": "sys_sendto()",
+        "target": "sys_sendmsg()",
+        "label": "send/sendto → __sys_sendto()\\nsendmsg → ___sys_sendmsg()\\nwrite → sock_write_iter()"
+      }
+    },
+    "node:xtbpf:internal:2": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/netfilter/xt_bpf.c",
+          "start": 96,
+          "end": 101,
+          "explanation": "The v1 xt_bpf match invokes bpf_prog_run_save_cb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "7377810b1850f3618603725dede6f84e58ee8d5ad9416e4bf5aa467012b2ea2e",
+      "claim": {
+        "source": "bpf_mt_v1()",
+        "target": "bpf_prog_run()",
+        "label": "iptables -m bpf: optional rule match\\nipt_do_table() → match->match()\\n→ bpf_mt() / bpf_mt_v1()\\n→ bpf_prog_run() / bpf_prog_run_save_cb()\\nSOCKET_FILTER program returns match boolean, not NF verdict"
+      }
+    },
+    "node:conn2:internal:2": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_ipv4.c",
+          "start": 300,
+          "end": 330,
+          "explanation": "tcp_v4_connect invokes tcp_connect after route/socket setup."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "f791ee474bad0483c4abd109d0e242e72a3b981e5f767d2d1a36634b9ec4e36d",
+      "claim": {
+        "source": "tcp_v4_connect()",
+        "target": "tcp_connect()",
+        "label": "__inet_stream_connect()\\n→ tcp_v4_pre_connect() [cgroup connect4]\\n→ tcp_v4_connect() → tcp_connect()"
+      }
+    },
+    "node:pr5:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "51612004bb9dc4e5bef2e4a54a0446f9108e730e9580ae99568cd859d2822fa4",
+      "claim": {
+        "source": "nf_nat_inet_fn()",
+        "target": "nf_nat_packet()",
+        "label": "-100 nf_nat_ipv4_pre_routing()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nlookup hooks on new mapping → nf_nat_packet()"
+      }
+    },
+    "node:ixcomplete:internal:1": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "drivers/net/ethernet/intel/ixgbe/ixgbe_main.c",
+          "start": 1155,
+          "end": 1165,
+          "explanation": "TX cleanup consumes skb and unmaps the header DMA buffer."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "4b6e90d159848fd575c139e72bfa3dd25761cc4a86b86abb688948257b015ab9",
+      "claim": {
+        "source": "ixgbe_clean_tx_irq()",
+        "target": "napi_consume_skb()",
+        "label": "Later ixgbe_poll() → ixgbe_clean_tx_irq()\\ncheck EOP/DD completion\\n→ napi_consume_skb()\\n→ DMA unmap head/pages\\n→ next_to_clean / stats update"
+      }
+    },
+    "node:connected:internal:0": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/neighbour.c",
+          "start": 1571,
+          "end": 1590,
+          "explanation": "neigh_connected_output constructs the L2 header and calls dev_queue_xmit."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "6ade5b658ffb91617555205a0c8f369f475a16ea1f01fa3f636022a2b835efb4",
+      "claim": {
+        "source": "neigh_connected_output()",
+        "target": "dev_queue_xmit()",
+        "label": "neigh_connected_output()\\nconstruct L2 header → dev_queue_xmit()"
+      }
+    },
+    "node:ct:internal:2": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/netfilter/nf_conntrack_core.c",
+          "start": 1915,
+          "end": 1925,
+          "explanation": "nf_conntrack_handle_packet dispatches TCP state handling to nf_conntrack_tcp_packet."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "281c36edc1266c9226b8ba07925432f24efb6ecad7dd477282589b809a842369",
+      "claim": {
+        "source": "nf_conntrack_handle_packet()",
+        "target": "nf_conntrack_tcp_packet()",
+        "label": "nf_conntrack_in()\\n→ resolve_normal_ct(): tuple/hash lookup or allocate\\n→ nf_conntrack_handle_packet()\\n→ nf_conntrack_tcp_packet()\\nTCP conntrack state differs from socket TCP state"
+      }
+    },
+    "node:ou5:internal:3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "b3c6b2c44ed6a8676e8aebe913beb418e90b1af6e2870e0424052072440c27eb",
+      "claim": {
+        "source": "nf_nat_packet()",
+        "target": "ip_route_me_harder()",
+        "label": "-100 nf_nat_ipv4_local_fn()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()\\n→ ip_route_me_harder() if needed"
+      }
+    },
+    "node:in4:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5b055fdec2af315459b356f915b59df12371639e2b5625e30d8b773b25c43acc",
+      "claim": {
+        "source": "nf_nat_inet_fn()",
+        "target": "nf_nat_packet()",
+        "label": "+100 nf_nat_ipv4_local_in()\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\n→ mapping lookup / nf_nat_packet()"
+      }
+    },
+    "node:flush:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "bcf97464eb084523c9f5fd632b559f7074eb31728a0a635b2bc7ce10cde1b824",
+      "claim": {
+        "source": "napi_gro_flush()",
+        "target": "gro_normal_list()",
+        "label": "napi_complete_done() / poll completion\\n→ napi_gro_flush() → gro_normal_list()"
+      }
+    },
+    "node:nat:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "8acaab54fc9e61f31525b725db7d63dc8db1150d2bf3ae05558ddf47b506baaf",
+      "claim": {
+        "source": "ipt_do_table()",
+        "target": "nf_nat_packet()",
+        "label": "nf_nat_ipv4_pre_routing / local_in / local_fn / out\\n→ nf_nat_ipv4_fn() → nf_nat_inet_fn()\\nNEW mapping: lookup hook → ipt_do_table()\\n→ nf_nat_packet() applies mapping"
+      }
+    },
+    "node:hard:internal:0": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/core/dev.c",
+          "start": 3579,
+          "end": 3605,
+          "explanation": "dev_hard_start_xmit loops over skb and invokes xmit_one."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "133c8e7d24c58997a8a2cbeae074d2131654d12e7e470c2c1c55ccb3f09a6c4c",
+      "claim": {
+        "source": "dev_hard_start_xmit()",
+        "target": "xmit_one()",
+        "label": "dev_hard_start_xmit()\\nloops skb list → xmit_one()"
+      }
+    },
+    "node:xt:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "34c551e30064133da2e60e77f68323fde67beb00e67dace53b14f6907673754d",
+      "claim": {
+        "source": "match()",
+        "target": "target()",
+        "label": "ipt_do_table(): walk chain entries\\nip_packet_match() → extension match->match()\\nstandard verdict/jump/RETURN OR target->target()\\nExtension-dependent calls (LOG, MARK, DNAT, etc.)"
+      }
+    },
+    "node:ack:internal:0": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_input.c",
+          "start": 6050,
+          "end": 6070,
+          "explanation": "TCP receive processing conditionally sends delayed/immediate ACK through tcp_send_ack."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "c10a1051de6dce2de6ff9f3d5ff000a6e37ce2bf2713e6a861105b0b5b312c91",
+      "claim": {
+        "source": "tcp_ack_snd_check()",
+        "target": "tcp_send_ack()",
+        "label": "tcp_ack_snd_check() / delayed ACK\\n→ tcp_send_ack() [timer also possible]"
+      }
+    },
+    "node:ready:internal:0": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "14110552f88b7fd4e63a429dc9f4c64e1f6c731e098570e279e649e426b7e9a3",
+      "claim": {
+        "source": "tcp_data_ready()",
+        "target": "sk_data_ready()",
+        "label": "tcp_data_ready() → sk->sk_data_ready()\\nusually sock_def_readable()\\nwake readers when conditions met"
+      }
+    },
+    "node:syn:internal:0": {
+      "kind": "direct",
+      "evidence": [
+        {
+          "commit": "5260836abb7056beed3f3f0d0e4262c11f36f0d0",
+          "file": "net/ipv4/tcp_output.c",
+          "start": 3930,
+          "end": 3940,
+          "explanation": "tcp_connect transmits SYN through tcp_transmit_skb."
+        }
+      ],
+      "reviewed": true,
+      "fingerprint": "2e8f16fce1464b90d837751024aa41dd3c58b82709a1792105aeb58113565e07",
+      "claim": {
+        "source": "tcp_connect()",
+        "target": "tcp_transmit_skb()",
+        "label": "tcp_connect() builds SYN\\n→ tcp_transmit_skb() → normal IP OUTPUT"
+      }
+    },
+    "node:tcxin:internal:3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "20cf9baf67266dd81f4958cc0624f54a5fa9fd8a77a4ba7d362baaa3f8ba63d2",
+      "claim": {
+        "source": "cls_bpf_classify()",
+        "target": "bpf_prog_run()",
+        "label": "tcx_run() [if TCX enabled]\\nnon-UNSPEC → ingress verdict\\nUNSPEC / no TCX → tc_run() → tcf_classify()\\n→ cls_bpf_classify() → bpf_prog_run()"
+      }
+    },
+    "node:one:internal:2": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "e5921083cc897ca907fbf242235bb2faded64b1aaf971eabb7335c5af65aec39",
+      "claim": {
+        "source": "netdev_start_xmit()",
+        "target": "__netdev_start_xmit()",
+        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()",
+        "relation": "displayed sequence; caller/callee requires manual source review"
+      }
+    },
+    "node:one:internal:4": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "3c5b55b032cd3eef2416371b4ed6b6d756a8c4ccf47bf9d08079de8be6b65c92",
+      "claim": {
+        "source": "ndo_start_xmit()",
+        "target": "trace_net_dev_xmit()",
+        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()",
+        "relation": "displayed sequence; caller/callee requires manual source review"
+      }
+    },
+    "node:conn2:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "990fd64d6f120ea6442fc50d79fcb7c9d9356ebeacdbac90c7c2f3832de3a2c2",
+      "claim": {
+        "source": "tcp_v4_connect()",
+        "target": "tcp_connect()",
+        "label": "__inet_stream_connect()\\n→ tcp_v4_pre_connect() [cgroup connect4]\\n→ tcp_v4_connect() → tcp_connect()",
+        "relation": "displayed sequence; caller/callee requires manual source review"
+      }
+    },
+    "node:ct:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "5201900285ea4d340be68d8785ef72f251705bd2c04fb62ff7e8a31674cf4533",
+      "claim": {
+        "source": "nf_conntrack_handle_packet()",
+        "target": "nf_conntrack_tcp_packet()",
+        "label": "nf_conntrack_in()\\n→ resolve_normal_ct(): tuple/hash lookup or allocate\\n→ nf_conntrack_handle_packet()\\n→ nf_conntrack_tcp_packet()\\nTCP conntrack state differs from socket TCP state",
+        "relation": "displayed sequence; caller/callee requires manual source review"
+      }
+    },
+    "node:one:internal:3": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "9ff2519b4640a0e305c8e9610f1330ffb0c122e183f26bb7e87f355a9b6348cc",
+      "claim": {
+        "source": "__netdev_start_xmit()",
+        "target": "ndo_start_xmit()",
+        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()",
+        "relation": "displayed sequence; caller/callee requires manual source review"
+      }
+    },
+    "node:one:internal:1": {
+      "kind": "unclassified",
+      "evidence": [],
+      "reviewed": false,
+      "fingerprint": "cef865d742edfc60d68dc076935290d33f55a43a1223b04d266e46411d491e50",
+      "claim": {
+        "source": "trace_net_dev_start_xmit()",
+        "target": "netdev_start_xmit()",
+        "label": "xmit_one()\\n→ dev_queue_xmit_nit() [AF_PACKET TX tap first]\\n→ trace_net_dev_start_xmit()\\n→ netdev_start_xmit()\\n→ __netdev_start_xmit()\\n→ ndo_start_xmit()\\n→ trace_net_dev_xmit()",
+        "relation": "displayed sequence; caller/callee requires manual source review"
+      }
     }
   }
 }
